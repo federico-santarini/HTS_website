@@ -1,0 +1,35 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}References{% endblock %}
+
+{% block content %}
+{# Il filtro per tipo usa ?kind=...; il valore è validato dalla view reference_list. #}
+<h1>References</h1>
+
+<div>
+    Type:
+    <a href="?"{% if not current_kind %} class="active"{% endif %}>All /</a>
+    {% for value, label in kinds %}
+    <a href="?kind={{ value }}"{% if current_kind == value %} class="active"{% endif %}>{{ label }} /</a>
+    {% endfor %}
+</div>
+
+<ul>
+    {% for reference in references %}
+    <li style="margin-bottom: 40px;">
+        <strong>{% if reference.url %}<a href="{{ reference.url }}">{{ reference.title }}</a>{% else %}{{ reference.title }}{% endif %}</strong>
+        ({{ reference.get_kind_display }})
+        {% if reference.author or reference.year %}
+        <div>{{ reference.author }}{% if reference.author and reference.year %}, {% endif %}{{ reference.year|default_if_none:"" }}</div>
+        {% endif %}
+        {% if reference.notes %}<p>{{ reference.notes }}</p>{% endif %}
+        {% if reference.projects.all %}
+        <div>Projects: {% for project in reference.projects.all %}<a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+        {% endif %}
+        {% if reference.image %}<img src="{{ reference.image.url }}" alt="{{ reference.title }}" style="max-width: 300px;">{% endif %}
+    </li>
+    {% empty %}
+    <li>No references yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

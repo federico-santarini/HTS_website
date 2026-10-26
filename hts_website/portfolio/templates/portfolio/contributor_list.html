@@ -1,0 +1,14 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}Contributors{% endblock %}
+
+{% block content %}
+<h1>Contributors</h1>
+<ul>
+    {% for contributor in contributors %}
+    <li><a href="{% url 'contributor_detail' contributor.pk %}">{{ contributor.name }} {{ contributor.surname }}</a></li>
+    {% empty %}
+    <li>No contributors yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

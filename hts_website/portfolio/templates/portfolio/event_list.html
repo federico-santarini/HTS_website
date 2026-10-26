@@ -1,0 +1,35 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}Events{% endblock %}
+
+{% block content %}
+{# upcoming_events e past_events arrivano già divisi e ordinati dalla view event_list. #}
+{# Le due liste hanno lo stesso markup: se cambia il layout di un evento, modificarle entrambe. #}
+<h1>Upcoming Events</h1>
+<ul>
+    {% for event in upcoming_events %}
+    <li style="margin-bottom: 40px;">
+        <strong>{{ event.date }}</strong> — {{ event.title }}
+        {% if event.location %} ({{ event.location }}){% endif %}
+        <p>{{ event.description }}</p>
+        {% if event.event_url %}<a href="{{ event.event_url }}">More info</a>{% endif %}
+    </li>
+    {% empty %}
+    <li>No upcoming events.</li>
+    {% endfor %}
+</ul>
+
+<h1>Past Events</h1>
+<ul>
+    {% for event in past_events %}
+    <li style="margin-bottom: 40px;">
+        <strong>{{ event.date }}</strong> — {{ event.title }}
+        {% if event.location %} ({{ event.location }}){% endif %}
+        <p>{{ event.description }}</p>
+        {% if event.event_url %}<a href="{{ event.event_url }}">More info</a>{% endif %}
+    </li>
+    {% empty %}
+    <li>No past events.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

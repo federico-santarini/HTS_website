@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <rect id="stitch" width="154" height="124" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="6 6"/>
+  </defs>
+  <rect width="800" height="500" fill="#fbf1e0"/>
+  <g>
+    <rect x="40" y="30" width="170" height="140" fill="#e07a5f"/>
+    <rect x="220" y="30" width="170" height="140" fill="#f2cc8f"/>
+    <rect x="400" y="30" width="170" height="140" fill="#81b29a"/>
+    <rect x="580" y="30" width="170" height="140" fill="#3d405b"/>
+    <rect x="40" y="180" width="170" height="140" fill="#81b29a"/>
+    <rect x="220" y="180" width="170" height="140" fill="#3d405b"/>
+    <rect x="400" y="180" width="170" height="140" fill="#e07a5f"/>
+    <rect x="580" y="180" width="170" height="140" fill="#f2cc8f"/>
+    <rect x="40" y="330" width="170" height="140" fill="#f2cc8f"/>
+    <rect x="220" y="330" width="170" height="140" fill="#e07a5f"/>
+    <rect x="400" y="330" width="170" height="140" fill="#3d405b"/>
+    <rect x="580" y="330" width="170" height="140" fill="#81b29a"/>
+  </g>
+  <g>
+    <use href="#stitch" x="48" y="38"/><use href="#stitch" x="228" y="38"/><use href="#stitch" x="408" y="38"/><use href="#stitch" x="588" y="38"/>
+    <use href="#stitch" x="48" y="188"/><use href="#stitch" x="228" y="188"/><use href="#stitch" x="408" y="188"/><use href="#stitch" x="588" y="188"/>
+    <use href="#stitch" x="48" y="338"/><use href="#stitch" x="228" y="338"/><use href="#stitch" x="408" y="338"/><use href="#stitch" x="588" y="338"/>
+  </g>
+</svg>

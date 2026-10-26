@@ -1,0 +1,135 @@
+"""
+Modelli del portfolio e relazioni tra loro (schema completo nel README):
+
+- Project <-> Contributor: M2M, si modifica dall'admin del progetto.
+- Project <-> ProjectType: M2M, le tipologie le crea l'admin.
+- Project <-> Reference: M2M, si modifica dall'admin della referenza.
+- ProjectImage / ContributorImage: immagini multiple, ForeignKey con related_name="images".
+- Event: indipendente, nessuna relazione con gli altri modelli.
+"""
+from django.db import models
+from django.utils import timezone
+
+
+class ProjectType(models.Model):
+    """Tipologia di progetto (es. "event", "radio show"), creata dall'admin.
+
+    Sostituisce il vecchio campo Project.project_type a scelte fisse.
+    Lo slug è il valore usato nell'indirizzo del filtro dell'archivio (?type=<slug>).
+    Una tipologia in uso non si può cancellare dall'admin: vedi ProjectTypeAdmin.
+    """
+
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Project(models.Model):
+    """Un progetto del collettivo (evento, puntata radio, ecc.). Compare in Archive e nel feed."""
+
+    # I valori salvati nel database sono quelli a sinistra: se cambi un valore
+    # servirà una data migration per aggiornare i progetti già salvati.
+    CATEGORIES = [
+        ("cogniton", "cogniton"),
+        ("perception", "perception"),
+        ("relationality", "relationality"),
+    ]
+
+    title = models.CharField(max_length=255)
+    date = models.DateField(default=timezone.localdate)
+    # Una o più tipologie. Dalla tipologia si risale ai progetti con project_type.projects.
+    project_types = models.ManyToManyField(ProjectType, related_name="projects", blank=True)
+    # Non è usata nelle pagine pubbliche (filtro e colonna tolti dall'archivio): tenuta per usi futuri.
+    project_category = models.CharField(max_length=255, choices=CATEGORIES, default=CATEGORIES[0][0])
+    project_url = models.URLField(blank=True, null=True)
+    description = models.TextField()
+    # Dal contributor si risale ai progetti con contributor.projects.
+    contributors = models.ManyToManyField("Contributor", related_name="projects", blank=True)
+
+
+    def __str__(self):
+        return self.title
+
+
+class Contributor(models.Model):
+    """Persona che partecipa ai progetti. Nell'admin mostra (in sola lettura) i suoi progetti."""
+
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    affiliation = models.CharField(max_length=255,blank=True, null=True)
+    bio = models.TextField()
+
+    def __str__(self):
+        return f"{self.name} {self.surname}"
+
+
+
+class ProjectImage(models.Model):
+    """Una riga per immagine, così un progetto può averne quante vuole (project.images.all)."""
+
+    project = models.ForeignKey(Project, related_name="images", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="projects/")
+
+    def __str__(self):
+        return f"Image for {self.project.title}"
+
+
+class ContributorImage(models.Model):
+    """Come ProjectImage, ma per i contributor (contributor.images.all)."""
+
+    contributor = models.ForeignKey(Contributor, related_name="images", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="contributors/")
+
+    def __str__(self):
+        return f"Image for {self.contributor.name} {self.contributor.surname}"
+
+
+class Event(models.Model):
+    """Evento, futuro o passato. Non c'è un campo per distinguerli: lo decide event_list confrontando la data con oggi."""
+
+    title = models.CharField(max_length=255)
+    date = models.DateField()
+    location = models.CharField(max_length=255, blank=True)
+    description = models.TextField()
+    event_url = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Reference(models.Model):
+    """Voce della pagina bibliografia/ispirazioni (libro, video, immagine o link).
+
+    `kind` serve oggi solo come etichetta e per il filtro; l'immagine, se caricata,
+    viene mostrata qualunque sia il tipo. Tutti i campi sono facoltativi tranne titolo e tipo.
+    """
+
+    KINDS = [
+        ("book", "book"),
+        ("video", "video"),
+        ("image", "image"),
+        ("link", "link"),
+    ]
+
+    title = models.CharField(max_length=255)
+    kind = models.CharField(max_length=20, choices=KINDS, default=KINDS[0][0])
+    author = models.CharField(max_length=255, blank=True)
+    year = models.PositiveSmallIntegerField(blank=True, null=True)
+    url = models.URLField(blank=True)
+    notes = models.TextField(blank=True)
+    image = models.ImageField(upload_to="references/", blank=True)
+    # La relazione si modifica da questo lato (admin della referenza); dal progetto
+    # si legge con project.references (nell'admin del progetto è in sola lettura).
+    projects = models.ManyToManyField(Project, related_name="references", blank=True)
+
+    class Meta:
+        # Ordine alfabetico, vale anche per project.references.all()
+        ordering = ["title"]
+
+    def __str__(self):
+        return self.title

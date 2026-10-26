@@ -1,0 +1,18 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}{{ contributor.name }} {{ contributor.surname }}{% endblock %}
+
+{% block content %}
+<h1>{{ contributor.name }} {{ contributor.surname }}</h1>
+<p>{{ contributor.affiliation }}</p>
+<p>{{ contributor.bio }}</p>
+
+<h2>Projects</h2>
+<ul>
+    {% for project in contributor.projects.all %}
+    <li><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></li>
+    {% empty %}
+    <li>No projects yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
