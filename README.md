@@ -157,12 +157,14 @@ un progetto può avere più tipologie.
 
 **`/projects/<id>/` e il feed.** Cliccando un progetto nell'archivio si va al feed già scrollato su di lui:
 `project_detail` fa un redirect a `/projects/feed/#project-<id>` e il browser scrolla da solo all'elemento con
-quell'`id`. Se cambi gli `id` nel template `project_feed.html`, rompi lo scroll.
+quell'`id`. Se cambi gli `id` nel template `_project.html`, rompi lo scroll.
 
 **Player YouTube e SoundCloud.** Nell'admin del progetto si incolla il link normale (quello della barra del browser
 o di "Condividi"), mai codice HTML. `portfolio/embeds.py` riconosce il servizio, ricava l'indirizzo di embed e accetta
 solo YouTube e SoundCloud: l'indirizzo finisce in un `<iframe>` e non deve poter puntare a un sito qualsiasi. I
-player compaiono solo nel feed dei progetti (`project_feed.html`) e si caricano quando la pagina scorre fin lì.
+player compaiono solo nel feed dei progetti (`_project.html`, incluso da `project_feed.html`) e si caricano quando la pagina scorre fin lì.
+L'aspetto dei player si regola con i parametri in cima a `embeds.py` (`YOUTUBE_PARAMS`, `SOUNDCLOUD_PARAMS`): l'interno
+degli iframe non si può cambiare con il CSS. Il colore di SoundCloud ripete il viola di `--hts-accent` in `custom.css`.
 Per YouTube si usa `youtube-nocookie.com` (nessun cookie finché non si preme play); il player di SoundCloud può invece
 impostare cookie già al caricamento: se il sito avrà un banner di consenso, va considerato.
 

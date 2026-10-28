@@ -7,6 +7,9 @@
     {# L'ordine conta: custom.css va DOPO Bootstrap, così le sue regole vincono. Vedi static/css/custom.css. #}
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya&family=Alegreya+SC&display=swap" rel="stylesheet">
 </head>
 <body>
     {# Navbar comune a tutte le pagine: ogni pagina estende questo template. #}
@@ -33,9 +36,12 @@
     </nav>
 
     {# Contenuto delle pagine dentro un .container di Bootstrap (colonna centrale a larghezza fissa per breakpoint). #}
+    {# Una pagina con fasce a tutta larghezza (il feed) sostituisce il blocco "main" e mette i .container da sé. #}
+    {% block main %}
     <main class="container">
         {% block content %}{% endblock %}
     </main>
+    {% endblock %}
 
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>

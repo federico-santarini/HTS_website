@@ -2,51 +2,13 @@
 
 {% block title %}Projects{% endblock %}
 
-{% block content %}
-{# Feed: tutti i progetti in sequenza. L'id="project-<pk>" è il bersaglio dell'ancora a cui rimanda la view project_detail: non cambiarlo. #}
-{% for project in projects %}
-<section id="project-{{ project.pk }}">
-    <h1>{{ project.title }}</h1>
-    <p>{{ project.description }}</p>
-
-    {# Player incorporati: i link arrivano già convertiti e limitati a YouTube/SoundCloud (portfolio/embeds.py). #}
-    {# loading="lazy": il player parte a caricarsi solo quando la pagina scorre fin lì (il feed ha molti progetti). #}
-    {% if project.youtube_embed_url %}
-    <div class="ratio ratio-16x9">
-        <iframe src="{{ project.youtube_embed_url }}" title="{{ project.title }} (YouTube)" loading="lazy" allowfullscreen
-                allow="encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    </div>
-    {% endif %}
-    {% if project.soundcloud_embed_url %}
-    <iframe src="{{ project.soundcloud_embed_url }}" title="{{ project.title }} (SoundCloud)" width="100%" height="166" loading="lazy"></iframe>
-    {% endif %}
-
-    {% if project.images.all %}
-    <div>
-        {% for project_image in project.images.all %}
-        <img src="{{ project_image.image.url }}" alt="{{ project.title }}" style="max-width: 300px;">
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if project.contributors.all %}
-    <h2>Contributors</h2>
-    <ul>
-        {% for contributor in project.contributors.all %}
-        <li><a href="{% url 'contributor_detail' contributor.pk %}">{{ contributor.name }} {{ contributor.surname }}</a></li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-
-    {% if project.references.all %}
-    <h2>References</h2>
-    <ul>
-        {% for reference in project.references.all %}
-        <li>{% if reference.url %}<a href="{{ reference.url }}">{{ reference.title }}</a>{% else %}{{ reference.title }}{% endif %} ({{ reference.get_kind_display }})</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-</section>
-<hr>
-{% endfor %}
+{# Il feed sostituisce "main" (non "content") perché l'header di ogni progetto è a tutta larghezza: i .container sono dentro _project.html. #}
+{% block main %}
+{# Feed: tutti i progetti in sequenza. Ogni scheda è in _project.html. Il titolo di pagina c'è per la struttura (un solo h1), ma non si vede. #}
+<main>
+    <h1 class="visually-hidden">Projects</h1>
+    {% for project in projects %}
+    {% include "portfolio/_project.html" %}
+    {% endfor %}
+</main>
 {% endblock %}

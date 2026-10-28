@@ -1,0 +1,56 @@
+{# Scheda di un progetto nel feed (incluso da project_feed.html, che passa la variabile "project"). #}
+{# L'id="project-<pk>" è il bersaglio dell'ancora a cui rimanda la view project_detail: non cambiarlo. #}
+{# L'header è a tutta larghezza (lo sfondo arriva ai bordi dello schermo); il suo testo e il resto stanno in un .container. #}
+<section id="project-{{ project.pk }}" class="text-center">
+    <header class="project-header pb-0 mb-5">
+        <div class="container">
+            <h2 class="project-title mt-5">{{ project.title }}</h2>
+
+            {% if project.contributors.all %}
+            <p class="section-label mt-5">with the contribution of</p>
+            <p class="contributors mx-5 my-0">
+                {% for contributor in project.contributors.all %}
+                <a href="{% url 'contributor_detail' contributor.pk %}">{{ contributor.name }} {{ contributor.surname }}</a>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </p>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        <p class="project-description col-lg-6">{{ project.description }}</p>
+
+        {% if project.references.all %}
+        <h3 class="section-label">references</h3>
+        <ul class="references list-unstyled">
+            {% for reference in project.references.all %}
+            <li>{% if reference.url %}{{ reference.author }}, <a href="{{ reference.url }}">{{ reference.title }}</a>{% else %}{{ reference.author }}, {{ reference.title }}{% endif %} ({{ reference.get_kind_display }})</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {# Player incorporati: i link arrivano già convertiti e limitati a YouTube/SoundCloud (portfolio/embeds.py). #}
+        {# loading="lazy": il player parte a caricarsi solo quando la pagina scorre fin lì (il feed ha molti progetti). #}
+        {% if project.youtube_embed_url %}
+        <div class="ratio ratio-16x9">
+            <iframe src="{{ project.youtube_embed_url }}" title="{{ project.title }} (YouTube)" loading="lazy" allowfullscreen
+                    allow="encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        {% endif %}
+        {% if project.soundcloud_embed_url %}
+        <iframe src="{{ project.soundcloud_embed_url }}" title="{{ project.title }} (SoundCloud)" width="100%" height="166" loading="lazy"></iframe>
+        {% endif %}
+
+        {% if project.images.all %}
+        <div class="row g-3">
+            {% for project_image in project.images.all %}
+            <div class="col-3">
+                <img class="img-fluid" src="{{ project_image.image.url }}" alt="{{ project.title }}" loading="lazy">
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <hr>
+    </div>
+</section>

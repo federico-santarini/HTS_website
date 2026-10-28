@@ -10,7 +10,7 @@ Le funzioni *_embed_url restituiscono None se il link non è riconosciuto. I val
 servono ai campi del modello (vengono usati dalle migration: non rinominare né spostare).
 """
 import re
-from urllib.parse import parse_qs, quote, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse
 
 from django.core.exceptions import ValidationError
 
@@ -18,6 +18,21 @@ YOUTUBE_HOSTS = {"youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be", 
 SOUNDCLOUD_HOSTS = {"soundcloud.com", "www.soundcloud.com", "m.soundcloud.com"}
 
 YOUTUBE_ID = re.compile(r"[A-Za-z0-9_-]{11}")
+
+# Parametri che cambiano l'aspetto dei player (l'interno dell'iframe non si può ritoccare dal nostro CSS).
+# Il colore di SoundCloud è lo stesso viola di --hts-accent in static/css/custom.css: se cambia là, cambia anche qui.
+# show_user resta attivo (il nome dell'artista è l'attribuzione richiesta da SoundCloud).
+# YouTube: rel=0 = i video suggeriti sono solo dello stesso canale; color=white = barra bianca invece che rossa;
+# iv_load_policy=3 = niente annotazioni sul video.
+YOUTUBE_PARAMS = {"rel": "0", "color": "white", "iv_load_policy": "3", "playsinline": "1"}
+SOUNDCLOUD_PARAMS = {
+    "color": "#b026ff",
+    "visual": "false",
+    "hide_related": "true",
+    "show_comments": "false",
+    "show_reposts": "false",
+    "show_teaser": "false",
+}
 
 
 def _parse(url):
@@ -47,7 +62,7 @@ def youtube_embed_url(url):
     if not video_id or not YOUTUBE_ID.fullmatch(video_id):
         return None
     # youtube-nocookie.com: il player non imposta cookie finché non si preme play.
-    return f"https://www.youtube-nocookie.com/embed/{video_id}"
+    return f"https://www.youtube-nocookie.com/embed/{video_id}?{urlencode(YOUTUBE_PARAMS)}"
 
 
 def soundcloud_embed_url(url):
@@ -62,7 +77,7 @@ def soundcloud_embed_url(url):
     if len(segments) < 2:
         return None
     clean = "https://soundcloud.com/" + "/".join(segments)
-    return "https://w.soundcloud.com/player/?url=" + quote(clean, safe="")
+    return "https://w.soundcloud.com/player/?" + urlencode({"url": clean, **SOUNDCLOUD_PARAMS})
 
 
 def validate_youtube_url(value):

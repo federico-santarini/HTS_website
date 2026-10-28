@@ -7,7 +7,7 @@ creare database. Il database vero non viene toccato.
 """
 import tempfile
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import parse_qs, urljoin, urlparse
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -123,8 +123,8 @@ class ReferenceListTests(TestCase):
         linked = html.split('id="project-%d"' % self.project.pk)[1].split("</section>")[0]
         lonely = html.split('id="project-%d"' % self.other_project.pk)[1].split("</section>")[0]
         self.assertIn("Book one", linked)
-        self.assertIn("<h2>References</h2>", linked)
-        self.assertNotIn("<h2>References</h2>", lonely)
+        self.assertIn('<h3 class="section-label">references</h3>', linked)
+        self.assertNotIn('<h3 class="section-label">references</h3>', lonely)
 
 
 class ProjectAdminReferencesTests(TestCase):
@@ -159,6 +159,16 @@ class EmbedUrlTests(SimpleTestCase):
 
     YT = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
 
+    @staticmethod
+    def without_query(url):
+        """L'indirizzo di embed senza i parametri di aspetto (?rel=0&...)."""
+        return url.split("?")[0]
+
+    @staticmethod
+    def soundcloud_target(url):
+        """Il link al brano che il player di SoundCloud riceve nel parametro url=."""
+        return parse_qs(urlparse(url).query)["url"][0]
+
     def test_youtube_accepts_the_common_link_forms(self):
         for url in [
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
@@ -172,7 +182,13 @@ class EmbedUrlTests(SimpleTestCase):
             "http://youtu.be/dQw4w9WgXcQ",
         ]:
             with self.subTest(url=url):
-                self.assertEqual(youtube_embed_url(url), self.YT)
+                self.assertEqual(self.without_query(youtube_embed_url(url)), self.YT)
+
+    def test_youtube_embed_carries_the_appearance_parameters(self):
+        query = parse_qs(urlparse(youtube_embed_url("https://youtu.be/dQw4w9WgXcQ")).query)
+        self.assertEqual(query["rel"], ["0"])
+        self.assertEqual(query["color"], ["white"])
+        self.assertEqual(query["iv_load_policy"], ["3"])
 
     def test_youtube_rejects_everything_else(self):
         for url in [
@@ -195,7 +211,7 @@ class EmbedUrlTests(SimpleTestCase):
                 self.assertIsNone(youtube_embed_url(url))
 
     def test_soundcloud_builds_the_player_url_and_drops_tracking_parameters(self):
-        expected = "https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsome-artist%2Fsome-track"
+        expected = "https://soundcloud.com/some-artist/some-track"
         for url in [
             "https://soundcloud.com/some-artist/some-track",
             "https://www.soundcloud.com/some-artist/some-track?si=abc123&utm_source=clipboard",
@@ -203,13 +219,24 @@ class EmbedUrlTests(SimpleTestCase):
             "http://soundcloud.com/some-artist/some-track/",
         ]:
             with self.subTest(url=url):
-                self.assertEqual(soundcloud_embed_url(url), expected)
+                embed = soundcloud_embed_url(url)
+                self.assertTrue(embed.startswith("https://w.soundcloud.com/player/?"))
+                self.assertEqual(self.soundcloud_target(embed), expected)
+
+    def test_soundcloud_embed_carries_the_appearance_parameters(self):
+        query = parse_qs(urlparse(soundcloud_embed_url("https://soundcloud.com/some-artist/some-track")).query)
+        self.assertEqual(query["color"], ["#b026ff"])
+        self.assertEqual(query["visual"], ["false"])
+        self.assertEqual(query["show_comments"], ["false"])
+        self.assertNotIn("show_user", query)  # il nome dell'artista resta visibile
 
     def test_soundcloud_keeps_playlists_and_private_link_tokens(self):
-        self.assertTrue(soundcloud_embed_url("https://soundcloud.com/some-artist/sets/some-playlist").endswith(
-            "some-artist%2Fsets%2Fsome-playlist"))
-        self.assertTrue(soundcloud_embed_url("https://soundcloud.com/some-artist/some-track/s-AbCdEfG").endswith(
-            "some-track%2Fs-AbCdEfG"))
+        self.assertEqual(
+            self.soundcloud_target(soundcloud_embed_url("https://soundcloud.com/some-artist/sets/some-playlist")),
+            "https://soundcloud.com/some-artist/sets/some-playlist")
+        self.assertEqual(
+            self.soundcloud_target(soundcloud_embed_url("https://soundcloud.com/some-artist/some-track/s-AbCdEfG")),
+            "https://soundcloud.com/some-artist/some-track/s-AbCdEfG")
 
     def test_soundcloud_rejects_everything_else(self):
         for url in [
@@ -245,8 +272,8 @@ class ProjectEmbedTests(TestCase):
 
     def test_feed_renders_both_players_for_a_project_that_has_them(self):
         html = self.section(self.with_embeds)
-        self.assertIn('src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"', html)
-        self.assertIn("https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsome-artist%2Fsome-track", html)
+        self.assertIn('src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?', html)
+        self.assertIn("https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsome-artist%2Fsome-track&amp;", html)
         self.assertEqual(html.count("<iframe"), 2)
 
     def test_feed_shows_no_player_when_the_fields_are_empty(self):

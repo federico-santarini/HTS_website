@@ -57,22 +57,31 @@
     --bs-body-font-size: 1rem;
     --bs-body-color: #ffffff;
     --bs-body-bg: #000000;
-    --bs-heading-color: #b026ff;
+    --bs-heading-color: #ffffff;
     --bs-link-color-rgb: 255,255,255;
-    --bs-link-hover-color-rgb: 176,38,255;
+    --bs-link-hover-color-rgb: var(--hts-accent-rgb);
+
+    /* Valori del sito usati in più punti: si cambiano qui e valgono ovunque. */
+    --hts-accent-rgb: 176, 38, 255;
+    --hts-accent: rgb(var(--hts-accent-rgb));
+    --hts-muted: #989898;
+    --hts-font-display: "Machina Inktrap", "Machina Plain", sans-serif;
+    --hts-font-serif: "Alegreya", serif;
+    --hts-font-label: "Alegreya SC", serif;
 }
 
 /* La navbar ridefinisce --bs-nav-link-color per conto suo (la prende da --bs-navbar-color),
    quindi un valore messo su :root non arriva mai ai link: va cambiata la variabile della navbar. */
 .navbar {
     --bs-navbar-color: white;
-    --bs-navbar-hover-color: #b026ff;
-    --bs-navbar-active-color: #b026ff;
+    --bs-navbar-hover-color: var(--hts-accent);
+    --bs-navbar-active-color: var(--hts-accent);
+    font-weight: 300;
 }
 
 /* Bootstrap non ha una variabile per il font dei titoli (usano quello del testo): serve una regola. */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: "Machina Inktrap", "Machina Plain", sans-serif;
+    font-family: var(--hts-font-display);
 }
 
 h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
@@ -87,4 +96,63 @@ h1, .h1{
 
 a {
     text-decoration: none;
+}
+
+/* Feed dei progetti (project_feed.html). Il centraggio del testo è dato da .text-center di Bootstrap sul <section>. */
+.project-header {
+    position: relative;
+    padding-top: 1.25rem;
+    padding-bottom: 3.75rem;
+}
+
+/* La sfumatura è uno strato SOPRA il testo (non uno sfondo). pointer-events: none lascia passare i click ai link sotto. */
+.project-header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(180deg, var(--hts-accent), transparent);
+    opacity: 0.9; /* più alto = viola più intenso, ma il titolo diventa meno leggibile */
+    pointer-events: none;
+}
+
+.project-title {
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-style: normal;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+/* Etichetta piccola sopra un gruppo di dati ("with the contribution of", "references"). */
+.section-label {
+    font-family: var(--hts-font-label);
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: var(--hts-muted);
+    padding-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+.contributors {
+    font-family: var(--hts-font-display);
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.references {
+    font-family: var(--hts-font-serif);
+    font-weight: 400;
+    font-size: 1rem;
+}
+.references a {
+text-decoration: underline;
+}
+
+.project-description {
+    font-family: var(--hts-font-serif);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.2;
 }
