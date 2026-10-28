@@ -6,7 +6,8 @@ referenze/bibliografia e una pubblicazione statica su un sottodominio dedicato.
 Stack: **Django 5.2**, **Postgres**, **WhiteNoise** per i file statici, **Gunicorn** per la produzione.
 Il deploy previsto è su **Railway** (non ancora fatto, vedi [Deploy](#deploy-checklist)).
 
-> Stato attuale: tutte le pagine sono senza stile (nessun CSS). Il design è la prossima fase.
+> Stato attuale: Bootstrap è collegato e la navbar è responsive, ma il design vero (layout editoriale, colori,
+> tipografia) è ancora da fare: le pagine hanno l'aspetto di base di Bootstrap. Vedi [Frontend](#frontend-bootstrap).
 
 ## Struttura del repository
 
@@ -32,7 +33,10 @@ HTS_website/
     │   ├── migrations/           # storia dello schema del database
     │   └── tests.py
     ├── publication/              # la pubblicazione statica (HTML + images/)
-    ├── static/                   # file statici del sito (per ora vuota)
+    ├── static/                   # file statici del sito
+    │   ├── css/custom.css        # lo stile personale, caricato dopo Bootstrap
+    │   ├── fonts/trial/          # font in versione trial (ignorata da git, vedi Frontend)
+    │   └── vendor/bootstrap/     # Bootstrap 5.3.8, copia locale (non si modifica)
     └── media/                    # immagini caricate dall'admin (non versionata)
 ```
 
@@ -109,6 +113,40 @@ Chi modifica cosa nell'admin (le relazioni many-to-many si modificano da **un so
 | `/about/` | `about` | Pagina About (testo scritto direttamente nel template `about.html`) |
 | `publication.<dominio>` | `PublicationMiddleware` | La pubblicazione statica (vedi sotto) |
 
+## Frontend (Bootstrap)
+
+Il sito usa **Bootstrap 5.3.8**, copiato in `hts_website/static/vendor/bootstrap/` invece di caricarlo da un CDN:
+niente dipendenze esterne e nessun indirizzo IP dei visitatori inviato a terzi. Come aggiornarlo è scritto nel
+README di quella cartella.
+
+- **Dove si collega**: `templates/portfolio/base.html`, che tutte le pagine estendono. Carica prima il CSS di Bootstrap
+  e poi `static/css/custom.css`; **l'ordine conta**, perché così le regole personali vincono. Il JavaScript di
+  Bootstrap è in fondo alla pagina (serve alla navbar che si chiude su schermi stretti).
+- **Struttura base**: navbar Bootstrap (`navbar-expand-lg`) e contenuto in un `<main class="container">`. Le pagine
+  interne non usano ancora la griglia a colonne (`row`/`col-*`): è il lavoro di design da fare, pagina per pagina.
+- **Come sovrascrivere Bootstrap**: le istruzioni sono in cima a `static/css/custom.css`. In breve: ridefinire le
+  variabili `--bs-*` su `:root`, poi le variabili dei singoli componenti, poi regole normali; niente `!important`.
+  Breakpoint e larghezze massime dei `.container` sono fissi nel file compilato: per cambiarli davvero servirebbe
+  ricompilare Bootstrap con Sass, che oggi non è configurato (richiederebbe Node nel progetto).
+- **I file statici**: in sviluppo li serve Django; in produzione `collectstatic` li raccoglie e li serve WhiteNoise.
+  Si usano nei template con `{% load static %}` e `{% static '...' %}`.
+- **Font**: PP Neue Machina in versione **trial**, in `hts_website/static/fonts/trial/` (12 file OTF: famiglie
+  Plain e Inktrap, ciascuna in Light/Regular/Ultrabold con i corsivi). La cartella è nel `.gitignore` perché la
+  licenza di prova non permette di distribuire i file: **chi clona il repository, o il sito pubblicato, non li ha**
+  e vede il carattere di riserva (`sans-serif`). Le `@font-face` sono in cima a `custom.css`: "Machina Plain" per
+  il testo (`--bs-body-font-family`) e "Machina Inktrap" per i titoli (Bootstrap non ha una variabile per i titoli,
+  quindi c'è una regola su `h1…h6`). Nel trial mancano solo ▲ ▼ (frecce di ordinamento): usano il carattere di riserva.
+  **Con la licenza**: mettere i file (meglio WOFF2, se la licenza permette la conversione) in `static/fonts/`,
+  aggiornare gli `url()` in `custom.css` e togliere la riga dal `.gitignore` solo se la licenza consente di versionarli
+  (in un repository pubblico di solito no).
+- **Tema scuro**: l'attributo `data-bs-theme="dark"` sul tag `<html>` fa cambiare a Bootstrap molte variabili insieme
+  (colore del testo, icona della navbar, ecc.). Sta in `base.html` e anche nella pubblicazione.
+- **La pubblicazione** usa gli stessi file (Bootstrap + `custom.css`), collegati dal suo `<head>` con percorsi
+  `/static/...`: quell'indirizzo è servito anche dal sottodominio. Quindi **cambiare `custom.css` cambia lo stile di
+  entrambi i siti**. I percorsi devono coincidere con `STATIC_URL`: se in produzione i file statici passassero da
+  un altro indirizzo, vanno aggiornati anche in `publication/index.html`. La pubblicazione non carica il JavaScript
+  di Bootstrap (non ha navbar).
+
 ## Cose non ovvie da sapere
 
 **Archivio, ordinamento e filtro.** Sono nell'indirizzo (`?sort=-date&type=event`). La view accetta solo `title` e
@@ -127,8 +165,9 @@ progetti collegati come "protetti" e non mostra il pulsante di conferma. Funzion
 `publication.` serve i file di `hts_website/publication/` (con `index.html` per le cartelle) e risponde 404 a tutto il
 resto, `/admin/` compreso. Per gli altri host non fa nulla. Con `DEBUG=True` le modifiche ai file si vedono subito;
 in produzione l'elenco dei file è fissato all'avvio, quindi dopo ogni modifica serve un nuovo deploy.
-La pubblicazione è una pagina unica: introduzione, indice e contributi uno dopo l'altro, con link ad ancore
-(`#slug`). **Il contenuto attuale è fittizio**, da sostituire.
+La pubblicazione è una pagina unica: introduzione, indice, contributi uno dopo l'altro e una bibliografia unica in
+fondo (`#bibliography`, in ordine alfabetico per cognome), con link ad ancore (`#slug`). **Il contenuto attuale è
+fittizio**, da sostituire: la bibliografia include le opere citate nelle epigrafi dei contributi.
 
 **Immagini caricate.** Finiscono in `hts_website/media/`, cartella ignorata da git: chi clona il repository non le
 riceve, e se servono vanno salvate a parte. In sviluppo le serve Django. In produzione non funzionerà così:
@@ -172,7 +211,9 @@ Nel repository non c'è ancora nessuna configurazione di deploy. Da fare prima d
 
 ## Idee rimandate
 
-- **CSS e design**: tutto da fare. Nelle pagine ci sono ancora pochi `style=` inline temporanei (larghezza immagini, margini).
+- **Design**: layout editoriale, colori e tipografia da definire in `static/css/custom.css`, adattando le pagine alla
+  griglia di Bootstrap. Restano alcuni `style=` inline temporanei (larghezza immagini, margini) e le classi `active`
+  dei filtri non hanno ancora uno stile.
 - **Zotero** per la bibliografia: valutato e per ora scartato; le referenze si inseriscono dall'admin.
 - **Video incorporati** (YouTube/Vimeo) nelle referenze: oggi i video sono solo un link.
 - **Dati di prova**: il database locale contiene referenze di esempio e la pubblicazione contiene testi fittizi.

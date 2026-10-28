@@ -5,6 +5,10 @@ __pycache__/
 
 .env
 db.sqlite3
+.DS_Store
 
 hts_website/staticfiles/
 media/
+
+# Font in versione trial: licenza di prova, non vanno nel repository
+hts_website/static/fonts/trial/

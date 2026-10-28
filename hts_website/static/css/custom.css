@@ -1,0 +1,90 @@
+/*
+ * Stile personale del sito.
+ *
+ * Viene caricato DOPO Bootstrap (vedi base.html): a parità di specificità vincono le
+ * regole scritte qui. Per sovrascrivere Bootstrap, dalla via più pulita alla meno:
+ *
+ *   1. Variabili CSS globali. Bootstrap 5.3 legge font, colori, link e testo da variabili
+ *      --bs-* definite su :root: basta ridefinirle qui sotto.
+ *   2. Variabili di un componente, ridefinite sul suo selettore. Esempi:
+ *        .navbar { --bs-navbar-nav-link-padding-x: 1rem; }
+ *        .row    { --bs-gutter-x: 3rem; }          (distanza tra le colonne)
+ *   3. Regole normali con un selettore uguale o più specifico di quello di Bootstrap.
+ *      Evitare !important: poi non si riesce più a sovrascrivere.
+ *
+ * Cosa NON si cambia con le variabili: i breakpoint e le larghezze massime di .container
+ * sono valori fissi nel file compilato. Si possono contrastare con regole normali, ma per
+ * cambiarli davvero serve ricompilare Bootstrap con Sass (oggi non configurato: si usa il
+ * file già compilato in static/vendor/bootstrap/).
+ *
+ * Elenco completo delle variabili: https://getbootstrap.com/docs/5.3/customize/css-variables/
+ */
+
+/*
+ * FONT: PP Neue Machina, versione TRIAL (cartella static/fonts/trial/, ignorata da git).
+ * Due famiglie, ciascuna in Light (300), Regular (400) e Ultrabold (800), con i corsivi:
+ *   "Machina Plain"   -> testo
+ *   "Machina Inktrap" -> titoli
+ * Quando ci sarà la licenza: mettere i file (meglio in WOFF2) in static/fonts/, aggiornare gli url()
+ * qui sotto e togliere la cartella trial dal .gitignore, se la licenza permette di versionare i file.
+ * I percorsi sono relativi a questo file (../fonts/ = /static/fonts/). font-display: swap fa vedere
+ * subito il testo con un font di riserva mentre il carattere si carica.
+ * Nel trial mancano solo le frecce ▲ ▼ dell'ordinamento nell'archivio: usano il font di riserva.
+ */
+@font-face { font-family: "Machina Plain"; font-weight: 300; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainLight.otf") format("opentype"); }
+@font-face { font-family: "Machina Plain"; font-weight: 300; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainLightItalic.otf") format("opentype"); }
+@font-face { font-family: "Machina Plain"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainRegular.otf") format("opentype"); }
+@font-face { font-family: "Machina Plain"; font-weight: 400; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainRegularItalic.otf") format("opentype"); }
+@font-face { font-family: "Machina Plain"; font-weight: 800; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainUltrabold.otf") format("opentype"); }
+@font-face { font-family: "Machina Plain"; font-weight: 800; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainUltraboldItalic.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 300; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapLight.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 300; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapLightItalic.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapRegular.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 400; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapRegularItalic.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 800; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapUltrabold.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 800; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapUltraboldItalic.otf") format("opentype"); }
+
+:root {
+    /* Da sostituire con le scelte di design, per esempio:
+    --bs-body-font-family: ...;
+    --bs-body-font-size: ...;
+    --bs-body-color: ...;
+    --bs-body-bg: ...;
+    --bs-heading-color: ...;
+    --bs-link-color-rgb: 0, 0, 0;     (i colori dei link vogliono la forma "r, g, b")
+    */
+    --bs-body-font-family: "Machina Plain", sans-serif;
+    --bs-body-font-size: 1rem;
+    --bs-body-color: #ffffff;
+    --bs-body-bg: #000000;
+    --bs-heading-color: #b026ff;
+    --bs-link-color-rgb: 255,255,255;
+    --bs-link-hover-color-rgb: 176,38,255;
+}
+
+/* La navbar ridefinisce --bs-nav-link-color per conto suo (la prende da --bs-navbar-color),
+   quindi un valore messo su :root non arriva mai ai link: va cambiata la variabile della navbar. */
+.navbar {
+    --bs-navbar-color: white;
+    --bs-navbar-hover-color: #b026ff;
+    --bs-navbar-active-color: #b026ff;
+}
+
+/* Bootstrap non ha una variabile per il font dei titoli (usano quello del testo): serve una regola. */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "Machina Inktrap", "Machina Plain", sans-serif;
+}
+
+h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: 400;
+    font-style: italic;
+}
+
+h1, .h1{
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+a {
+    text-decoration: none;
+}

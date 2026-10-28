@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Soft Machines — Issue 01</title>
+    <!-- Stessi stili del sito principale: /static/ è servito anche da questo sottodominio.
+         custom.css deve restare DOPO Bootstrap. -->
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
 </head>
 <body>
 <!--
@@ -11,9 +15,15 @@
   Pagina unica: introduzione + indice + tutti i contributi uno dopo l'altro (come il feed dei progetti).
   Ogni voce dell'indice punta a un <article id="..."> con href="#...".
   Per aggiungere un contributo: nuovo <article id="slug"> + nuova voce nell'indice con href="#slug".
+  In fondo c'è un'unica bibliografia (<section id="bibliography">) per tutti i contributi, in ordine
+  alfabetico per cognome, una voce per paragrafo (i titoli delle opere sono in <cite>).
   Le immagini stanno in /images/ e hanno percorsi assoluti dalla radice del sottodominio.
-  Contenuto attuale: FITTIZIO, solo segnaposto. Nessun CSS per ora.
+  Stile: Bootstrap + static/css/custom.css del sito principale, collegati dal <head> con percorsi /static/...
+  (devono coincidere con STATIC_URL in settings.py: se cambia, aggiornarli qui). Il tema scuro è
+  l'attributo data-bs-theme="dark" sul tag <html>, come in base.html. Il JavaScript di Bootstrap non serve.
+  Contenuto attuale: FITTIZIO, solo segnaposto.
 -->
+<main class="container">
 <h1>Soft Machines</h1>
 <p>Issue 01 · Contributions on listening, care and technology</p>
 
@@ -49,6 +59,7 @@
         <p>Two letters addressed to a device that does not exist yet.</p>
     </li>
 </ol>
+<p><a href="#bibliography">Bibliography</a></p>
 <hr>
 
 <article id="listening-is-a-technology">
@@ -228,6 +239,40 @@
 </article>
 <hr>
 
-<p>Placeholder content: titles, authors and quotations in this issue are fictional.</p>
+<section id="bibliography">
+<h2>Bibliography</h2>
+
+<p>Abara-Holm, Kenji. 2021. “Weather Reports from the Desk: Notes on Device Behaviour.” <cite>Quarterly of Small Technologies</cite> 7 (2): 33–48.</p>
+
+<p>Benedetti, Noor. 2019. <cite>Manners for Machines: Short Essays on Living with Things That Answer Back</cite>. Rotterdam: Linden Row Press.</p>
+
+<p>Delacroix-Njoroge, Marguerite. 2008. <cite>Small Treatises on Contact</cite>. Lisbon: Editora Casa Estreita.</p>
+
+<p>Hartmann-Osei, Pia, ed. 2020. <cite>Sound and Shared Attention</cite>. Malmö: Harbour Street Press.</p>
+
+<p>Lindgren-Adeyemi, Sofia. 2015. <cite>Hands, Screens, Habits: A Study of Everyday Touch</cite>. Leeds: Open Palm Press.</p>
+
+<p>Marchetti, Ilse. 2014. <cite>Notes on Quiet Machines</cite>. Turin: Edizioni Soglia Bassa.</p>
+
+<p>Okafor-Lindqvist, Maren. 2020. “Rooms That Listen: A Score for Domestic Acoustics.” In <cite>Sound and Shared Attention</cite>, edited by Pia Hartmann-Osei, 112–131. Malmö: Harbour Street Press.</p>
+
+<p>Oyelaran-Wu, Pilar. 2012. <cite>A Dictionary of Small Atmospheres</cite>. Singapore: Paper Weather Books.</p>
+
+<p>Quist, Anselm. 2003. <cite>The Long Afterlife of Objects</cite>. Leeds: Mending Table Press.</p>
+
+<p>Rasmussen, Odile. 2017. <cite>Minutes of a Small Assembly: Notes on Informal Organising</cite>. Aarhus: Kitchen Table Editions.</p>
+
+<p>Ríos, Tavish. 2018. “The Maintainer’s Calendar.” <cite>Maintenance &amp; Care Review</cite> 3: 9–21.</p>
+
+<p>Sørensen, Leif, and Amara Diop. 2013. <cite>Room Tone</cite>. Field recordings, 48 min. Copenhagen: Quiet Hours Records.</p>
+
+<p>Tanaka-Weiss, Emil. 2016. “On Forgetting Well: Memory as a Design Material.” <cite>Quarterly of Small Technologies</cite> 5 (1): 60–74.</p>
+
+<p>Varga, Isolde. 2022. “Soft Infrastructures: Collectives That Continue.” <cite>Journal of Informal Organisations</cite> 12 (1): 5–27.</p>
+</section>
+<hr>
+
+<p>Placeholder content: titles, authors, quotations and references in this issue are fictional.</p>
+</main>
 </body>
 </html>
