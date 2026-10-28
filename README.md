@@ -27,6 +27,7 @@ HTS_website/
     │   ├── views.py              # una view per pagina, con docstring
     │   ├── urls.py               # indirizzi delle pagine
     │   ├── admin.py              # configurazione dell'admin
+    │   ├── embeds.py             # da link YouTube/SoundCloud a indirizzi di embed (e validazione)
     │   ├── middleware.py         # serve la pubblicazione sul sottodominio
     │   ├── context_processors.py # rende PUBLICATION_URL disponibile ai template
     │   ├── templates/portfolio/  # base.html + una pagina per file
@@ -84,7 +85,8 @@ erDiagram
     Event
 ```
 
-- **Project**: titolo, data, descrizione, una o più tipologie, contributor, immagini. `project_category` esiste
+- **Project**: titolo, data, descrizione, una o più tipologie, contributor, immagini, e due link facoltativi
+  (`youtube_url`, `soundcloud_url`) mostrati come player incorporati. `project_category` esiste
   ma oggi non è usata nelle pagine pubbliche (tenuta per il futuro).
 - **ProjectType**: tipologie create dall'admin (es. "event", "radio show"). Una tipologia in uso non si può cancellare.
 - **Contributor**: persone, con bio e immagini. I loro progetti si vedono nella pagina del contributor.
@@ -105,7 +107,7 @@ Chi modifica cosa nell'admin (le relazioni many-to-many si modificano da **un so
 |---|---|---|
 | `/` | `home` | Home (vuota per ora) |
 | `/projects/` | `project_list` | Archivio: tabella con ordinamento (`?sort=`) e filtro per tipologia (`?type=`) |
-| `/projects/feed/` | `project_feed` | Tutti i progetti uno dopo l'altro |
+| `/projects/feed/` | `project_feed` | Tutti i progetti uno dopo l'altro, con i player YouTube/SoundCloud |
 | `/projects/<id>/` | `project_detail` | Non ha pagina propria: reindirizza al feed, scrollato su quel progetto |
 | `/contributors/`, `/contributors/<id>/` | `contributor_*` | Elenco e dettaglio dei contributor |
 | `/events/` | `event_list` | Eventi futuri e passati in due sezioni |
@@ -156,6 +158,13 @@ un progetto può avere più tipologie.
 **`/projects/<id>/` e il feed.** Cliccando un progetto nell'archivio si va al feed già scrollato su di lui:
 `project_detail` fa un redirect a `/projects/feed/#project-<id>` e il browser scrolla da solo all'elemento con
 quell'`id`. Se cambi gli `id` nel template `project_feed.html`, rompi lo scroll.
+
+**Player YouTube e SoundCloud.** Nell'admin del progetto si incolla il link normale (quello della barra del browser
+o di "Condividi"), mai codice HTML. `portfolio/embeds.py` riconosce il servizio, ricava l'indirizzo di embed e accetta
+solo YouTube e SoundCloud: l'indirizzo finisce in un `<iframe>` e non deve poter puntare a un sito qualsiasi. I
+player compaiono solo nel feed dei progetti (`project_feed.html`) e si caricano quando la pagina scorre fin lì.
+Per YouTube si usa `youtube-nocookie.com` (nessun cookie finché non si preme play); il player di SoundCloud può invece
+impostare cookie già al caricamento: se il sito avrà un banner di consenso, va considerato.
 
 **Cancellare una tipologia.** Per una many-to-many Django non ha `on_delete=PROTECT`: senza protezione
 cancellerebbe in silenzio i collegamenti con i progetti. Per questo `ProjectTypeAdmin` (in `admin.py`) elenca i

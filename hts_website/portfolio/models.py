@@ -10,6 +10,8 @@ Modelli del portfolio e relazioni tra loro (schema completo nel README):
 from django.db import models
 from django.utils import timezone
 
+from . import embeds
+
 
 class ProjectType(models.Model):
     """Tipologia di progetto (es. "event", "radio show"), creata dall'admin.
@@ -48,12 +50,34 @@ class Project(models.Model):
     project_category = models.CharField(max_length=255, choices=CATEGORIES, default=CATEGORIES[0][0])
     project_url = models.URLField(blank=True, null=True)
     description = models.TextField()
+    # Si incolla il link normale (quello della barra del browser o di "Condividi"): l'indirizzo
+    # di embed lo ricava portfolio/embeds.py, che accetta solo YouTube e SoundCloud.
+    youtube_url = models.URLField(
+        blank=True,
+        validators=[embeds.validate_youtube_url],
+        help_text="Link of a YouTube video, e.g. https://www.youtube.com/watch?v=… It is shown as an embedded player.",
+    )
+    soundcloud_url = models.URLField(
+        blank=True,
+        validators=[embeds.validate_soundcloud_url],
+        help_text="Link of a SoundCloud track or playlist, e.g. https://soundcloud.com/artist/track. It is shown as an embedded player.",
+    )
     # Dal contributor si risale ai progetti con contributor.projects.
     contributors = models.ManyToManyField("Contributor", related_name="projects", blank=True)
 
 
     def __str__(self):
         return self.title
+
+    @property
+    def youtube_embed_url(self):
+        """Indirizzo per l'<iframe> di YouTube, o None se il campo è vuoto."""
+        return embeds.youtube_embed_url(self.youtube_url)
+
+    @property
+    def soundcloud_embed_url(self):
+        """Indirizzo per l'<iframe> di SoundCloud, o None se il campo è vuoto."""
+        return embeds.soundcloud_embed_url(self.soundcloud_url)
 
 
 class Contributor(models.Model):

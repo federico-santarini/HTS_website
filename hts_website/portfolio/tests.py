@@ -10,8 +10,10 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.test import Client, SimpleTestCase, TestCase, override_settings
 
+from .embeds import soundcloud_embed_url, youtube_embed_url
 from .models import Project, Reference
 
 
@@ -150,3 +152,116 @@ class ProjectAdminReferencesTests(TestCase):
 
     def test_add_page_renders(self):
         self.assertEqual(self.client.get("/admin/portfolio/project/add/").status_code, 200)
+
+
+class EmbedUrlTests(SimpleTestCase):
+    """Conversione dei link di YouTube e SoundCloud in indirizzi di embed (nessun database)."""
+
+    YT = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+
+    def test_youtube_accepts_the_common_link_forms(self):
+        for url in [
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "https://youtube.com/watch?v=dQw4w9WgXcQ&t=42s&list=PL123",
+            "https://m.youtube.com/watch?v=dQw4w9WgXcQ",
+            "https://youtu.be/dQw4w9WgXcQ?si=trackingparam",
+            "https://www.youtube.com/shorts/dQw4w9WgXcQ",
+            "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+            "  https://youtu.be/dQw4w9WgXcQ  ",
+            "http://youtu.be/dQw4w9WgXcQ",
+        ]:
+            with self.subTest(url=url):
+                self.assertEqual(youtube_embed_url(url), self.YT)
+
+    def test_youtube_rejects_everything_else(self):
+        for url in [
+            "",
+            None,
+            "https://www.youtube.com/",
+            "https://www.youtube.com/watch",
+            "https://www.youtube.com/watch?v=short",
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ%22onload=%22x",
+            "https://www.youtube.com/@somechannel",
+            "https://vimeo.com/123456789",
+            "https://youtube.com.evil.example/watch?v=dQw4w9WgXcQ",
+            "https://evil.example/youtube.com/watch?v=dQw4w9WgXcQ",
+            "https://evil.example/?next=https://youtu.be/dQw4w9WgXcQ",
+            "javascript:alert(1)",
+            "ftp://youtu.be/dQw4w9WgXcQ",
+            '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>',
+        ]:
+            with self.subTest(url=url):
+                self.assertIsNone(youtube_embed_url(url))
+
+    def test_soundcloud_builds_the_player_url_and_drops_tracking_parameters(self):
+        expected = "https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsome-artist%2Fsome-track"
+        for url in [
+            "https://soundcloud.com/some-artist/some-track",
+            "https://www.soundcloud.com/some-artist/some-track?si=abc123&utm_source=clipboard",
+            "https://m.soundcloud.com/some-artist/some-track#t=30",
+            "http://soundcloud.com/some-artist/some-track/",
+        ]:
+            with self.subTest(url=url):
+                self.assertEqual(soundcloud_embed_url(url), expected)
+
+    def test_soundcloud_keeps_playlists_and_private_link_tokens(self):
+        self.assertTrue(soundcloud_embed_url("https://soundcloud.com/some-artist/sets/some-playlist").endswith(
+            "some-artist%2Fsets%2Fsome-playlist"))
+        self.assertTrue(soundcloud_embed_url("https://soundcloud.com/some-artist/some-track/s-AbCdEfG").endswith(
+            "some-track%2Fs-AbCdEfG"))
+
+    def test_soundcloud_rejects_everything_else(self):
+        for url in [
+            "",
+            None,
+            "https://soundcloud.com/",
+            "https://soundcloud.com/some-artist",
+            "https://soundcloud.com.evil.example/some-artist/some-track",
+            "https://evil.example/soundcloud.com/some-artist/some-track",
+            "https://w.soundcloud.com/player/?url=https%3A%2F%2Fevil.example",
+            "https://bandcamp.com/some-artist/some-track",
+            "javascript:alert(1)",
+        ]:
+            with self.subTest(url=url):
+                self.assertIsNone(soundcloud_embed_url(url))
+
+
+class ProjectEmbedTests(TestCase):
+    """Campi youtube_url / soundcloud_url: validazione nel modello e player nel feed dei progetti."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.with_embeds = Project.objects.create(
+            title="With players", description="d",
+            youtube_url="https://youtu.be/dQw4w9WgXcQ?si=x",
+            soundcloud_url="https://soundcloud.com/some-artist/some-track?si=y",
+        )
+        cls.plain = Project.objects.create(title="Plain project", description="d")
+
+    def section(self, project):
+        html = self.client.get("/projects/feed/").content.decode()
+        return html.split('id="project-%d"' % project.pk)[1].split("</section>")[0]
+
+    def test_feed_renders_both_players_for_a_project_that_has_them(self):
+        html = self.section(self.with_embeds)
+        self.assertIn('src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"', html)
+        self.assertIn("https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsome-artist%2Fsome-track", html)
+        self.assertEqual(html.count("<iframe"), 2)
+
+    def test_feed_shows_no_player_when_the_fields_are_empty(self):
+        self.assertNotIn("<iframe", self.section(self.plain))
+
+    def test_empty_fields_are_valid_and_have_no_embed(self):
+        self.plain.full_clean(exclude=["description"])
+        self.assertIsNone(self.plain.youtube_embed_url)
+        self.assertIsNone(self.plain.soundcloud_embed_url)
+
+    def test_full_clean_rejects_links_from_other_sites(self):
+        for field, bad in [("youtube_url", "https://vimeo.com/123456"), ("soundcloud_url", "https://example.com/a/b"),
+                           ("youtube_url", "https://soundcloud.com/some-artist/some-track")]:
+            with self.subTest(field=field, value=bad):
+                project = Project(title="x", description="d", **{field: bad})
+                with self.assertRaises(ValidationError) as ctx:
+                    project.full_clean()
+                self.assertIn(field, ctx.exception.message_dict)
