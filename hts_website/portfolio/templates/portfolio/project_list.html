@@ -6,15 +6,29 @@
 {# Archivio: tabella dei progetti. Ordinamento e filtro stanno nell'indirizzo (?sort=...&type=...). #}
 {# Ogni link ricostruisce anche l'altro parametro, altrimenti cliccare un filtro azzererebbe l'ordine e viceversa. #}
 {# I valori arrivano già validati dalla view project_list. La colonna Type non è ordinabile (è una M2M). #}
-<h1>Projects</h1>
+<div class="row justify-content-center">
 
-<div>
-    Type:
-    <a href="?sort={{ current_sort }}"{% if not current_type %} class="active"{% endif %}>All /</a>
+<div class="col-8 text-center text-uppercase">
+    <a href="?sort={{ current_sort }}"{% if not current_type %} class="active"{% endif %}>All</a> /
     {% for type in types %}
-    <a href="?sort={{ current_sort }}&type={{ type.slug }}"{% if current_type == type.slug %} class="active"{% endif %}>{{ type.name }} /</a>
+    <a href="?sort={{ current_sort }}&type={{ type.slug }}"{% if current_type == type.slug %} class="active"{% endif %}>{{ type.name }} </a>
+    {% if not forloop.last %}/{% endif %}
     {% endfor %}
 </div>
+</div>
+
+        {% for project in projects %}
+<div class="container row border-bottom border-bottom py-2">
+        <div class="list-label col-9 p-0">{% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+        <div class="list-label col-3 text-end p-0">{{ project.date|date:"b 'y" }}</div>
+        <div class="list-title p-0 mt-1"><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></div>
+</div>
+        {% empty %}
+        <div class="container row">
+        <div class="list-title">No projects yet.</div>
+</div>
+        {% endfor %}
+
 
 <table style="width: 100%; margin-top: 40px">
     <thead style="text-align: left;">

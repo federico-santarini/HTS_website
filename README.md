@@ -158,6 +158,11 @@ un progetto può avere più tipologie.
 **`/projects/<id>/` e il feed.** Cliccando un progetto nell'archivio si va al feed già scrollato su di lui:
 `project_detail` fa un redirect a `/projects/feed/#project-<id>` e il browser scrolla da solo all'elemento con
 quell'`id`. Se cambi gli `id` nel template `_project.html`, rompi lo scroll.
+Perché l'ancora atterri giusta, le immagini del feed devono avere `width` e `height` nell'`<img>`: sono `loading="lazy"`
+e, senza dimensioni, occupano 0 px finché non si caricano, poi spingono in basso i progetti sotto (scarto diverso per
+ogni progetto). `ProjectImage` salva le dimensioni da solo (`image_width`, `image_height`); per le immagini caricate
+prima della migration 0014 si riempiono con `pi.save()` su ogni `ProjectImage`. Qualsiasi altro elemento di altezza
+variabile messo nel feed (player, immagini) deve riservare il suo spazio allo stesso modo.
 
 **Player YouTube e SoundCloud.** Nell'admin del progetto si incolla il link normale (quello della barra del browser
 o di "Condividi"), mai codice HTML. `portfolio/embeds.py` riconosce il servizio, ricava l'indirizzo di embed e accetta

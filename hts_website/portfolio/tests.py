@@ -127,6 +127,33 @@ class ReferenceListTests(TestCase):
         self.assertNotIn('<h3 class="section-label">references</h3>', lonely)
 
 
+class FeedReferenceFormatTests(TestCase):
+    """Come una reference appare nel feed: titolo in corsivo con la sola iniziale maiuscola, autore solo se c'è."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.project = Project.objects.create(title="P", description="d")
+        Reference.objects.create(title="THE Cyborg MANIFESTO", author="donna haraway", kind="book").projects.add(cls.project)
+        Reference.objects.create(title="anonymous zine", kind="link", url="https://example.com/z").projects.add(cls.project)
+
+    def feed(self):
+        return self.client.get("/projects/feed/").content.decode()
+
+    def test_title_is_italic_with_only_the_first_letter_capitalised(self):
+        self.assertIn("<em>The cyborg manifesto&nbsp;", self.feed())
+
+    def test_link_is_on_the_kind_label_not_on_the_title(self):
+        html = self.feed()
+        self.assertIn("<em>Anonymous zine&nbsp;", html)
+        self.assertIn('(<a href="https://example.com/z">link</a>)', html)
+
+    def test_author_is_marked_for_capitalisation_and_missing_author_leaves_no_comma(self):
+        html = self.feed()
+        self.assertIn('<span class="reference-author">donna haraway</span>, ', html)
+        self.assertNotIn("<li>, ", html)
+        self.assertNotIn('<li><span class="reference-author"></span>', html)
+
+
 class ProjectAdminReferencesTests(TestCase):
     """Campo di sola lettura "References" nell'admin dei progetti (si entra come superuser di prova)."""
 

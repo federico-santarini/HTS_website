@@ -17,17 +17,22 @@
         </div>
     </header>
 
-    <div class="container">
-        <p class="project-description col-lg-6">{{ project.description }}</p>
-
+    <div class="container project-body">
+    <div class="row justify-content-center">
+        <p class="project-description col-lg-8">{{ project.description }}</p>
+    
         {% if project.references.all %}
         <h3 class="section-label">references</h3>
-        <ul class="references list-unstyled">
+        <ul class="references list-unstyled col-8 col-lg-6">
             {% for reference in project.references.all %}
-            <li>{% if reference.url %}{{ reference.author }}, <a href="{{ reference.url }}">{{ reference.title }}</a>{% else %}{{ reference.author }}, {{ reference.title }}{% endif %} ({{ reference.get_kind_display }})</li>
+            {# Autore con le iniziali maiuscole (CSS, .reference-author); titolo in corsivo con la sola prima lettera maiuscola. #}
+            {% with title=reference.title|lower|capfirst %}
+            <li class="mb-3">{% if reference.author %}<span class="reference-author">{{ reference.author }}</span>, {% endif %}<em>{{ title }}&nbsp;&nbsp;&nbsp;&nbsp;</em>{% if reference.url %}(<a href="{{ reference.url }}">{{ reference.get_kind_display }}</a>){% else %}({{ reference.get_kind_display }}){% endif %}</li>
+            {% endwith %}
             {% endfor %}
         </ul>
         {% endif %}
+        </div>
 
         {# Player incorporati: i link arrivano già convertiti e limitati a YouTube/SoundCloud (portfolio/embeds.py). #}
         {# loading="lazy": il player parte a caricarsi solo quando la pagina scorre fin lì (il feed ha molti progetti). #}
@@ -45,7 +50,7 @@
         <div class="row g-3">
             {% for project_image in project.images.all %}
             <div class="col-3">
-                <img class="img-fluid" src="{{ project_image.image.url }}" alt="{{ project.title }}" loading="lazy">
+                <img class="img-fluid" src="{{ project_image.image.url }}" alt="{{ project.title }}" loading="lazy"{% if project_image.image_width %} width="{{ project_image.image_width }}" height="{{ project_image.image_height }}"{% endif %}>
             </div>
             {% endfor %}
         </div>

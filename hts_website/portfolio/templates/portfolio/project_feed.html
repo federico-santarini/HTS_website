@@ -5,7 +5,7 @@
 {# Il feed sostituisce "main" (non "content") perché l'header di ogni progetto è a tutta larghezza: i .container sono dentro _project.html. #}
 {% block main %}
 {# Feed: tutti i progetti in sequenza. Ogni scheda è in _project.html. Il titolo di pagina c'è per la struttura (un solo h1), ma non si vede. #}
-<main>
+<main class="project-feed">
     <h1 class="visually-hidden">Projects</h1>
     {% for project in projects %}
     {% include "portfolio/_project.html" %}

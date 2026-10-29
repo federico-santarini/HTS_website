@@ -77,6 +77,7 @@
     --bs-navbar-hover-color: var(--hts-accent);
     --bs-navbar-active-color: var(--hts-accent);
     font-weight: 300;
+    text-transform: uppercase;
 }
 
 /* Bootstrap non ha una variabile per il font dei titoli (usano quello del testo): serve una regola. */
@@ -103,6 +104,39 @@ a {
     position: relative;
     padding-top: 1.25rem;
     padding-bottom: 3.75rem;
+}
+
+/* Ritmo "a schermate": ogni progetto è alto almeno uno schermo (svh = altezza visibile anche con la barra del browser
+   del telefono), quindi un progetto corto non lascia vedere l'inizio del successivo.
+   Snap: "mandatory" = la pagina si ferma sempre all'inizio di un progetto; "proximity" = si allinea solo se ci si
+   ferma vicino. Un progetto più alto dello schermo si legge comunque per intero. Vale solo nel feed (:has) e non per
+   chi chiede meno animazioni.
+   Anche la navbar è un punto di snap: senza, al caricamento la pagina si allineerebbe al primo progetto (che sta
+   sotto la navbar) e la navbar resterebbe fuori vista. */
+.project-feed > section {
+    min-height: 100svh;
+}
+
+/* Spazio in fondo a ogni progetto. Sta nel contenitore interno (non sul <section>) perché il <section> ha già
+   min-height: un progetto corto resta alto uno schermo, uno lungo ottiene questo spazio in più. */
+.project-body {
+    padding-bottom: 20rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html:has(.project-feed) {
+        scroll-snap-type: y mandatory;
+        /* scroll-snap-type: none; */
+
+    }
+
+    .project-feed > section {
+        scroll-snap-align: start;
+    }
+
+    html:has(.project-feed) .navbar {
+        scroll-snap-align: start;
+    }
 }
 
 /* La sfumatura è uno strato SOPRA il testo (non uno sfondo). pointer-events: none lascia passare i click ai link sotto. */
@@ -140,6 +174,15 @@ a {
     font-weight: 400;
     font-size: 1rem;
 }
+.contributors a {
+text-decoration: underline;
+text-decoration-thickness: 0.05rem;
+text-underline-offset: 0.3rem;
+}
+.contributors a:hover {
+text-decoration: none;
+color: white;
+}
 
 .references {
     font-family: var(--hts-font-serif);
@@ -148,11 +191,36 @@ a {
 }
 .references a {
 text-decoration: underline;
+text-decoration-thickness: 0.05rem;
+text-underline-offset: 0.3rem;
+}
+
+/* Iniziali maiuscole su ogni parola, senza toccare le altre lettere (resta "McDonald"). Solo visivo: il dato nell'admin non cambia. */
+.reference-author {
+    text-transform: capitalize;
 }
 
 .project-description {
     font-family: var(--hts-font-serif);
     font-weight: 400;
     font-size: 1rem;
+    line-height: 1.2;
+}
+
+.list-label {
+    font-family: var(--hts-font-label);
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: white;
+    padding-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+.list-title a {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.5;
     line-height: 1.2;
 }

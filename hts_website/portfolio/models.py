@@ -97,7 +97,12 @@ class ProjectImage(models.Model):
     """Una riga per immagine, così un progetto può averne quante vuole (project.images.all)."""
 
     project = models.ForeignKey(Project, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="projects/")
+    # width_field/height_field: Django salva da solo le dimensioni dell'immagine quando la si carica. Il template le mette
+    # negli attributi width/height dell'<img>, così il browser riserva lo spazio prima che l'immagine sia scaricata
+    # (senza, il feed "salta" quando le immagini si caricano e l'ancora di un progetto finisce fuori posto).
+    image = models.ImageField(upload_to="projects/", width_field="image_width", height_field="image_height")
+    image_width = models.PositiveIntegerField(null=True, blank=True, editable=False)
+    image_height = models.PositiveIntegerField(null=True, blank=True, editable=False)
 
     def __str__(self):
         return f"Image for {self.project.title}"
