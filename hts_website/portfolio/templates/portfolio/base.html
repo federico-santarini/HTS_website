@@ -15,23 +15,31 @@
     {# Navbar comune a tutte le pagine: ogni pagina estende questo template. #}
     {# "Publication" compare solo se PUBLICATION_URL è impostata (context processor in portfolio/context_processors.py). #}
     {# Sempre visibile in cima (sticky-top): il contenuto le scorre sotto. Marchio a sinistra, voci a destra. #}
-    {# Su schermi stretti le voci stanno dietro la parola "Menu" e si aprono in una tendina (serve il JavaScript di #}
-    {# Bootstrap, caricato in fondo alla pagina). Altezza e aspetto della tendina: vedi custom.css. #}
-    <nav class="navbar navbar-expand-lg sticky-top">
+    {# Sempre collassata, a qualsiasi larghezza (non c'è "navbar-expand-*"): le voci stanno dietro la parola "Menu" e #}
+    {# si aprono in un box di vetro (serve il JavaScript di Bootstrap, caricato in fondo alla pagina). Aspetto: custom.css. #}
+    <nav class="navbar sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">HTS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
                     aria-controls="main-nav" aria-expanded="false">Menu</button>
             <div class="collapse navbar-collapse" id="main-nav">
+                {# Voce della pagina corrente: la classe "active" la colora (--bs-navbar-active-color in custom.css), aria-current la #}
+                {# segnala ai lettori di schermo. Si confronta il nome dell'URL (urls.py): il feed conta come Archive, la scheda di un #}
+                {# contributor come Contributors. Una pagina nuova va aggiunta qui sotto. #}
+                {# Il box è largo quanto la barra; il .container interno tiene le voci sugli stessi margini di marchio e "Menu". #}
+                {% with page=request.resolver_match.url_name %}
+                <div class="container">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'project_list' %}">Archive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'contributor_list' %}">Contributors</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'event_list' %}">Events</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'reference_list' %}">References</a></li>
+                    <li class="nav-item"><a class="nav-link{% if page == 'home' %} active{% endif %}"{% if page == 'home' %} aria-current="page"{% endif %} href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link{% if page == 'project_list' or page == 'project_feed' %} active{% endif %}"{% if page == 'project_list' or page == 'project_feed' %} aria-current="page"{% endif %} href="{% url 'project_list' %}">Archive</a></li>
+                    <li class="nav-item"><a class="nav-link{% if page == 'contributor_list' or page == 'contributor_detail' %} active{% endif %}"{% if page == 'contributor_list' or page == 'contributor_detail' %} aria-current="page"{% endif %} href="{% url 'contributor_list' %}">Contributors</a></li>
+                    <li class="nav-item"><a class="nav-link{% if page == 'event_list' %} active{% endif %}"{% if page == 'event_list' %} aria-current="page"{% endif %} href="{% url 'event_list' %}">Events</a></li>
+                    <li class="nav-item"><a class="nav-link{% if page == 'reference_list' %} active{% endif %}"{% if page == 'reference_list' %} aria-current="page"{% endif %} href="{% url 'reference_list' %}">References</a></li>
                     {% if PUBLICATION_URL %}<li class="nav-item"><a class="nav-link" href="{{ PUBLICATION_URL }}">Publication</a></li>{% endif %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link{% if page == 'about' %} active{% endif %}"{% if page == 'about' %} aria-current="page"{% endif %} href="{% url 'about' %}">About</a></li>
                 </ul>
+                </div>
+                {% endwith %}
             </div>
         </div>
     </nav>

@@ -123,8 +123,9 @@ README di quella cartella.
 
 - **Dove si collega**: `templates/portfolio/base.html`, che tutte le pagine estendono. Carica prima il CSS di Bootstrap
   e poi `static/css/custom.css`; **l'ordine conta**, perché così le regole personali vincono. Il JavaScript di
-  Bootstrap è in fondo alla pagina (serve alla navbar che si chiude su schermi stretti).
-- **Struttura base**: navbar Bootstrap (`navbar-expand-lg`) e contenuto in un `<main class="container">`. Le pagine
+  Bootstrap è in fondo alla pagina (serve alla navbar, che è sempre collassata dietro "Menu").
+- **Struttura base**: navbar Bootstrap fissa in cima e sempre collassata (nessun `navbar-expand-*`: le voci si aprono in
+  un box "liquid glass", vedi `custom.css`) e contenuto in un `<main class="container">`. Le pagine
   interne non usano ancora la griglia a colonne (`row`/`col-*`): è il lavoro di design da fare, pagina per pagina.
 - **Come sovrascrivere Bootstrap**: le istruzioni sono in cima a `static/css/custom.css`. In breve: ridefinire le
   variabili `--bs-*` su `:root`, poi le variabili dei singoli componenti, poi regole normali; niente `!important`.

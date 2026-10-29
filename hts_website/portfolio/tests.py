@@ -5,6 +5,7 @@ Le classi basate su TestCase usano il database: Django crea un database temporan
 (test_<nome del db>) e lo cancella alla fine, quindi l'utente Postgres deve poter
 creare database. Il database vero non viene toccato.
 """
+import re
 import tempfile
 from pathlib import Path
 from urllib.parse import parse_qs, urljoin, urlparse
@@ -14,7 +15,7 @@ from django.core.exceptions import ValidationError
 from django.test import Client, SimpleTestCase, TestCase, override_settings
 
 from .embeds import soundcloud_embed_url, youtube_embed_url
-from .models import Project, Reference
+from .models import Contributor, Project, Reference
 
 
 class PublicationMiddlewareTests(SimpleTestCase):
@@ -152,6 +153,39 @@ class FeedReferenceFormatTests(TestCase):
         self.assertIn('<span class="reference-author">donna haraway</span>, ', html)
         self.assertNotIn("<li>, ", html)
         self.assertNotIn('<li><span class="reference-author"></span>', html)
+
+
+class NavbarActiveLinkTests(TestCase):
+    """La voce della navbar che corrisponde alla pagina corrente (e solo quella) è evidenziata."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.contributor = Contributor.objects.create(name="Ada", surname="Lovelace")
+
+    def active_labels(self, path):
+        html = self.client.get(path).content.decode()
+        return re.findall(r'<a class="nav-link active"[^>]*>(.*?)</a>', html)
+
+    def test_each_page_highlights_its_own_entry(self):
+        for path, label in [
+            ("/", "Home"),
+            ("/projects/", "Archive"),
+            ("/projects/feed/", "Archive"),  # il feed fa parte dell'archivio
+            ("/contributors/", "Contributors"),
+            (f"/contributors/{self.contributor.pk}/", "Contributors"),
+            ("/events/", "Events"),
+            ("/references/", "References"),
+            ("/about/", "About"),
+        ]:
+            with self.subTest(path=path):
+                self.assertEqual(self.active_labels(path), [label])
+
+    def test_active_entry_is_marked_for_screen_readers(self):
+        html = self.client.get("/references/").content.decode()
+        self.assertEqual(html.count('aria-current="page"'), 1)
+
+    def test_unknown_page_highlights_nothing(self):
+        self.assertEqual(self.active_labels("/does-not-exist/"), [])
 
 
 class ProjectAdminReferencesTests(TestCase):
