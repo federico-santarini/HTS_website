@@ -14,15 +14,16 @@
 <body>
     {# Navbar comune a tutte le pagine: ogni pagina estende questo template. #}
     {# "Publication" compare solo se PUBLICATION_URL è impostata (context processor in portfolio/context_processors.py). #}
-    {# Su schermi stretti si chiude dietro il pulsante (serve il JavaScript di Bootstrap, caricato in fondo alla pagina). #}
-    <nav class="navbar navbar-expand-lg">
+    {# Sempre visibile in cima (sticky-top): il contenuto le scorre sotto. Marchio a sinistra, voci a destra. #}
+    {# Su schermi stretti le voci stanno dietro la parola "Menu" e si aprono in una tendina (serve il JavaScript di #}
+    {# Bootstrap, caricato in fondo alla pagina). Altezza e aspetto della tendina: vedi custom.css. #}
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">HTS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
-                    aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                    aria-controls="main-nav" aria-expanded="false">Menu</button>
             <div class="collapse navbar-collapse" id="main-nav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'project_list' %}">Archive</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'contributor_list' %}">Contributors</a></li>

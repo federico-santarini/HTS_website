@@ -68,6 +68,14 @@
     --hts-font-display: "Machina Inktrap", "Machina Plain", sans-serif;
     --hts-font-serif: "Alegreya", serif;
     --hts-font-label: "Alegreya SC", serif;
+    --hts-navbar-height: 3.5rem;
+}
+
+/* La navbar è fissa in cima (sticky-top in base.html) e alta quanto --hts-navbar-height: serve un valore fisso perché
+   scroll-padding-top lo usa per lasciarle lo spazio. Senza, ancore e snap porterebbero l'inizio di un progetto
+   SOTTO la navbar. */
+html {
+    scroll-padding-top: var(--hts-navbar-height);
 }
 
 /* La navbar ridefinisce --bs-nav-link-color per conto suo (la prende da --bs-navbar-color),
@@ -76,8 +84,45 @@
     --bs-navbar-color: white;
     --bs-navbar-hover-color: var(--hts-accent);
     --bs-navbar-active-color: var(--hts-accent);
+    --bs-navbar-brand-hover-color: var(--hts-accent);
+    /* "Menu" (solo sotto lg) è testo semplice: niente bordo, niente riquadro, stessa dimensione del resto. */
+    --bs-navbar-toggler-padding-x: 0;
+    --bs-navbar-toggler-padding-y: 0;
+    --bs-navbar-toggler-font-size: 1rem;
+    --bs-navbar-toggler-border-color: transparent;
     font-weight: 300;
     text-transform: uppercase;
+    height: var(--hts-navbar-height);
+    padding-block: 0;
+    background-color: var(--bs-body-bg);
+}
+
+.navbar-toggler {
+    text-transform: uppercase; /* i <button> non ereditano il maiuscolo dal .navbar */
+}
+
+/* Bootstrap disegna l'anello di focus anche dopo un click o un tocco; qui resta solo per chi usa la tastiera. */
+.navbar-toggler:focus:not(:focus-visible) {
+    box-shadow: none;
+}
+
+/* Sotto lg le voci non spingono giù la pagina: si aprono in una tendina sotto la barra, larga quanto lo schermo
+   (box-shadow + clip-path allargano lo sfondo ai lati) e con il testo allineato al marchio. */
+@media (max-width: 991.98px) {
+    .navbar > .container {
+        position: relative;
+    }
+
+    .navbar-collapse {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        padding: 0.5rem calc(var(--bs-gutter-x) * 0.5) 1rem;
+        background-color: var(--bs-body-bg);
+        box-shadow: 0 0 0 100vmax var(--bs-body-bg);
+        clip-path: inset(0 -100vmax);
+    }
 }
 
 /* Bootstrap non ha una variabile per il font dei titoli (usano quello del testo): serve una regola. */
@@ -111,10 +156,9 @@ a {
    Snap: "mandatory" = la pagina si ferma sempre all'inizio di un progetto; "proximity" = si allinea solo se ci si
    ferma vicino. Un progetto più alto dello schermo si legge comunque per intero. Vale solo nel feed (:has) e non per
    chi chiede meno animazioni.
-   Anche la navbar è un punto di snap: senza, al caricamento la pagina si allineerebbe al primo progetto (che sta
-   sotto la navbar) e la navbar resterebbe fuori vista. */
+   La navbar è fissa: l'inizio di ogni progetto si allinea sotto di lei grazie a scroll-padding-top (vedi sopra). */
 .project-feed > section {
-    min-height: 100svh;
+    min-height: calc(100svh - var(--hts-navbar-height)); /* l'area sotto la navbar fissa */
 }
 
 /* Spazio in fondo a ogni progetto. Sta nel contenitore interno (non sul <section>) perché il <section> ha già
@@ -131,10 +175,6 @@ a {
     }
 
     .project-feed > section {
-        scroll-snap-align: start;
-    }
-
-    html:has(.project-feed) .navbar {
         scroll-snap-align: start;
     }
 }
