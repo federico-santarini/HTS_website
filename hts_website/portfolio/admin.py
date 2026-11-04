@@ -71,7 +71,7 @@ class ProjectAdmin(admin.ModelAdmin):
 class ContributorAdmin(admin.ModelAdmin):
     list_display = ["name", "surname", "affiliation"]
     readonly_fields = ["related_projects"]
-    fields = ["name", "surname", "affiliation", "bio", "related_projects"]
+    fields = ["name", "surname", "affiliation", "short_bio", "bio", "website", "related_projects"]
     inlines = [ContributorImageInline]
 
     # Sola lettura: la relazione si modifica dall'admin del Project (dove sta la M2M).
@@ -84,7 +84,7 @@ class ContributorAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ["title", "date", "location"]
+    list_display = ["title", "date", "location_label"]
     ordering = ["date"]
     actions = [duplicate_listings]
 

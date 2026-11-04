@@ -3,16 +3,34 @@
 {% block title %}{{ contributor.name }} {{ contributor.surname }}{% endblock %}
 
 {% block content %}
-<h1>{{ contributor.name }} {{ contributor.surname }}</h1>
-<p>{{ contributor.affiliation }}</p>
-<p>{{ contributor.bio }}</p>
+{# Scheda di un contributor: foto a sinistra, testi a destra (sotto i 768px in colonna); sotto, i suoi progetti come righe dell'archivio. #}
+<div class="row mt-5">
+    <div class="col-12 col-md-4 mb-4">
+        {% for contributor_image in contributor.images.all %}
+        <img class="contributor-photo mb-3" src="{{ contributor_image.image.url }}" alt="{{ contributor.name }} {{ contributor.surname }}">
+        {% endfor %}
+    </div>
 
-<h2>Projects</h2>
-<ul>
-    {% for project in contributor.projects.all %}
-    <li><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></li>
-    {% empty %}
-    <li>No projects yet.</li>
-    {% endfor %}
-</ul>
+    <div class="col-12 col-md-8 col-lg-6">
+        <h1 class="project-title">{{ contributor.name }} {{ contributor.surname }}</h1>
+        {% if contributor.affiliation %}<p class="section-label pt-0 mt-2">{{ contributor.affiliation }}</p>{% endif %}
+        {# Il link mostra l'indirizzo senza "https://" (cut toglie la parte indicata), ma punta all'indirizzo completo. #}
+        {% if contributor.website %}<p class="section-label pt-0 mt-1"><a href="{{ contributor.website }}">{{ contributor.website|cut:"https://"|cut:"http://" }}</a></p>{% endif %}
+        {% if contributor.short_bio %}<p class="contributor-short-bio mt-4">{{ contributor.short_bio }}</p>{% endif %}
+        {# linebreaks: gli a capo del testo diventano paragrafi. #}
+        <div class="project-description mt-4">{{ contributor.bio|linebreaks }}</div>
+    </div>
+</div>
+
+<h2 class="section-label mt-5">Projects</h2>
+{# Stesse righe dell'archivio (project_list.html): tipologie, data, titolo. #}
+{% for project in contributor.projects.all %}
+<div class="container row border-bottom py-2 archive-row">
+    <div class="list-label col-9 col-lg-2 p-0">{% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+    <div class="list-label col-3 col-lg-1 text-end p-0">{{ project.date|date:"b 'y" }}</div>
+    <div class="list-title col-lg-9 p-0 mt-1 order-lg-first"><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></div>
+</div>
+{% empty %}
+<p class="list-title mt-3">No projects yet.</p>
+{% endfor %}
 {% endblock %}

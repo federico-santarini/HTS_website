@@ -6,7 +6,7 @@ riconosce il servizio, si ricava l'indirizzo di embed e si rifiuta tutto il rest
 controllo sull'host è anche una difesa: l'indirizzo finisce in un <iframe src="...">,
 quindi non deve poter puntare a un sito qualsiasi.
 
-Le funzioni *_embed_url restituiscono None se il link non è riconosciuto. I validator
+Le funzioni youtube_*/soundcloud_* restituiscono None se il link non è riconosciuto. I validator
 servono ai campi del modello (vengono usati dalle migration: non rinominare né spostare).
 """
 import re
@@ -44,8 +44,8 @@ def _parse(url):
     return parts.hostname.lower(), segments, parse_qs(parts.query)
 
 
-def youtube_embed_url(url):
-    """https://www.youtube.com/watch?v=ID, https://youtu.be/ID, .../shorts/ID, .../embed/ID -> embed."""
+def youtube_video_id(url):
+    """https://www.youtube.com/watch?v=ID, https://youtu.be/ID, .../shorts/ID, .../embed/ID -> ID (None se il link non è riconosciuto)."""
     parsed = _parse(url or "")
     if not parsed or parsed[0] not in YOUTUBE_HOSTS:
         return None
@@ -61,8 +61,26 @@ def youtube_embed_url(url):
 
     if not video_id or not YOUTUBE_ID.fullmatch(video_id):
         return None
+    return video_id
+
+
+def youtube_embed_url(url):
+    """Link di un video YouTube -> indirizzo per l'<iframe> (che il feed crea solo al clic sulla copertina)."""
+    video_id = youtube_video_id(url)
+    if not video_id:
+        return None
     # youtube-nocookie.com: il player non imposta cookie finché non si preme play.
     return f"https://www.youtube-nocookie.com/embed/{video_id}?{urlencode(YOUTUBE_PARAMS)}"
+
+
+def youtube_thumbnail_url(url):
+    """Copertina del video, da mostrare al posto del player finché non si preme play.
+
+    hqdefault (480x360) esiste per ogni video, ma ha due fasce nere sopra e sotto: il CSS (object-fit: cover in un
+    riquadro 16:9) le taglia. maxresdefault sarebbe più nitida, ma manca per i video più vecchi o caricati in bassa risoluzione.
+    """
+    video_id = youtube_video_id(url)
+    return f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg" if video_id else None
 
 
 def soundcloud_embed_url(url):

@@ -14,7 +14,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import Client, SimpleTestCase, TestCase, override_settings
 
-from .embeds import soundcloud_embed_url, youtube_embed_url
+from .embeds import soundcloud_embed_url, youtube_embed_url, youtube_thumbnail_url
 from .models import Contributor, Project, Reference
 
 
@@ -251,6 +251,15 @@ class EmbedUrlTests(SimpleTestCase):
         self.assertEqual(query["color"], ["white"])
         self.assertEqual(query["iv_load_policy"], ["3"])
 
+    def test_youtube_thumbnail_comes_from_the_same_video_id(self):
+        expected = "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+        for url in ["https://www.youtube.com/watch?v=dQw4w9WgXcQ", "https://youtu.be/dQw4w9WgXcQ?si=x"]:
+            with self.subTest(url=url):
+                self.assertEqual(youtube_thumbnail_url(url), expected)
+        for bad in ["", None, "https://vimeo.com/123456", "https://www.youtube.com/watch?v=short"]:
+            with self.subTest(bad=bad):
+                self.assertIsNone(youtube_thumbnail_url(bad))
+
     def test_youtube_rejects_everything_else(self):
         for url in [
             "",
@@ -333,9 +342,12 @@ class ProjectEmbedTests(TestCase):
 
     def test_feed_renders_both_players_for_a_project_that_has_them(self):
         html = self.section(self.with_embeds)
-        self.assertIn('src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?', html)
-        self.assertIn("https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsome-artist%2Fsome-track&amp;", html)
-        self.assertEqual(html.count("<iframe"), 2)
+        # YouTube: solo la copertina; l'iframe lo crea players.js al clic, partendo da data-embed-url.
+        self.assertIn('data-embed-url="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?', html)
+        self.assertIn('src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg"', html)
+        # SoundCloud: il widget nascosto ha l'indirizzo in data-src (lo imposta players.js quando serve).
+        self.assertIn('data-src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsome-artist%2Fsome-track&amp;', html)
+        self.assertEqual(html.count("<iframe"), 1)
 
     def test_feed_shows_no_player_when_the_fields_are_empty(self):
         self.assertNotIn("<iframe", self.section(self.plain))

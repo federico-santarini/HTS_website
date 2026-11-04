@@ -33,7 +33,7 @@ HTS_website/
     │   ├── templates/portfolio/  # base.html + una pagina per file
     │   ├── migrations/           # storia dello schema del database
     │   └── tests.py
-    ├── publication/              # la pubblicazione statica (HTML + images/)
+    ├── publication/              # la pubblicazione statica (index.html + publication.css + images/)
     ├── static/                   # file statici del sito
     │   ├── css/custom.css        # lo stile personale, caricato dopo Bootstrap
     │   ├── fonts/trial/          # font in versione trial (ignorata da git, vedi Frontend)
@@ -144,11 +144,13 @@ README di quella cartella.
   (in un repository pubblico di solito no).
 - **Tema scuro**: l'attributo `data-bs-theme="dark"` sul tag `<html>` fa cambiare a Bootstrap molte variabili insieme
   (colore del testo, icona della navbar, ecc.). Sta in `base.html` e anche nella pubblicazione.
-- **La pubblicazione** usa gli stessi file (Bootstrap + `custom.css`), collegati dal suo `<head>` con percorsi
-  `/static/...`: quell'indirizzo è servito anche dal sottodominio. Quindi **cambiare `custom.css` cambia lo stile di
-  entrambi i siti**. I percorsi devono coincidere con `STATIC_URL`: se in produzione i file statici passassero da
-  un altro indirizzo, vanno aggiornati anche in `publication/index.html`. La pubblicazione non carica il JavaScript
-  di Bootstrap (non ha navbar).
+- **La pubblicazione** ha uno stile tutto suo: `publication/publication.css`, che **non usa Bootstrap né `custom.css`**.
+  Cambiare uno non tocca l'altro. Tutto ciò che si regola (colori, caratteri, corpi, larghezza della colonna, spazi, filetti)
+  è in un blocco di variabili `--pub-...` in cima al file, a gruppi e commentate: per cambiare l'aspetto si cambiano
+  i valori, le regole sotto non servono. In comune col sito restano solo il viola e i font Machina (trial): i loro
+  `@font-face` sono ripetuti in `publication.css` con percorsi `/static/fonts/trial/...` (`/static/` è servito anche dal
+  sottodominio). Il testo lungo è in Alegreya, caricata da Google Fonts nel `<head>` di `index.html` (con corsivo e
+  grassetto veri: come per il sito, da scaricare in locale quando si autorizzerà).
 
 ## Cose non ovvie da sapere
 
@@ -168,11 +170,21 @@ variabile messo nel feed (player, immagini) deve riservare il suo spazio allo st
 **Player YouTube e SoundCloud.** Nell'admin del progetto si incolla il link normale (quello della barra del browser
 o di "Condividi"), mai codice HTML. `portfolio/embeds.py` riconosce il servizio, ricava l'indirizzo di embed e accetta
 solo YouTube e SoundCloud: l'indirizzo finisce in un `<iframe>` e non deve poter puntare a un sito qualsiasi. I
-player compaiono solo nel feed dei progetti (`_project.html`, incluso da `project_feed.html`) e si caricano quando la pagina scorre fin lì.
-L'aspetto dei player si regola con i parametri in cima a `embeds.py` (`YOUTUBE_PARAMS`, `SOUNDCLOUD_PARAMS`): l'interno
-degli iframe non si può cambiare con il CSS. Il colore di SoundCloud ripete il viola di `--hts-accent` in `custom.css`.
-Per YouTube si usa `youtube-nocookie.com` (nessun cookie finché non si preme play); il player di SoundCloud può invece
-impostare cookie già al caricamento: se il sito avrà un banner di consenso, va considerato.
+player compaiono solo nel feed dei progetti (`_project.html`, incluso da `project_feed.html`) e sono custom:
+comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione "Player YouTube e SoundCloud").
+
+- **YouTube**: finché non si preme play c'è solo una copertina (`hqdefault.jpg` da `i.ytimg.com`, indirizzo da
+  `youtube_thumbnail_url`) con un'etichetta "Play"; nessun iframe e nessuno script di Google. Al clic `players.js` crea
+  l'`<iframe>` da `data-embed-url` con `autoplay=1`. Senza JavaScript la copertina è un normale link al video. I parametri
+  in `YOUTUBE_PARAMS` (`embeds.py`) valgono ancora, dopo il clic. Per YouTube si usa `youtube-nocookie.com`.
+- **SoundCloud**: il widget ufficiale è un iframe nascosto (`.sc-engine`) che fa solo da motore audio; play/pausa, barra
+  e tempo sono nostri e lo pilotano con la Widget API (`https://w.soundcloud.com/player/api.js`, caricata da `players.js`
+  solo se nella pagina c'è un player). Titolo e artista arrivano dal widget: sono l'attribuzione richiesta da SoundCloud,
+  non vanno tolti. Il widget si carica solo quando il player sta per entrare nello schermo e un solo brano suona alla volta.
+  Il widget di SoundCloud può impostare cookie già al caricamento: se il sito avrà un banner di consenso, va considerato.
+  Dei parametri di `SOUNDCLOUD_PARAMS` oggi conta poco: l'interfaccia ufficiale non si vede.
+- **Da verificare su iPhone**: Safari iOS può rifiutare il `play()` dato da JavaScript al widget di SoundCloud (gli serve
+  un gesto dentro l'iframe). Provato solo su desktop.
 
 **Cancellare una tipologia.** Per una many-to-many Django non ha `on_delete=PROTECT`: senza protezione
 cancellerebbe in silenzio i collegamenti con i progetti. Per questo `ProjectTypeAdmin` (in `admin.py`) elenca i
@@ -182,9 +194,13 @@ progetti collegati come "protetti" e non mostra il pulsante di conferma. Funzion
 `publication.` serve i file di `hts_website/publication/` (con `index.html` per le cartelle) e risponde 404 a tutto il
 resto, `/admin/` compreso. Per gli altri host non fa nulla. Con `DEBUG=True` le modifiche ai file si vedono subito;
 in produzione l'elenco dei file è fissato all'avvio, quindi dopo ogni modifica serve un nuovo deploy.
-La pubblicazione è una pagina unica: introduzione, indice, contributi uno dopo l'altro e una bibliografia unica in
-fondo (`#bibliography`, in ordine alfabetico per cognome), con link ad ancore (`#slug`). **Il contenuto attuale è
-fittizio**, da sostituire: la bibliografia include le opere citate nelle epigrafi dei contributi.
+La pubblicazione è una pagina unica: titolo, indice e tre sezioni (`<article id="...">`: Introduction, How to read, In
+Search of Holistic Methods, quest'ultima con la bibliografia "Works Cited" in fondo), con link ad ancore (`#slug`).
+Il contenuto è la conversione di un file markdown (`pubblicazione.md`, non nel repository): da ora `index.html` si
+modifica a mano. **Le note**: i 21 numeri in apice nel testo (classe `pub-fnref`) sono link a un elenco
+"Notes" in fondo al saggio, prima di "Works Cited" (`<li id="fn-N">`, con freccia di ritorno a `id="fnref-N"`). **Il testo
+delle note è finto (lorem ipsum)**: nel markdown non c'era, e il capitolo è solo un campione. Le immagini usate stanno in `publication/images/`; dei file immagine ricevuti insieme al markdown
+sono state copiate solo quelle citate nel testo.
 
 **Immagini caricate.** Finiscono in `hts_website/media/`, cartella ignorata da git: chi clona il repository non le
 riceve, e se servono vanno salvate a parte. In sviluppo le serve Django. In produzione non funzionerà così:
@@ -211,7 +227,7 @@ python manage.py check
 ```
 
 - **Aggiungere una tipologia di progetto**: admin → Project types (lo slug si compila da solo).
-- **Aggiornare la pubblicazione**: modifica `hts_website/publication/index.html` (istruzioni in un commento in cima al file).
+- **Aggiornare la pubblicazione**: modifica `hts_website/publication/index.html` (istruzioni in un commento in cima al file); per l'aspetto, i valori in cima a `publication/publication.css`.
 - **Cambiare il nome di una pagina in `urls.py`**: aggiorna anche i `{% url '...' %}` nei template che lo usano.
 
 ## Deploy checklist

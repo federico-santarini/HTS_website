@@ -1,0 +1,376 @@
+/*
+ * Stile SOLO della pubblicazione (index.html). Non fa parte del sito principale: non usa Bootstrap né custom.css,
+ * quindi cambiare questo file non tocca il resto del sito, e viceversa.
+ *
+ * COME SI USA: tutto quello che si può regolare sta nel blocco ":root" qui sotto, a gruppi. Le regole dopo quel blocco
+ * leggono solo quei valori (var(--pub-...)): normalmente non serve toccarle. Per cambiare l'aspetto basta cambiare un valore.
+ *   - rem  = unità legata al corpo del testo del browser (1rem = 16px di solito). Più comoda dei pixel perché scala.
+ *   - svh  = percentuale dell'altezza dello schermo (100svh = tutto lo schermo). ch = larghezza di uno "0" del font.
+ *   - clamp(minimo, preferito, massimo) = un valore che cresce con lo schermo ma resta tra due limiti.
+ * Nel blocco @media in fondo (schermi stretti) si ridefiniscono solo alcuni valori: stessi nomi, valori per il telefono.
+ *
+ * Il pezzo in comune con il sito: i file dei font "Machina" (trial) e il viola. Se cambiano là, vanno cambiati anche qui.
+ */
+
+/* Font titoli: PP Neue Machina Inktrap, versione TRIAL (static/fonts/trial/, ignorata da git). I percorsi partono dalla radice
+   del sottodominio: /static/ è servito anche da qui. Il corpo del testo usa Alegreya, caricata da index.html (Google Fonts). */
+@font-face { font-family: "Machina Inktrap"; font-weight: 300; font-style: normal; font-display: swap; src: url("/static/fonts/trial/PPNeueMachina-InktrapLight.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 400; font-style: normal; font-display: swap; src: url("/static/fonts/trial/PPNeueMachina-InktrapRegular.otf") format("opentype"); }
+
+:root {
+    color-scheme: dark;
+
+    /* ---------- Colori ---------- */
+    --pub-bg: #000000;                       /* sfondo della pagina */
+    --pub-text: #ffffff;                     /* testo */
+    --pub-muted: #989898;                    /* etichette, didascalie, voci secondarie */
+    --pub-accent: #b026ff;                   /* viola: filetti, link al passaggio del mouse, numeri delle note */
+    --pub-rule: rgb(255 255 255 / 0.25);     /* filetti discreti (dizionario, bibliografia) */
+    --pub-selection-bg: #b026ff;             /* sfondo del testo selezionato */
+    --pub-selection-text: #ffffff;           /* colore del testo selezionato */
+
+    /* ---------- Caratteri ---------- */
+    --pub-font-body: "Alegreya", Georgia, serif;                              /* testo lungo */
+    --pub-font-heading: "Machina Inktrap", "Machina Plain", sans-serif;       /* titoli e indice */
+    --pub-font-label: "Alegreya SC", "Alegreya", Georgia, serif;              /* etichette piccole ("Contents"), didascalie */
+    --pub-heading-weight: 300;               /* 300 = leggero, 400 = normale (sono i due pesi caricati sopra) */
+    --pub-heading-transform: uppercase;      /* uppercase | none */
+    --pub-heading-letter-spacing: 0.02em;    /* spaziatura tra le lettere dei titoli */
+    --pub-label-letter-spacing: 0.05em;      /* spaziatura delle etichette */
+
+    /* ---------- Testo ---------- */
+    --pub-text-size: 1.25rem;                /* corpo del testo (Alegreya ha le lettere piccole: 1.25rem = 20px è comodo) */
+    --pub-text-line-height: 1.5;             /* interlinea (numero senza unità: multiplo del corpo) */
+    --pub-text-align: left;                  /* left | justify */
+    --pub-paragraph-gap: 1.25rem;            /* spazio tra un paragrafo e il successivo */
+    --pub-hyphens: manual;                   /* manual = a capo solo dove la parola ha già un trattino; auto = sillabazione automatica */
+    --pub-small-size: 1rem;                  /* bibliografia, didascalie, etichette */
+    --pub-small-line-height: 1.4;
+
+    /* ---------- Titoli ---------- */
+    --pub-h1-size: clamp(2.5rem, 9vw, 6rem);     /* titolo in copertina */
+    --pub-h1-line-height: 1.05;
+    --pub-h2-size: clamp(1.75rem, 4vw, 2.5rem);  /* titoli delle sezioni */
+    --pub-h2-line-height: 1.15;
+    --pub-h3-size: 1.25rem;                      /* sottotitoli */
+    --pub-h3-line-height: 1.25;
+    --pub-h3-color: var(--pub-text);             /* colore dei sottotitoli (es. var(--pub-muted) o var(--pub-accent)) */
+
+    /* ---------- Pagina e colonne ---------- */
+    --pub-gutter: 2rem;                      /* margine a destra e a sinistra della pagina */
+    --pub-measure: 36rem;                    /* larghezza della colonna di testo (circa 60-70 caratteri per riga) */
+    --pub-figure-width: 44rem;               /* larghezza massima delle figure (più larga del testo, se vuoi) */
+    --pub-figure-max-height: 85svh;          /* le figure alte non superano questa altezza */
+
+    /* ---------- Spazi verticali ---------- */
+    --pub-cover-min-height: 80svh;           /* altezza minima della copertina (il titolo sta al centro) */
+    --pub-section-gap: 8rem;                 /* spazio sopra ogni sezione */
+    --pub-heading-gap: 1.5rem;               /* spazio tra un titolo e il testo che segue */
+    --pub-subheading-gap: 3.5rem;            /* spazio sopra ogni sottotitolo */
+    --pub-block-gap: 2.5rem;                 /* spazio sopra e sotto figure, citazioni e dizionario */
+
+    /* ---------- Filetti ---------- */
+    --pub-rule-width: 1px;                   /* spessore dei filetti */
+    --pub-section-rule-color: var(--pub-accent); /* filetto sopra ogni sezione */
+
+    /* ---------- Indice ---------- */
+    --pub-contents-size: 1.25rem;            /* voci principali */
+    --pub-contents-sub-size: 1rem;           /* sottovoci */
+    --pub-contents-gap: 0.5rem;              /* spazio tra le voci */
+    --pub-contents-indent: 1.5rem;           /* rientro delle sottovoci */
+
+    /* ---------- Citazioni ---------- */
+    --pub-quote-indent: 1.5rem;              /* rientro del testo citato */
+    --pub-quote-style: italic;               /* italic | normal */
+    --pub-quote-rule-color: var(--pub-accent); /* filetto a sinistra della citazione */
+
+    /* ---------- Note (i numeri in apice nel testo) ---------- */
+    --pub-note-size: 0.7em;                  /* dimensione del numero in apice nel testo, rispetto al testo */
+    --pub-note-color: var(--pub-accent);
+    --pub-notes-gap: 0.75rem;                /* spazio tra una nota e la successiva, nell'elenco "Notes" */
+    --pub-notes-indent: 2rem;                /* spazio a sinistra del testo delle note, dove sta il numero */
+    --pub-notes-back-color: var(--pub-muted); /* freccia ↩ che riporta al punto del testo */
+
+    /* ---------- Bibliografia ---------- */
+    --pub-works-gap: 0.75rem;                /* spazio tra le voci */
+    --pub-works-hanging-indent: 2rem;        /* rientro della seconda riga di ogni voce */
+
+    /* ---------- Link ---------- */
+    --pub-link-color: var(--pub-text);
+    --pub-link-hover-color: var(--pub-accent);
+    --pub-link-underline-offset: 0.25em;
+    --pub-link-underline-thickness: 0.05em;
+}
+
+/* Schermi stretti (telefono): stessi nomi, valori più piccoli. */
+@media (max-width: 40rem) {
+    :root {
+        --pub-text-size: 1.125rem;
+        --pub-gutter: 1.25rem;
+        --pub-section-gap: 5rem;
+        --pub-subheading-gap: 2.5rem;
+        --pub-cover-min-height: 60svh;
+        --pub-works-hanging-indent: 1.5rem;
+    }
+}
+
+/* ============================================================================================================
+   Da qui in giù le regole leggono solo i valori sopra: non serve modificarle per cambiare l'aspetto.
+   ============================================================================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;   /* i link dell'indice scorrono invece di saltare */
+    }
+}
+
+body {
+    margin: 0;
+    background: var(--pub-bg);
+    color: var(--pub-text);
+    font-family: var(--pub-font-body);
+    font-size: var(--pub-text-size);
+    line-height: var(--pub-text-line-height);
+    text-align: var(--pub-text-align);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background: var(--pub-selection-bg);
+    color: var(--pub-selection-text);
+}
+
+a {
+    color: var(--pub-link-color);
+    text-decoration-thickness: var(--pub-link-underline-thickness);
+    text-underline-offset: var(--pub-link-underline-offset);
+}
+a:hover,
+a:focus-visible {
+    color: var(--pub-link-hover-color);
+}
+
+/* ---------- Copertina ---------- */
+.pub-cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--pub-cover-min-height);
+    padding: var(--pub-gutter);
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--pub-font-heading);
+    font-weight: var(--pub-heading-weight);
+    font-style: normal;
+    text-transform: var(--pub-heading-transform);
+    letter-spacing: var(--pub-heading-letter-spacing);
+    text-align: left;
+    text-wrap: balance;
+    margin: 0;
+}
+h1 {
+    font-size: var(--pub-h1-size);
+    line-height: var(--pub-h1-line-height);
+    text-align: center;
+}
+h2 {
+    font-size: var(--pub-h2-size);
+    line-height: var(--pub-h2-line-height);
+    margin-bottom: var(--pub-heading-gap);
+}
+h3 {
+    font-size: var(--pub-h3-size);
+    line-height: var(--pub-h3-line-height);
+    color: var(--pub-h3-color);
+    margin-top: var(--pub-subheading-gap);
+    margin-bottom: var(--pub-heading-gap);
+}
+
+/* ---------- Indice ---------- */
+.pub-contents {
+    max-width: var(--pub-measure);
+    margin-inline: auto;
+    padding-inline: var(--pub-gutter);
+}
+.pub-label {
+    margin: 0 0 var(--pub-heading-gap);
+    font-family: var(--pub-font-label);
+    font-size: var(--pub-small-size);
+    letter-spacing: var(--pub-label-letter-spacing);
+    color: var(--pub-muted);
+}
+.pub-contents ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--pub-font-heading);
+    font-weight: var(--pub-heading-weight);
+    font-size: var(--pub-contents-size);
+    line-height: var(--pub-h3-line-height);
+    text-transform: var(--pub-heading-transform);
+    letter-spacing: var(--pub-heading-letter-spacing);
+    text-align: left;
+}
+.pub-contents li {
+    margin-bottom: var(--pub-contents-gap);
+}
+.pub-contents ol ol {
+    margin-top: var(--pub-contents-gap);
+    padding-left: var(--pub-contents-indent);
+    font-size: var(--pub-contents-sub-size);
+    color: var(--pub-muted);
+}
+.pub-contents a {
+    text-decoration: none;
+}
+
+/* ---------- Sezioni e testo ---------- */
+main {
+    padding-inline: var(--pub-gutter);
+}
+.pub-section {
+    margin-top: var(--pub-section-gap);
+    padding-top: var(--pub-heading-gap);
+    border-top: var(--pub-rule-width) solid var(--pub-section-rule-color);
+}
+.pub-section > * {
+    max-width: var(--pub-measure);
+    margin-inline: auto;
+}
+.pub-section > h2:first-child {
+    margin-bottom: var(--pub-heading-gap);
+}
+
+p {
+    margin: 0 0 var(--pub-paragraph-gap);
+    hyphens: var(--pub-hyphens);
+    text-wrap: pretty;
+}
+
+/* Numeri delle note nel testo: sono link all'elenco "Notes" in fondo al saggio. */
+.pub-fnref {
+    font-size: var(--pub-note-size);
+    line-height: 0;
+}
+.pub-fnref a {
+    color: var(--pub-note-color);
+    text-decoration: none;
+}
+.pub-fnref a:hover,
+.pub-fnref a:focus-visible {
+    color: var(--pub-link-hover-color);
+}
+
+/* Elenco "Notes": numeri automatici, testo più piccolo, freccia di ritorno in fondo a ogni nota. */
+.pub-notes {
+    margin: 0;
+    padding-left: var(--pub-notes-indent);
+    font-size: var(--pub-small-size);
+    line-height: var(--pub-small-line-height);
+    text-align: left;
+}
+.pub-notes li {
+    margin-bottom: var(--pub-notes-gap);
+}
+.pub-note-back {
+    color: var(--pub-notes-back-color);
+    text-decoration: none;
+}
+.pub-note-back:hover,
+.pub-note-back:focus-visible {
+    color: var(--pub-link-hover-color);
+}
+
+/* ---------- Citazioni ---------- */
+blockquote {
+    margin-block: var(--pub-block-gap);
+    padding-left: var(--pub-quote-indent);
+    border-left: var(--pub-rule-width) solid var(--pub-quote-rule-color);
+    font-style: var(--pub-quote-style);
+}
+blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---------- Dizionario ("holistic") ---------- */
+.pub-definition {
+    margin-block: var(--pub-block-gap);
+    padding-block: var(--pub-block-gap);
+    border-block: var(--pub-rule-width) solid var(--pub-rule);
+}
+.pub-definition p {
+    margin-bottom: 0.5rem;
+}
+.pub-definition-term {
+    font-family: var(--pub-font-heading);
+    font-weight: var(--pub-heading-weight);
+    font-size: var(--pub-h3-size);
+}
+.pub-definition-reading {
+    font-family: var(--pub-font-label);
+    letter-spacing: var(--pub-label-letter-spacing);
+    color: var(--pub-muted);
+}
+.pub-definition-source {
+    margin-bottom: 0;
+    font-family: var(--pub-font-label);
+    font-size: var(--pub-small-size);
+    letter-spacing: var(--pub-label-letter-spacing);
+    color: var(--pub-muted);
+}
+
+/* ---------- Figure ---------- */
+.pub-section > .pub-figure {
+    max-width: var(--pub-figure-width);
+    margin-block: var(--pub-block-gap);
+}
+.pub-figure img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: var(--pub-figure-max-height);
+    margin-inline: auto;
+}
+.pub-figure figcaption {
+    max-width: var(--pub-measure);
+    margin: 1rem auto 0;
+    font-family: var(--pub-font-label);
+    font-size: var(--pub-small-size);
+    line-height: var(--pub-small-line-height);
+    letter-spacing: var(--pub-label-letter-spacing);
+    color: var(--pub-muted);
+    text-align: left;
+}
+.pub-figure figcaption p {
+    margin-bottom: 0.5rem;
+}
+
+/* ---------- Bibliografia ---------- */
+.works-cited {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+    font-size: var(--pub-small-size);
+    line-height: var(--pub-small-line-height);
+    text-align: left;
+}
+.works-cited li {
+    margin-bottom: var(--pub-works-gap);
+    padding-left: var(--pub-works-hanging-indent);
+    text-indent: calc(-1 * var(--pub-works-hanging-indent));
+}
+.works-cited cite {
+    font-style: italic;
+}

@@ -75,6 +75,11 @@ class Project(models.Model):
         return embeds.youtube_embed_url(self.youtube_url)
 
     @property
+    def youtube_thumbnail_url(self):
+        """Copertina del video YouTube (mostrata finché non si preme play), o None se il campo è vuoto."""
+        return embeds.youtube_thumbnail_url(self.youtube_url)
+
+    @property
     def soundcloud_embed_url(self):
         """Indirizzo per l'<iframe> di SoundCloud, o None se il campo è vuoto."""
         return embeds.soundcloud_embed_url(self.soundcloud_url)
@@ -86,6 +91,8 @@ class Contributor(models.Model):
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     affiliation = models.CharField(max_length=255,blank=True, null=True)
+    short_bio = models.CharField(max_length=120, blank=True)
+    website = models.URLField(blank=True)
     bio = models.TextField()
 
     def __str__(self):
@@ -123,7 +130,8 @@ class Event(models.Model):
 
     title = models.CharField(max_length=255)
     date = models.DateField()
-    location = models.CharField(max_length=255, blank=True)
+    location_label = models.CharField(max_length=255, blank=True)
+    location_url = models.URLField(blank=True)
     description = models.TextField()
     event_url = models.URLField(blank=True, null=True)
 

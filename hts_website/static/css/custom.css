@@ -84,6 +84,7 @@ html {
     --bs-navbar-color: white;
     --bs-navbar-hover-color: var(--hts-accent);
     --bs-navbar-active-color: var(--hts-accent);
+    --bs-navbar-active-text-decoration: underline;
     --bs-navbar-brand-hover-color: var(--hts-accent);
     /* "Menu" è testo semplice: niente bordo, niente riquadro, stessa dimensione del resto. */
     --bs-navbar-toggler-padding-x: 0;
@@ -199,7 +200,7 @@ a {
 }
 
 .project-title {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     font-weight: 300;
     font-style: normal;
     text-transform: uppercase;
@@ -207,7 +208,7 @@ a {
 }
 
 /* Etichetta piccola sopra un gruppo di dati ("with the contribution of", "references"). */
-.section-label {
+.section-label, .section-label a {
     font-family: var(--hts-font-label);
     font-weight: 400;
     font-style: normal;
@@ -252,9 +253,17 @@ text-underline-offset: 0.3rem;
 .project-description {
     font-family: var(--hts-font-serif);
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 1.25rem;
     line-height: 1.2;
 }
+
+
+
+
+
+
+
+
 
 .list-label {
     font-family: var(--hts-font-label);
@@ -272,5 +281,322 @@ text-underline-offset: 0.3rem;
     font-family: var(--hts-font-display);
     font-weight: 300;
     font-size: 1.5;
+    line-height: 1.2;
+}
+
+#filter a {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-style: normal;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: white;
+}
+#filter a.active {
+    text-decoration: underline;
+    text-decoration-thickness: 0.05rem;
+    text-underline-offset: 0.3rem;
+
+}
+
+.archive-row {
+border-bottom: 1px solid var(--hts-accent) !important;
+}
+
+
+
+
+
+
+
+.reference-title,
+.event-title{
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+/* Gli <h3> sono in corsivo di default (stile globale dei titoli): qui il titolo dell'evento resta dritto. */
+.event-title{
+    font-style: normal;
+}
+
+.reference-author-date{
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    text-transform: capitalize;
+}
+
+.reference-notes{
+    font-family: var(--hts-font-serif);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.reference-label{
+    font-family: var(--hts-font-display);
+    font-weight: 400;
+    font-size: .75rem;
+    line-height: 1.2;
+    color: var(--hts-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+}
+
+/* Un'etichetta che è anche un link (il luogo di un evento) resta grigia; il hover usa l'accento di Bootstrap. */
+.reference-label a{
+    color: inherit;
+}
+
+
+
+.card-title{
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    font-style: normal;
+}
+
+.card-subtitle{
+    font-family: var(--hts-font-label);
+    color: var(--hts-muted);
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    font-style: normal;
+}
+
+.card{
+    --bs-card-border-width: 0;
+}
+
+.card-img-top{
+    height: 15rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    /* Bordi sfumati: opaca fino al 45% dal centro, poi sempre più trasparente fino al 75%. */
+    /* -webkit-mask-image: radial-gradient(ellipse at center, #000 70%, transparent 75%);
+    mask-image: radial-gradient(ellipse at center, #000 70%, transparent 75%); */
+    
+-webkit-mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
+                    linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
+            linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+-webkit-mask-composite: source-in;
+mask-composite: intersect;
+}
+
+/* Galleria immagini dei progetti (modale con carosello: vedi _project.html e static/js/gallery.js). */
+.gallery-thumb {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+}
+
+/* Sfondo del modale quasi opaco; il contenuto del modale è trasparente, resta solo l'immagine. */
+.modal-backdrop {
+    --bs-backdrop-opacity: 0.92;
+}
+.gallery-modal .modal-content {
+    background: transparent;
+    border: 0;
+}
+.gallery-modal .carousel-item img {
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+}
+
+/* ---------- Player YouTube e SoundCloud (markup in _project.html, comportamento in static/js/players.js) ---------- */
+
+/* Etichetta "Play": riquadro a spigoli vivi, testo maiuscolo leggero come le voci della navbar. Sfondo scuro semitrasparente
+   per restare leggibile sopra la copertina. */
+.player-play,
+.sc-toggle {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #fff;
+    border-radius: .75rem;
+}
+
+/* YouTube: la copertina riempie il riquadro 16:9 (.ratio lo porta già a tutta larghezza e altezza); le fasce nere
+   di hqdefault restano fuori grazie a object-fit: cover. */
+.yt-facade {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    text-decoration: none;
+}
+.yt-facade img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+    transition: filter 0.2s;
+}
+.yt-facade .player-play {
+    position: relative;
+    background: rgb(0 0 0 / 0.5);
+    transition: color 0.2s, border-color 0.2s;
+}
+.yt-facade:hover img,
+.yt-facade:focus-visible img {
+    filter: brightness(0.9);
+}
+.yt-facade:hover .player-play,
+.yt-facade:focus-visible .player-play {
+    color: var(--hts-accent);
+    border-color: var(--hts-accent);
+}
+
+/* SoundCloud: una fascia con due filetti viola (come le righe dell'archivio). Sopra: Play, titolo/artista, tempo;
+   sotto: la barra di avanzamento a tutta larghezza. */
+.sc-player {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-block: 2rem;
+    padding: 1rem 0;
+    border-block: 1px solid var(--hts-accent);
+    text-align: left;
+}
+.sc-toggle {
+    background: none;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+.sc-toggle:hover:not(:disabled),
+.sc-toggle:focus-visible {
+    color: var(--hts-accent);
+    border-color: var(--hts-accent);
+}
+.sc-toggle:disabled {
+    color: var(--hts-muted);
+    border-color: var(--hts-muted);
+    cursor: default;
+}
+.sc-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+.sc-title {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.sc-artist {
+    font-family: var(--hts-font-label);
+    color: var(--hts-muted);
+}
+.sc-time {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.1rem;
+    color: var(--hts-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Barra di avanzamento: un <input type="range"> (tastiera e touch gratis) ridisegnato come filetto sottile con
+   un piccolo cursore rettangolare. --progress lo imposta players.js. Webkit/Blink e Firefox vogliono regole separate. */
+.sc-seek {
+    grid-column: 1 / -1;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 1rem;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.sc-seek:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+.sc-seek::-webkit-slider-runnable-track {
+    height: 1px;
+    background: linear-gradient(to right, var(--hts-accent) var(--progress, 0%), rgb(255 255 255 / 0.35) var(--progress, 0%));
+}
+.sc-seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0.5rem;
+    height: 0.75rem;
+    margin-top: calc(0.5px - 0.375rem);
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+}
+.sc-seek::-moz-range-track {
+    height: 1px;
+    background: rgb(255 255 255 / 0.35);
+}
+.sc-seek::-moz-range-progress {
+    height: 1px;
+    background: var(--hts-accent);
+}
+.sc-seek::-moz-range-thumb {
+    width: 0.5rem;
+    height: 0.75rem;
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+}
+
+/* Il widget ufficiale di SoundCloud: solo motore audio, invisibile (ma non display:none, sennò non carica). */
+.sc-engine {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Pagina del singolo contributor (contributor_detail.html). La foto ha lo stesso trattamento delle card dell'elenco:
+   angoli arrotondati e bordi sfumati, ma con le proporzioni originali. */
+.contributor-photo {
+    display: block;
+    width: 100%;
+    border-radius: 1rem;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
+                        linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
+                linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+}
+
+.contributor-short-bio {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.25rem;
     line-height: 1.2;
 }

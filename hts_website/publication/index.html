@@ -1,278 +1,225 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Soft Machines — Issue 01</title>
-    <!-- Stessi stili del sito principale: /static/ è servito anche da questo sottodominio.
-         custom.css deve restare DOPO Bootstrap. -->
-    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/custom.css">
+    <title>The Holistic Technology Salon</title>
+    <!-- Alegreya (testo) e Alegreya SC (etichette), con corsivo e grassetto veri: questa pagina è tutta testo. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Alegreya+SC&display=swap" rel="stylesheet">
+    <!-- Stile solo della pubblicazione: /publication.css (vedi i valori in cima al file). Non usa Bootstrap né custom.css del sito. -->
+    <link rel="stylesheet" href="/publication.css">
 </head>
 <body>
 <!--
   Pubblicazione statica, servita da portfolio/middleware.py sul sottodominio "publication".
-  Pagina unica: introduzione + indice + tutti i contributi uno dopo l'altro (come il feed dei progetti).
-  Ogni voce dell'indice punta a un <article id="..."> con href="#...".
-  Per aggiungere un contributo: nuovo <article id="slug"> + nuova voce nell'indice con href="#slug".
-  In fondo c'è un'unica bibliografia (<section id="bibliography">) per tutti i contributi, in ordine
-  alfabetico per cognome, una voce per paragrafo (i titoli delle opere sono in <cite>).
-  Le immagini stanno in /images/ e hanno percorsi assoluti dalla radice del sottodominio.
-  Stile: Bootstrap + static/css/custom.css del sito principale, collegati dal <head> con percorsi /static/...
-  (devono coincidere con STATIC_URL in settings.py: se cambia, aggiornarli qui). Il tema scuro è
-  l'attributo data-bs-theme="dark" sul tag <html>, come in base.html. Il JavaScript di Bootstrap non serve.
-  Contenuto attuale: FITTIZIO, solo segnaposto.
+  Pagina unica: titolo, indice e tre sezioni (<article id="...">); l'indice punta a ogni sezione e sottosezione con href="#...".
+  Le immagini stanno in /images/ (percorsi assoluti dalla radice del sottodominio). Lo stile sta in /publication.css.
+  Convertita da un file markdown (un capitolo di prova). Le note: i rimandi nel testo sono apici numerati (class "pub-fnref")
+  che puntano a <li id="fn-N"> nella lista "Notes" (class "pub-notes"), con link di ritorno a id="fnref-N".
+  Il TESTO delle note è finto (lorem ipsum): nel markdown non c'era.
 -->
-<main class="container">
-<h1>Soft Machines</h1>
-<p>Issue 01 · Contributions on listening, care and technology</p>
+<header class="pub-cover">
+    <h1>The Holistic Technology Salon</h1>
+</header>
 
-<p>This issue gathers five voices around a shared question: what would technology look like if it were built to be listened to, repaired and returned to?</p>
+<nav class="pub-contents" aria-label="Contents">
+    <p class="pub-label">Contents</p>
+    <ol>
+        <li><a href="#introduction">Introduction</a>
+            <ol>
+                <li><a href="#the-methodology">The Methodology</a></li>
+            </ol>
+        </li>
+        <li><a href="#how-to-read">How to read</a></li>
+        <li><a href="#in-search-of-holistic-methods">In Search of Holistic Methods</a>
+            <ol>
+                <li><a href="#the-holistic-as-a-conduit-for-the-decolonial">The Holistic as a Conduit for the Decolonial</a></li>
+                <li><a href="#zooming-into-the-esoteric-and-the-artistic">Zooming into the esoteric and the artistic</a></li>
+                <li><a href="#technology-of-the-spirit">Technology of the spirit</a></li>
+                <li><a href="#living-the-holistic-method">Living the Holistic Method</a></li>
+                <li><a href="#an-auto-ethnographic-research-interlude">An auto-ethnographic research interlude</a></li>
+                <li><a href="#towards-a-holistic-method">Towards a Holistic Method</a></li>
+                <li><a href="#notes">Notes</a></li>
+                <li><a href="#works-cited">Works Cited</a></li>
+            </ol>
+        </li>
+    </ol>
+</nav>
 
-<p>The contributions that follow differ in tone — essay, field guide, correspondence — but they share an interest in the quiet work that surrounds machines: the maintenance, the attention and the habits of the people who live with them.</p>
-
-<h2>Contents</h2>
-<ol>
-    <li>
-        <a href="#listening-is-a-technology">Listening Is a Technology</a>
-        <div>Maren Okafor-Lindqvist</div>
-        <p>On listening as a built, tuned and maintained practice, with a small protocol for the reader.</p>
-    </li>
-    <li>
-        <a href="#repair-before-innovation">Repair Before Innovation</a>
-        <div>Tavish Ríos</div>
-        <p>Why mending deserves a seat at the table, and what attention looks like in a workshop.</p>
-    </li>
-    <li>
-        <a href="#soft-infrastructures">Soft Infrastructures</a>
-        <div>Isolde Varga</div>
-        <p>The informal arrangements that keep a collective going when nobody is in charge.</p>
-    </li>
-    <li>
-        <a href="#a-field-guide-to-machine-moods">A Field Guide to Machine Moods</a>
-        <div>Kenji Abara-Holm</div>
-        <p>A playful taxonomy of the patterns we read as mood in our devices.</p>
-    </li>
-    <li>
-        <a href="#letters-to-a-future-interface">Letters to a Future Interface</a>
-        <div>Noor Benedetti</div>
-        <p>Two letters addressed to a device that does not exist yet.</p>
-    </li>
-</ol>
-<p><a href="#bibliography">Bibliography</a></p>
-<hr>
-
-<article id="listening-is-a-technology">
-<h2>Listening Is a Technology</h2>
-<p>Maren Okafor-Lindqvist</p>
-
-<p>Before there were microphones there were rooms, and before rooms there were bodies learning to hold still long enough to hear.</p>
-
-<h3>The ear as an instrument</h3>
-<p>We tend to describe listening as passive, a kind of receiving that happens to us. But anyone who has sat through a long rehearsal knows that listening is built, tuned and maintained, much like any other apparatus. It has parts: posture, patience, a tolerance for boredom. It has failure modes: distraction, assumption, the urge to name a sound before it has finished arriving.</p>
-<p>In this sense the ear is less a window than a workshop. What reaches us has already been shaped by habit, by language, by the acoustics of the places we grew up in. To listen carefully is to become aware of that shaping and, occasionally, to loosen it.</p>
-
-<h4>Thresholds</h4>
-<p>Every listening situation has a threshold, the point at which a sound becomes audible and, a little later, meaningful. A refrigerator hum sits below that threshold until the night it stops. Sensors work in the same way: they are set to ignore the ordinary so that they can report the exceptional, and in doing so they quietly decide what counts as ordinary.</p>
-
-<blockquote>
-    <p>A room is only quiet to those who have agreed on what not to hear.</p>
-    <footer>Ilse Marchetti, <cite>Notes on Quiet Machines</cite></footer>
-</blockquote>
-
-<figure>
-    <img src="/images/listening.svg" alt="Concentric blue rings spreading from a small central point, like sound travelling through water.">
-    <figcaption>Fig. 1 — A room listening to itself. Diagram after a score by the author.</figcaption>
+<main>
+<article class="pub-section" id="introduction">
+<h2>Introduction</h2>
+<p>The Holistic Technology Salon (HTS) is a living collective research space for co-creating alternative technological futures through multidimensional conversations that integrate
+diverse ways of knowing. Throughout 2023-2024, HTS organized gatherings and events in
+which artists, designers and researchers shared their knowledge with the community. The Holistic Technology Salon was created to counter the current conception of the technosphere as an autonomous, abstract domain divorced from ecological and social realities. The theoretical and ontological basis for HTS is to challenge this dominant perception, advocating for a relational understanding of technology as part of a living, entangled system that includes humans, non-human entities, and the environment. In response to a lack of holistic understanding of the technosphere, HTS asks: How can we relate to the technosphere as an integral part of the planetary experience from a care-centric perspective?</p>
+<p>Since 2023, HTS has developed through salons, workshops, performances, artistic commissions and interdisciplinary collaborations between artists, designers, researchers, technologists and audiences. Inspired by the historical salon as a space for exchange, HTS has evolved into a dynamic artistic research platform that weaves different ways of producing knowledge.</p>
+<h3 id="the-methodology">The Methodology</h3>
+<p>The <em>Triskele</em> is the inspiration for the artistic research methodology that guides HTS. The ancient Celtic symbol of three interconnected spirals represents our research as a living ecology, in which different forms of knowledge remain distinct, while continuously informing each other in a mutually beneficial way. The <em>Triskele</em> proposes a model of artistic research that includes COGNITION, PERCEPTION and RELATIONALITY. </p>
+<p><strong>COGNITION</strong> materializes through reading groups, writing, editorial processes and collaborations with academic researchers and writers.</p>
+<p><strong>RELATIONALITY</strong> relates to artist conversations, public discussions, interviews, radio broadcasts and collective reflection, recognising conversation, both prompted and spontaneous, as a generative space for expanding knowledge. </p>
+<p><strong>PERCEPTION</strong> explores embodied knowledge through workshops, movement, ritual, making and participatory encounters, inviting participants to contribute directly to the evolution of the research through their lived experience. 
+Together, these three spirals shape our artistic research methodology as a diverse and living space that we collectively hold. We see every person who has participated, encountered or engaged with HTS as part of its community.</p>
+<figure class="pub-figure">
+    <img src="/images/Triskele_Introduction.png" alt="Triskele symbol" width="1920" height="1920">
+    <figcaption>
+        <p>"<em>A triskelion, or triskeles, is an ancient motif consisting either of a triple spiral exhibiting rotational symmetry or of other patterns in triplicate that emanate from a common center.</em>"</p>
+    </figcaption>
 </figure>
-
-<h3>Feedback as method</h3>
-<p>Feedback is usually treated as a problem to be eliminated, the shriek that interrupts the concert. Yet it is also the simplest demonstration that a system is listening to itself. A microphone that hears its own speaker is, for a moment, a small act of attention turned inward.</p>
-<p>Working with feedback taught me to treat sensing devices as participants rather than tools. They respond, they drift, they have preferences about distance and temperature. Collaborating with them means accepting a slower tempo and a shared authorship.</p>
-
-<h3>A small protocol</h3>
-<p>The following exercise needs one room, one hour and no equipment.</p>
-<ol>
-    <li>Sit still for five minutes and write down every sound you can name.</li>
-    <li>Sit for five more minutes and write down only the sounds you cannot name.</li>
-    <li>Compare the two lists. Notice which one was harder to make.</li>
-    <li>Repeat the exercise somewhere else, ideally with someone you do not know well.</li>
-</ol>
-<p>The point is not to arrive at a better ear. It is to make visible the work the ear was already doing.</p>
-
-<p>Maren Okafor-Lindqvist is a sound researcher who writes about domestic acoustics and shared attention.</p>
 </article>
-<hr>
-
-<article id="repair-before-innovation">
-<h2>Repair Before Innovation</h2>
-<p>Tavish Ríos</p>
-
-<p>Every object in this room is, at some level, being kept alive by someone. Most of them are never thanked.</p>
-
-<h3>What breaks, and who notices</h3>
-<p>Culture rewards the moment of invention and forgets the long afterlife of the thing invented. A bridge is celebrated at its opening and ignored for the following century, during which a rotating cast of inspectors, welders and painters keep it standing. Software is no different: for every launch there are thousands of unglamorous hours spent on patches, migrations and quiet fixes.</p>
-<p>Repair is therefore a form of knowledge that circulates through the hands more than through publications. It lives in the habit of tapping a casing to hear whether something is loose, or in the knowing way a technician says “it always does that”.</p>
-
-<h4>The maintainer’s calendar</h4>
-<p>Imagine a calendar organised not around launches but around upkeep: the day the filters are changed, the week the archive is verified, the afternoon the cables are relabelled. Such a calendar would make care visible as a recurring rhythm rather than an emergency.</p>
-
+<article class="pub-section" id="how-to-read">
+<h2>How to read</h2>
+<p>Not unlike the holistic approach that the Holistic Technology Salon has been striving to apply and embody in the artistic field, this publication strives to connect projects and artefacts together, to see if they react to each other, what relationships they create, and what they teach us about themselves.</p>
+<p>The method that we, as Holistic Technology Salon, have developed, or better, discovered, is represented in this book as the intertwined spirals of the Celtic <em>Triskele</em> symbol.</p>
+<p>The <em>Triskele</em> is a triad that makes a whole. The HTS cohort is a triad, also making a whole. Our research and artistic methodology is a triad making a whole: COGNITION, PERCEPTION, and RELATIONALITY, which together make our attempt at a holistic approach. </p>
+<p>A holistic approach is not a homogenising one. The difference between each artwork or text adds to it.  Each author has a different style, tone, and way of organising thinking. Each has a focus, a method. Whether it is more connected to cognition, to perception or to relationality, when meeting in the pages of this publication, they become particles of a whole, elements contributing to a shared understanding.</p>
+<p>As the <em>Triskele</em> represents and symbolically guides us in the realization of a holistic approach to technology, we leave this publication to exist in a trifold state. A reader approaching it might feel compelled to read into each contribution as belonging to one of the three categories. We invite you to catch, in each work, perhaps a tendency for one of those categories to present itself more strongly, and at the same time see it as part of a mechanism, an activity being performed by multiple agents at the same time. </p>
+<p>The content of this publication is therefore ‘organized’ around these three spirals, each contributing to this wholeness. As everything, these will shift with time, with interlocutors, with feelings, and many other factors. The written word binds us to cognition somehow. Therefore, on a meta-level this e-publication has also been organized around the moving spirals of the Triskele, towards PERCEPTION. It exists within the exhibition opening at V2* in November 2026, which organizes itself on the PERCEPTION spiral, and this will be activated through an open program focused on RELATIONALITY. </p>
+<p>You might also follow your intuition, opening the book wherever it falls and allowing a particular text, image, or idea to catch your attention. There is no need to follow a linear path; instead, let curiosity guide you through the spirals and discover the connections that emerge along the way.</p>
+<p>We embrace the fractality of this whole project and hope to invite participation into this ever-evolving spiral of meaning, that somehow is shaping itself around us. </p>
+</article>
+<article class="pub-section" id="in-search-of-holistic-methods">
+<h2>In Search of Holistic Methods</h2>
+<div class="pub-definition">
+<p class="pub-definition-term"><em>holistic</em> (adjective)</p>
+<p class="pub-definition-reading">ho·lis·tic</p>
+<p class="pub-definition-text">Relating to or concerned with complete systems rather than with individual parts, especially: concerned with the whole person, animal, or organism as opposed to a specific part or aspect.</p>
+<p class="pub-definition-source">— Merriam Webster Dictionary</p>
+</div>
+<p>What does it mean to embody a holistic perspective?</p>
+<p>Since the New Age movement in the 1970s, ‘holistic’ has often been understood as the mind-body-spirit triad. Holistic medicine, like traditional Chinese medicine and Ayurveda, considers the body as a whole system and uses medical interventions to readjust the entire body’s equilibrium. This is based on the view that the body has innate intelligence that can heal itself through the ‘life force’ (e.g. chi/qi, or prana) that animates the whole body. In Western medicine, a holistic approach can mean studying the patient through the tripartite bio-physio-social structure, that evaluates health outcomes based on biological factors like pathogens, as well as psychological and social dimensions. In systems thinking, a holistic perspective entails studying emergent properties within a system, characteristics which only appear when the system functions as a whole. </p>
+<p>This interplay between parts and wholes is not unique to systems science, and extends into how we interpret the world and understand its meaning. In hermeneutics, the branch of knowledge on interpretation of literary or religious texts, we refer to semantic holism, where words only have meaning through the context of a whole language. This is often explained through the ‘hermeneutic circle’: to understand something on the whole you need to understand its parts, but to understand the parts, you also need the whole.</p>
+<p>However, modern science and philosophy has often broken the circle of holism. In our pursuit of objectivity, we decided that we actually do not need to understand the whole in order to understand a part. The part is sometimes enough. A case-in-point here is the Cartesian mind/ body split. Descartes’s adage “<em>Cogito ergo sum</em>/ I think therefore I am” suggests that the mind is the privileged site of reason and logic, and the body is constantly swept to the side. We still live in the aftermath of this hierarchisation in academia. As scholars, we effectively learn to ignore our gut feelings, intuitions, and embodied reactions in the search for rational argumentations and objectivity — logos above pathos, reasoning over feeling, belief, and intuition. </p>
+<p>Artistic practice, which gives space for full-bodied presence and sensorial engagement, becomes an important partner for rebuilding such knowledge links to the self and to the myriad expressiveness of the body. As a dance practitioner, I train my intuitive body for improvisation, and I lean into my gut feelings. Being in flow when dancing brings me into an altered state of consciousness, where I feel a heightened connection to fellow dancers and to my environment<sup class="pub-fnref"><a id="fnref-1" href="#fn-1">1</a></sup>. Yet, my sweaty body with all its unbridled sensations rarely entered my academic reflections. Later, as I transitioned from ‘maiden’ to ‘mother’ after giving birth, this other version of my body, the maternal postpartum body of milk, blood, spiritual and existential transformations, also failed to enter scholarly writing, even though I felt like I looked at the world with a new pair of eyes in motherhood<sup class="pub-fnref"><a id="fnref-2" href="#fn-2">2</a></sup>. ‘Corporeality’ and ‘embodiment’ might be lovely academic terms, but the actual, breathing body and its inner psyche and soul often disappear in the folds of cognitively-driven research and writing<sup class="pub-fnref"><a id="fnref-3" href="#fn-3">3</a></sup>.</p>
+<p>In the last few years, with these reflections in mind, I began wondering how I could do scholarship differently. I am currently Assistant Professor in Media, Arts, and Society at Utrecht University<sup class="pub-fnref"><a id="fnref-4" href="#fn-4">4</a></sup>, where I also completed my postgraduate training and PhD in Media and Performance Studies. I relocated there from Hong Kong, my hometown, approximately 15 years ago. At UU, I teach research methods, and am obliged to grade my own students according to their performance of the ‘golden standards’ of academic research. Over the years, I have been disciplined into regarding ‘peer-reviewed science’ as the highest form of knowledge.</p>
+<p>When pre-eminent Black Studies scholar Katherine McKittrick published <em>Dear Science and Other Stories</em> (2021), I latched onto it like a lifeline. McKittrick draws from a rich repository of black and anti-colonial methodologies and theoretical frameworks to challenge mainstream academic methods, recasting them as insular, disciplinary, exclusionary, and premised upon the racial logics of European modernity. The book reminded me that science looked different to different communities. Black science, for instance, could take the form of storytelling and music, “across a range of places, times, genres, texts, shadows, grooves” (12) in the lifeworld of black humanity and black livingness. McKittrick’s intervention gave me the push I needed to commit to decolonial work in media studies, to ask what media studies and technologies look like from my own situated knowledge of East Asian cosmology and lifeworld.</p>
+<p>In an attempt to define what a non-Eurocentric definition of technology could stand for, I landed upon the lost meaning of ‘medium’ and ‘mediumship’ in media studies, where the mediation of messages from other realms by women, indigenous communities, and people of colour have been conveniently left out of media history<sup class="pub-fnref"><a id="fnref-5" href="#fn-5">5</a></sup>. I began looking into the intersections between technology and spirituality both in Europe and in Hong Kong. I researched séances, discovered channelling women in the British Spiritualist archives, and eventually made a performance on such histories<sup class="pub-fnref"><a id="fnref-6" href="#fn-6">6</a></sup>. How might stories of technology be told differently, and how might they propose new textures, tales, narratives, and concepts for an expanded field of media and performance studies?</p>
+<p>On this journey, I am grateful for the company of Holistic Technology Salon (“HTS”)<sup class="pub-fnref"><a id="fnref-7" href="#fn-7">7</a></sup>, where technology meets spirituality meets artistic practice. In HTS, the dimensions of body, spirit, and being that I intimately knew but have always bracketed out found a space to be taken seriously. I have been privy to many activities of HTS, and am proudly a member of the larger expert circle in this network of artists, curators, and researchers. What has often struck me as unconventional is the way HTS works with an expansive definition of technology, centring unconventional themes such as esotericism, spiritual inner technologies, and magic, next to digital tech and AI. We meditated together, mourned the death of devices, questioned our relationship to technologies, played with sensors, embraced love as a technology, stared at the black mirrors of our screens until we entered into trance and saw visions dancing on the edge of our consciousness… We shared our curiosities, our questions, and our desires towards another vision of technology, one that moves beyond what Big Tech dictates as gadgets of the future.</p>
+<p>The Holistic Technology Salon has been an interesting space of experimentation, and I have always felt that I could show up with my full embodied self, without severing my body and spirit from my intellectual work. In this essay, I explore further what makes a ‘holistic’ method, ponder how a holistic method dovetails with artistic research, and offer ways to contextualise the Holistic Technology Salon. Via detours and musings, I offer auto-ethnographic accounts<sup class="pub-fnref"><a id="fnref-8" href="#fn-8">8</a></sup> of how I have come to embrace the ‘holistic’ as a critical, decolonial praxis in my own work, in its intersections with the world opened up by Holistic Technology Salon.</p>
+<h3 id="the-holistic-as-a-conduit-for-the-decolonial">The Holistic as a Conduit for the Decolonial</h3>
+<p>To situate the holistic triad of mind-body-spirit in my lifeworld, I begin with a positionality statement. I am a postcolonial subject who grew up in British Hong Kong and witnessed the handover of sovereignty from Great Britain to the People’s Republic of China in 1997. My maternal lineage has roots in French Indochina, while my paternal lineage hails from the southern Chinese coast. As a child and teenager, I went to a Christian kindergarten, then a Catholic primary and secondary school. In our classrooms, we prayed each morning to God, Jesus, or Holy Mary. I studied the Bible from the Old Testament to the New and scored a B in the public examination subject of ‘Religious Studies’ — but this title was a misnomer. Biblical Studies would have been more apt, and this strongly reflects the colonial bias of what counts as legitimate ‘religion’ in Hong Kong.</p>
+<p>Outside of school, Buddhist, Taoist, and folk practices are much more common, though sometimes tinged with a sense of backward conservatism and superstition in a cosmopolitan city. My neighbours had a little shrine at their front door where they worshipped the God of Property (土地公) for safe passage and a prosperous home. On the weekends, when I visited my grandparents on an outlying island, I would play outside the Tin Hau Temple (天后廟). Islanders and fisherfolk believe that Tin Hau, the Goddess of the Sea, would keep them safe. In the city, traditional fortune-tellers line the night market, and in my teenage years, my friends would seek advice from Tarot readers tucked away in tiny shops in shopping arcades, eager to see their futures with their crushes and first loves. Every Lunar New Year, extensive predictions and analyses of the year ahead are broadcasted on TV, based on the animals of the Chinese zodiac. At the Ching Ming Festival, we would burn incense to pay respect to our ancestors when we visit their graves. </p>
+<p>I grew up in a rich and multicultural spiritual world where competing belief systems co-exist, mostly in harmony. The identity of a modern progressive cosmopolitan subject in Hong Kong, however, privileges Westernisation. It is one thing to partake in traditional rites and rituals, but to truly believe in them? That’s superstition. Or to quote Chicana feminist Gloria Anzaldúa, in her seminal work <em>Borderlands</em> (1987),“I allowed white rationality to tell me that the existence of the ‘other world’ was mere pagan superstition. I accepted their reality, the ‘official reality’ of the rational, reasoning mode, which is connected with external reality” (36-37). Like Anzaldúa, I <em>learned</em> to prefer subjects that would allegedly connect me to the wider world, ones I later discovered simply represented the hegemony of Global North and Anglo-/ Euro-centric ontologies and epistemologies, and severed my connection to my own culture. Ben Spatz, in <em>Blue Sky Body: Thresholds for Embodied Research</em> (2020), refers to academic training as a training in whiteness (36), which makes invisible the violence of erasure where forms of knowledge(s) stemming from whiteness are legitimised over others.</p>
+<p>I was a conscientious student, and studied arts and sciences. I embraced the rational, scientific worldview, and consumed Western cultural artefacts from Hollywood to Shakespeare to Van Gogh. I read Western political philosophy and cultural theory at university, majored in government and laws, and studied great juridical minds of the British Commonwealth. In my relocation to the Netherlands to study Gender Studies and Media and Performance Studies at graduate school, I became well-versed too in Continental philosophy; I quote Foucault, Heidegger, Deleuze, and many other dead white men in my work. In fact, I have mastered the coloniser’s tongue so well that I, a woman of colour of mixed Asian descent, am tasked to develop and teach the core course ‘Philosophy of Science in Cultural Inquiry’ in my department’s BA programme.</p>
+<p>Yet something shifted fundamentally in me in parallel as I became Other in the Western European<sup class="pub-fnref"><a id="fnref-9" href="#fn-9">9</a></sup> academy — if Europe is so proud of its intellectual legacy and exported it around the world through colonisation, why shouldn’t I be equally proud of mine? After all, East Asian philosophy has a deep and rich repository of ideas that date back millennia, especially in the cosmology of yin-yang (陰陽) and theories of cosmic order that detail the correlative correspondence between heaven, earth, nature, and humanity. In my spare time, I found myself religiously studying the Tao Te Ching (道德經) and the teachings of Buddhist monks. In recent years, as this practice of re-indigenisation consolidated, I studied the I-Ching (The Book of Changes/ 易經) to learn traditional cosmology, picked up Qigong (氣功) to train my body, and immersed myself in the mythology of Chinese gods, goddesses, and mythical beasts that once fascinated me as a child. Since last year, in my determination to relearn my mother tongue, I began to author research-based articles in Chinese too. But this is only one side of decolonising my work.</p>
+<p>To me, decolonial work does not only involve a deep re-engagement with my own culture and unlearning of Eurocentrism in my training, but also a proposition of how Western Europe can decolonise itself, in order to unravel the hegemony of Enlightenment values and power structures that have taken root in this part of the world. While it is a necessary move for decolonial scholarship to concentrate on the lifeworlds of the formerly colonised and for these voices to find expression, it is equally crucial to scrutinise how the West has suppressed other worlds within its own borders.</p>
+<p>In this respect, I am indebted to the genealogical and somatic analysis of US race-based violence in Resmaa Menakem’s <em>My Grandmother’s Hands</em> (2017). Menakem argues that violence committed within Europe towards fellow white bodies during the medieval period was exported to coloured bodies in the New World. Victimised by the brutality of corporeal punishment from burning at the stake to public hangings in England, those who settled in the New World became victimisers as a trauma response. They saw the subjugation of natives and blacks as an opportunity to finally assert dominance and control, a self-protective response which consolidated into dominant racist white culture in the US. Menakem’s work urgently shows that attention to the body must be integrated into decolonial scholarship, as racialisation and the accompanying racial hierarchy are implicated with somatic histories of trauma. </p>
+<p>In my view, Silvia Federici’s study of the European witch-hunts between the 16th and 17th centuries supplements Menakem’s account by providing an additional gendered and esoteric lens. In <em>Caliban and the Witch</em> (2004), Federici argues that the witch-hunts, fueled by beliefs in Christian demonology, fractured European peasant communities to create an opening for increased state control, land privatisation, and capitalist expropriation. The systematic elimination of witches was essential to securing capitalism’s patriarchal control over female bodies for forced reproductive labor. Crucially, killing off these bodies also meant destroying embodied and esoteric knowledge systems of folk practices and witchcraft. Witches were frequently older women who held custodianship over contraceptive methods, herbal medicine, and healing rituals, through spellwork, ritual, and community gatherings. Suppression of these embodied practices cleared the path for Enlightenment rationalism and modern scientific authority. As a result, the witch-hunts can be read as an early instance of European epistemicide of magic and esotericism.</p>
+<p>Menakem and Federici’s writings reiterate the subjugation of body and spirit within the Western order, and remind us that we are still living in the wake of racialised and gendered violence inflicted upon enslaved, maimed, and murdered bodies. The marginalised knowledge worlds of women, natives, and blacks must also be reclaimed as legitimate ways of knowing. My contention is that a holistic method bringing together mind, body, and spirit will help us decentralize a version of ‘science’ built upon colonial hierarchies and narrow ‘rational’ ideals. My drive to develop holistic methods, therefore, is to build knowledge spaces that enable access to oppressed worlds beyond the mind-centred focus of conventional research. How might such holistic methods be activated, especially within the creative and embodied modalities of artistic research and practice? </p>
+<h3 id="zooming-into-the-esoteric-and-the-artistic">Zooming into the esoteric and the artistic</h3>
+<p>Here I turn my attention once again to the practices of HTS. Even though HTS does not use the concept of ‘decolonisation’ in its self-representations, I view the esoteric and magical nature of its work as crucial to decolonising Europe from within. Central to this effort is the somatic and spiritual body in HTS’s artistic practice. By placing visitors in esoteric and magical worlds, HTS reveals a side of Europe rarely brought under the spotlight and challenges post-Enlightenment rationality by asking visitors to surrender scientific ways of knowing and sink instead into the visions, dreams, and the deep sensations of the material body.</p>
+<p>Esotericism takes centre stage in HTS’s work, a testimony to the fact that despite years of erasure via witch-hunts, colonisation, and the subjugation of bodily and spiritual knowledge(s) beyond the rational, esoteric practices have both survived in and outside of Europe<sup class="pub-fnref"><a id="fnref-10" href="#fn-10">10</a></sup>. Yet, this begs the question: why has Europe abandoned and dismissed magical forms of knowing in the first place? Silvia Federici would argue that in the transition to modernity, magic was seen to be at odds with a scientific, rationalistic, and capitalist worldview. Magic’s animist view of nature resisted capitalist extraction, while its reliance on unpredictable cosmic forces and fortune disrupted the belief in rigid work discipline required by capitalist labour.</p>
+<p>It is perhaps no coincidence that HTS is a collective mainly of feminists and gender non-conforming artists, banded together like a coven of the descendants of witches they failed to eliminate centuries ago. The founding trio, Sieta van Horck, Ginevra Petrozzi, and Annika Kappner, in fact met at a V2* community event featuring the work of artist Danae Tapia, who runs the Digital Witchcraft Institute<sup class="pub-fnref"><a id="fnref-11" href="#fn-11">11</a></sup>. It was also at this very event that I first encountered the artistic practices of Annika Kappner and Ginevra Petrozzi, who both gave guest appearances during Tapia’s presentation.</p>
+<p>From an art historical perspective, the artistic practices of the key artists in HTS sit in a niche between technology and spirituality, and often reflect upon realms of magic, divination, mysticism, meditation, and bodily attunement, as well as the impact of technology on society. Their work have been part of museums, biennales, and festivals such as Ars Electronica, INDEX Braga Biennial, IMPAKT, Sonic Acts, MU Hybrid Art House, Het Hem, Het Nieuwe Instituut, and Stedelijk Museum Amsterdam.</p>
+<p>In fact, themes of the magical, esoteric, and spiritual have seen a recent resurgence in curatorial and study interest in the Netherlands and around the world. Two successive editions of the Venice Biennale in 2022 and 2024 explicitly included women artists of the occult, indigenous artists, and spirit mediums, where a selection of curated works emphasised alternative cosmologies, ancestral rites, earth-bound spiritualities, rituals, and magic. The 13th Gwangju Biennale in 2021 was themed <em>Minds Rising, Spirits Attuning</em>, and centred Korean shamanism as a key entry-point. The 2026 edition of Transmediale, <em>By the Mango Belt &amp; Tamarind Road</em>, opened with a ritual walk and a cleansing rite with smoke and drum by two artists of African and Asian descent. In the Netherlands, students at the Royal Academy of Art (KABK) chose the theme <em>Wxtch Craft</em> for their Studium Generale programme in 2020-2021, showcasing magic, spellwork, and queer-feminist witchcraft as a contemporary feminist liberatory practice of storytelling, self and community care, and survival. Kunstinstituut Melly, in <em>84 STEPS</em> (2021-2023), incorporated a diverse public education programme on contemporary spiritual practices alongside their exhibition, which focused on somatic care and holistic healing. IMPAKT Festival <em>Techno-Ancestrality</em> (2026) heavily featured Winti spirituality as a technology of colonial resistance in Suriname. These are mere samplings of a larger movement in the art world that increasingly draws on indigenous cosmologies, ritual practices, and ancestral knowledges<sup class="pub-fnref"><a id="fnref-12" href="#fn-12">12</a></sup>, often also recast as forms of technology.</p>
+<p>In October 2025, I made a dedicated research trip to the Seoul MediaCity Biennale, themed <em>Séance: Technology of the Spirit</em>. Before I saw the exhibition, I was warned by an Asian critic who said, “You know... there’s a certain white bias in the exhibition. White, European curators don’t have enough knowledge of East Asian esoteric practices to really situate this exhibition in Seoul. It feels like the curators fell short dealing with this theme through an overemphasis on artworks from the West.” While it is a fair critique, this comment also fails to acknowledge the continuous resurgence of esotericism in Europe, and the exhibition precisely captures this lesser known history in a genealogy that included the West as well as other cultures. I entered the exhibition through Rudolf Steiner’s blackboard drawings (1920-1924) that anchored the Anthroposophy movement in Switzerland. British spiritualist Georgiana Houghton’s watercolours that captured her channeling of God, saints, and angels lined up behind glass panels. Abstract paintings of Swedish mystic Hilma af Klimt, the mother of abstract art, were steps away from Nam June Paik's <em>TV Buddha</em> (1974), which brought East Asian philosophy and shamanism to the then-burgeoning field of new media art. The exhibition also assembled various non-Western and indigenous artists from many corners of the earth: Karrabing Film Collective shared Aboriginal worldviews through <em>The Family and the Zombie</em> (2021), Jane Jin Kaisen captured shapeshifting nature spirits <em>Dokkaebi</em> (2024) on Jeju island, and Kurdish artist Hiwa K was commissioned to produce <em>They call him Haji Laser</em> (2025), a film installation which focused on a traditional healer who had ‘laser vision’, and could identify tumours and shatter kidney stones with his eyes.</p>
+<p>The exhibited works served as a genealogical study of the role spiritual experience has played in the development of modern and contemporary art, mapping an art history that has always been decidedly Western-centric, while expanding the diversity of exhibited works as one ventured deeper into the galleries. Despite rooting the curated journey in Western fascinations with mysticism and spiritualism, the exhibition successfully shows how artists, in and outside of Europe, have long resisted the Enlightenment ideal of ‘rationality’, and have consistently made space for other parallel worlds where the spiritual meets the other-worldly, where ghosts, spirits, and ancestors reside, and anticolonial, feminist, ecological, and anti-capitalist ideas thrive. </p>
+<h3 id="technology-of-the-spirit">Technology of the spirit</h3>
+<p>To the curators of Seoul MediaCity Biennale, the curated works “widen the aperture of reality to include those forces, entities, and knowledge(s) denied by the dominant ways of ordering and indexing the world” (17). And through this, they develop the concept of “technology of the spirit”. To me, this connects very well to Arturo Escobar’s concept of the ‘pluriverse’ (2020), stemming from his work in the Latin American decolonial school. Escobar argues that parallel worlds have always existed in addition to the capitalist, extractive, colonial world, yet that one world has occupied so much of our existence and imagination that it might be seen as a form of ‘one-worldism’, a universalised, linear progressive way of being in the world. Much like my own experience of growing up in Hong Kong, parallel folk cultural worlds never disappeared despite the spread of Christianity that accompanied colonial modernity. And even in the heart of Western Europe, other belief systems have co-existed and persisted despite violent oppression and structural elimination, such as the witch-hunts I discussed above.</p>
+<p>HTS develops a similar idea of the technology of the spirit. Through three key pillars, the collective develops their practice through leaning into the ‘relational’, the ‘cognitive’ and the ‘ultra-sensorial’. The ‘relational’ emphasises that the world has always been relational and interconnected, and invites us to recognise the ecological relations we as humans are embedded in. The ‘relational’ pillar proposes care-centric and eco-centric ways of being together. The ‘cognitive’ attends to computational and machinic logic and explores its alternatives, while incorporating cutting-edge science in quantum physics, material physics and other domains of research as sites of experimentation. The ‘ultra-sensorial’ leans into human sensing through expanded consciousness and retrained attention through modalities such as meditation and yoga, or through machinic sensors and human-machine feedback loops that augment our ability to feel. These intertwining pillars are materialised through artworks, aesthetic experiences, rituals, critical discourse, dialogue, and other happenings that bring audience members into the fold through shared experience in the here and now<sup class="pub-fnref"><a id="fnref-13" href="#fn-13">13</a></sup>.</p>
+<p>The work of the collective departs from the recognition that the world as we know it is often filtered through complex interlocking systems of power and hegemony imposed upon us by capitalism, organised religion, and other dominant structures. To even notice these filters, we must go via the experiential realm to re-attune ourselves and reclaim our bodies and our attention away from these oppressive structures that have become the norm. Even though HTS does not announce itself as a decolonial practice, it does offer a critical access point into the experiential and the somatic via the artistic. This access point is a crucial first step, a window into what has been suppressed collectively, in the subjugation of esoteric knowledge(s) that is part and parcel of colonial modernity. The holistic becomes a stand-in for resistance, against power-over structures, against the coloniality of knowledge, and provides an opportunity to tell different stories about our relationality to earth and ecology and to one another<sup class="pub-fnref"><a id="fnref-14" href="#fn-14">14</a></sup>.</p>
+<p>In alignment with diverse magical practices that ultimately invite other ways of relating to nature and to ourselves as part of nature, HTS invites re-integration of spiritual and bodily practices as part of their vision of holism, through featuring them in their artistic works and discourse. While the circle of HTS is predominantly composed of white European artists, the larger sphere of inspiration includes a much wider range of reference points from the rest of the world. Just to name a few—Sieta van Horck brought in <em>Sand Talk: How Indigenous Thinking can Save the World</em> (2020) to discuss the notion of a ‘right relationship’ to technology via Aboriginal thinker Tyson Yunkaporta; artist and healer Jihae Ko’s <em>Planetary Acupuncture</em> project investigates Korean traditional acupuncture medicine as a technology of healing the self and the world; V2* director Fabian Saavedra Lara brought in his experience of Amazonian cultures in Latin America as a German-Chilean in one of our expert meetings; and Annika Kappner and I often discuss the cosmology of yin and yang stemming from East Asian cultures. This inter-referential mode of building HTS does not tend towards a totalising vision of what the esoteric and the magical is, but remains open to the pluriversal worlds the collective inhabits. And these pluriversal worlds open up conduits into a decolonial potentiality.</p>
+<h3 id="living-the-holistic-method">Living the Holistic Method</h3>
+<p>HTS enfolds the three pillars of their work, the ‘relational’, the ‘cognitive’ and the ‘ultra-sensorial’, into the artistic as ‘direct experience’ in active spectatorship. HTS’s insistence on ‘direct experience’ suggests that embodied experience is a crucial part of the holistic method. This method is not an abstract scientific proposal that only lives in the discursive, but one that is materially lived and, quite literally, breathed. This insistence on embodied experience emphasises that the corporeal realm must be taken seriously as part of knowledge production, against the constant erasure of bodily knowledge that remains under-theorised. Part of the collective’s work is to develop articulations and choreographies of experience such that what lies beneath the surface of the perceptible world and under our skin can be brought to attention. How can we, through artistic intervention, expand our embodied ways of sensing and being in the world?</p>
+<p>This exploration is in line with the model of somatics and transformative justice Staci Haines outlines in her book <em>The Politics of Trauma</em> (2019). Haines explains her view on somatics in the following quotation:</p>
 <blockquote>
-    <p>Nothing is ever finished; things are merely cared for, or not.</p>
-    <footer>Anselm Quist, <cite>The Long Afterlife of Objects</cite></footer>
+<p>Somatics is fascinated with embodiment—what is embodied, and is that working? Do we have the embodied options we want for love, boundaries, dealing with conflict in a life-affirming way, equity, and more? Somatics looks for aliveness—what allows for more life, more connection, more wisdom, more effective action, and relations? Somatics looks to increase choices—based in agency and empowerment—to ‘becoming’ more individually and collectively whole and skilled at living. (36)</p>
 </blockquote>
-
-<figure>
-    <img src="/images/repair.svg" alt="A patchwork of coloured squares joined by dashed white stitching.">
-    <figcaption>Fig. 1 — Patchwork study for a mended tablecloth. Stitching lines mark earlier repairs.</figcaption>
+<p>To Haines, somatics is a field that needs to be coupled with social and economic analysis. Through the body, we can gain deeper access to ourselves and develop self-knowledge. With this awareness, we can instigate change and transform our ways of being and relating, such that we can embody transformation, both individually and collectively. This is in alignment with Menakem’s intervention in <em>My Grandmother’s Hands</em>. Beyond the genealogical and somatic analysis of race-based violence, Menakem interjects his theoretical discussions with practical somatic exercises, inviting the reader to sense their bodies as well as conduct various meditations and body and breath practices. To him, it is crucial that the somatic practice is integrated with the cognitive discussion of trauma, and the reader is warned not to skip over these parts and to commit to them.</p>
+<p>In fact, in the spirit of the somatic and the holistic, take a few deep breaths now. Notice the sensations that arise in your body. Allow yourself to pause and digest the points raised in the essay so far. Feel free to make yourself a cup of tea before you continue reading. I have had to take multiple breaks from writing this essay, as I sat with the density and diversity of the materials (thoughts, concepts, methods, intuitions, bodily sensations, affects, experiences) assembled over the last few years of my life. I allowed my body to dictate the rhythm of writing, re-writing, and editing, slowly integrating various aspects of my experience into a coherent narrative. In allowing the body to speak, I become more present and connected to the thoughts, sensations and emotions of my body. In becoming more present, I open up deeper possibilities of relational connection with other people—in this case, through channeling my somatic lifeworld into words on a page. </p>
+<p>From a somatic perspective, the body is not only the medium but also the technology for social change. Through specific modes of somatic training, Haines suggests that the body can become a vehicle for social change through its insistence on aliveness — how might we feel more? How might we <em>experience</em> more deeply? How might we, through such experiences, build more capacity for further action? While both Haines and Menakem focus on somatic trauma processing as a key training, I would consider a wider field of practices, especially in the arts and in spiritual practice, that work on the somatic body and extend its capacities. From dance and choreography to improvisation, from breathwork to qigong, these disciplines refine our capacity to perceive, process, and embody experience. Creative and contemplative movement honours the body as a dynamic site of knowledge generation. Dancers, meditators, and somatic practitioners alike learn to navigate internal micro-shifts, such as attuning to subtle variations in tone, breath, and spatial awareness. In these modes of practice, the body is not just a medium for moving our very engaged minds into meeting rooms and workspaces. Rather, it is possible to view the body beyond its capacity to labour and produce for capitalist extraction. Attention can be directed to sensory processing and our embodied presence in the world. Through creative and contemplative practices, the body is recognised as an active, expressive agent, capable of affecting others and being affected.</p>
+<p>But what exactly are these capabilities? What is a body capable of and what are our bodies collectively capable of? As two dead white male philosophers, Baruch Spinoza and later Gilles Deleuze, famously quipped, “no one knows what a body can do”. To build a holistic method, the body and the spirit should be brought back into research. Methods determine a researcher’s way of navigating the field, and I wonder how direct, embodied, somatic experience might be recorded, narrated, and analysed. </p>
+<h3 id="an-auto-ethnographic-research-interlude">An auto-ethnographic research interlude</h3>
+<p>In Spring of 2025, I took it upon myself to deepen my field research into séances and folk esoteric practices during a research stint back home in Hong Kong. I was determined to reclaim my own knowledge of a Chinese cosmological world I have been severed from, and unlearn the coloured lens of superstition I have long carried. Through friends of friends, I was invited to visit a spirit-writing group (fuluan 扶鸞 or fuji 扶乩), which has been operational in Hong Kong since 1951. Spirit-writing refers to the (often Taoist) divination practice where messages from deities, ancestors, or spirits, are conveyed through a wooden stylus guided by a medium. The stylus is held by the medium and assistants, and it would move to write words in sand. It originated as a rural women’s practice involving spirit possession of physical objects, before evolving into a more sophisticated written form of spirit communication, where educated, literate practitioners receive messages from historically revered figures and deities from beyond. These spirit-writers consulted spirits on a wide variety of questions, from personal advice to medical prescriptions to broader social and political commentary. According to sociologists of religion, they deliberately avoided dramatic manifestations of trance and spirit possession, so as to distinguish themselves from rural village shamans<sup class="pub-fnref"><a id="fnref-15" href="#fn-15">15</a></sup>.</p>
+<p>The history of the spirit-writing group I visited has been exceptionally well-recorded, in part due to the participation of various professors and researchers from local universities. Amongst them are philosophers, researchers, traditional Chinese medical doctors, journalists, and other highly-educated professionals. It turns out that more of us live with double-identities between science and esotericism. I am definitely not alone<sup class="pub-fnref"><a id="fnref-16" href="#fn-16">16</a></sup>. The medium herself is a retired Chinese literature professor, who has advanced linguistic ability to mediate the deity’s expressions. The deity they contact, affectionately known as Teacher, communicates in classical poetic verses, an old style used by literary elites of centuries past. Born in 1592, he was a scholar who eventually died in army service defending the last days of the Ming Dynasty in the 17th century. At a typical spirit-writing session, the medium poses requests and questions from the followers and receives answers from Teacher. Several scribes would transcribe entire proceedings for record-keeping. It is part spiritual study (in the vein of Taoist and Buddhist philosophy), part trans-temporal dialogue, part worship, and part social gathering. </p>
+<p>This field experience was both magical and mundane. The atmosphere in the hall was calm, reverent, and quiet. In hushed breath I listened to every word uttered by the medium, arriving from a place beyond the visible and the sensible. I was struck by the time-bending nature of such a dialogue, and took home various published records the group assembled over the years, to continue studying wise words from the Teacher. </p>
+<p>In the evening after the spirit-writing session, I was sitting in a restaurant for dinner when my right arm began trembling uncontrollably. I felt the innate urge to pick up a pen, as if I had to write something down. But I had chopsticks in hand, and dumplings were waiting, and I wasn’t sure if I wanted to find out what the trembling was all about. A few days later, the trembling began again as I read a book-length analysis on spirit-writing for research. Deep in my body, I intuitively knew what this meant, and yet I wanted to resist the meaning and all that it would entail. In time, I steadied myself and let my fear of the unknown dissipate. I answered the call with an incense offering, and readied myself with pen and paper, cautious but curious. I did not know the spirit entity I was connecting with, but I felt a bright white halo around me, tranquil and peaceful. As I allowed the pen to drift aimlessly across the paper, I entered a mild state of trance, and specific phrases floated into my head. I dictated them as they came through, transcribing 4-character phrases in structured Chinese poetic form. I retained my full thinking capacity, and I was half-channeling and half-observing what was going on simultaneously. To my surprise, the entity on the other end reached out to teach me mediumship. </p>
+<figure class="pub-figure">
+    <img src="/images/image9.jpg" alt="Two sheets of the author's spirit-writing records" width="1139" height="853" loading="lazy">
+    <figcaption>
+        <p>"<em>A triskelion, or triskeles, is an ancient motif consisting either of a triple spiral exhibiting rotational symmetry or of other patterns in triplicate that emanate from a common centre.</em>"</p>
+        <p><em>Records of spirit-writing in trance mediumship by the author (From R to L: April 17, April 18, 2025)</em></p>
+    </figcaption>
 </figure>
-
-<h3>Mending as a form of attention</h3>
-<p>To mend something you have to look at it more closely than you ever did while it worked. You discover how it was made, where it was compromised, what its makers assumed about the world. A repaired object carries that attention inside it, like a scar that doubles as a signature.</p>
-
-<h4>Three small repairs</h4>
-<ul>
-    <li>Re-sole a pair of boots instead of replacing them, and keep the old sole.</li>
-    <li>Document one fix you made this month in a form someone else could follow.</li>
-    <li>Ask the person who maintains your tools what they would change, then listen.</li>
+<p>Across two separate trance sessions, it reminded me to have peace in my heart and to still my mind in order to receive messages. It told me that staying in a dream-like state helped with reception, and that my hand would stop writing if I were too afraid<sup class="pub-fnref"><a id="fnref-17" href="#fn-17">17</a></sup>. It told me that practice would keep my technique fresh, and eventually invited me to practise weekly in order to develop my clairvoyant talents<sup class="pub-fnref"><a id="fnref-18" href="#fn-18">18</a></sup>.</p>
+<p>As I gathered myself after the automatic writing experiences, I began to ponder: what does it mean to answer to a non-human power, or to learn a spiritual technology from beyond this visible and perceptible world? I must be honest here about my experience after this field experience and embodied research. In fact, I did not know what my body was capable of, even after all the somatic trainings as a dancer, even after all the material fluctuations in the transition to motherhood<sup class="pub-fnref"><a id="fnref-19" href="#fn-19">19</a></sup>. I did not anticipate my body becoming ‘a technology of spirit’, turning into the female mediums I have been researching<sup class="pub-fnref"><a id="fnref-20" href="#fn-20">20</a></sup>. In mediumistic art, spirits can control the hands of artists and produce paintings. Hilma af Klint, for instance, built her practice through automatic writing and drawing in séances in Sweden, eventually producing 193 works in <em>The Paintings for the Temple</em> (1906-1915) cycle, allegedly commissioned by ‘High Masters’ she had been channeling. If I have already been immersed in documented séance communication across cultures in my research, why is it still so disconcerting to experience my own body in mediumship?</p>
+<p>It was humbling, strange, but also invigorating to discover a side of me that has remained untapped. I was confronted by what Anzaldúa called “a tolerance of ambiguity” (79), a space of unknowing and not knowing, a space for divergent thinking that moves beyond known boundaries. It made me question whether I, too, as a researcher have fallen into the trap of the colonial anthropologist, interested in the exotic worlds of mediumship and trance and animist cosmologies, but never quite stepping into these communities in reciprocal relation. Are those of us working in the realm of the esoteric extracting from these practices, and what are the ethics of engagement with such practices, when they are ruled by an unseen realm?</p>
+<p>About 9 months later, in an HTS expert meeting at V2*, I was explicitly asked to channel messages from beyond again. We all performed scrying under the guidance of Ginevra Petrozzi, who brought with her a book, <em>Specchi Magici: Divination, evocation deli spiriti</em> (2021), by Louis-Alphonse Cahagnet. Cahagnet was a famous French spiritualist and occultist who carried out research on magical magnetism. This Italian book is translated and excerpted from <em>Magie Magnetique</em> (1858), and includes a specific focus on magical mirrors. I have never heard of the term ‘scrying’ before, but I knew of this divination technique that has been found cross-culturally in different parts of the world. From crystal balls to bronze mirrors to water reflections, practitioners would look into reflective surfaces to find answers to their queries. We were invited to find a comfortable corner in the V2* office, and we had to stare into the black mirrors of our screens until we had visions. We were told to look intensely without staring. Afterwards we discussed what we saw, or rather, what danced in the periphery of our visions and in our minds. Sceptical but curious, all of us spread across the space to scry for 30 minutes.</p>
+<p>While some of us preferred darkness, I was drawn to natural light. I turned off my iPhone screen, and sat cross-legged on a wide window ledge overlooking the streets of Rotterdam. I turned on Solfeggio sound healing music<sup class="pub-fnref"><a id="fnref-21" href="#fn-21">21</a></sup> and isolated my hearing senses from the room for better concentration. I tilted the angle of my screen slowly but constantly, searching for the most interesting reflection. I noticed the cracks on my protective screen, and traced them mindlessly with my eyes. Upside down in this reflection, I saw buildings and rooftops, graffiti and plants, muted and darkened in colours, but nothing was out of the ordinary. Boredom rose within me, as well as doubt as the clock ticked on—but as a seasoned meditation practitioner, I observed those feelings and let them float away. I emptied my mind of thoughts, grounded my body, and reminded myself that my alleged clairvoyant talents might come in handy in this exercise. Perhaps, I would successfully mediate something from beyond this realm?</p>
+<p>I brought the black mirror closer to my face, and I studied my eyes, my eyebrows, and my forehead. I have never looked at my own reflection this way. The limited scope reminded me of the tiny mirrors that often accompany makeup-kits, just enough for someone to add a touch of eye-shadow or a lip colour. It was thoroughly defamiliarising my own face.</p>
+<p>And this was when distortions to my reflection slowly unravelled.</p>
+<p>As if in a time-lapse video, the skin around my eyes began to shrivel and form wrinkles. Lines formed between my eyebrows, as if I carried the frustrations of the world. Disturbed by this image, I relaxed my eyebrows consciously but my reflection remained the same. I was knotting them furiously. I began to age uncontrollably in front of my very own eyes. I felt slight tinges of fear and revulsion. And just as I became an old hex, I saw flashes of myself in youthfulness. Scenes of my eyes now under heavy theatrical makeup played. Colourful, sparkly, and glittery, it resembled the kind of makeup I used to do when I had stage performances. Shuttling between old age and youthfulness, I watched a montage of myself jumping between different ages. </p>
+<p>Time was compressed into the now.</p>
+<p>Nothing was linear.</p>
+<p>All was an illusion.</p>
+<p>Later, we would all come back into the room spilling stories of our visions. Some saw apocalyptic images, others saw dreams within dreams. Some came with reflections on the inhumane rationality of technology, and others interpreted their unconscious through Tarot card imagery. I was surprised by the richness of the experience — we paid no attention to what was ‘real’ and what was ‘acceptable’ in discourse; we simply held space for what came up, whether through cognitive thoughts, visions, or associations. We jokingly said that we all should probably stare more often at the black mirrors of our smartphones, scrying instead of scrolling, as resistance to the attention economy of capture so pertinent to our devices.</p>
+<h3 id="towards-a-holistic-method">Towards a Holistic Method</h3>
+<p>No one knows what a body can do.</p>
+<p>Through channelling and embodied research, I discovered extra layers to myself in the process of exploring a holistic method. When writing this essay, I questioned whether I would like to ‘come out’ in public through narrating these spiritual experiences which would no doubt challenge my scientific integrity as a researcher at a well-regarded university. I asked myself whether I was willing to take the risk of being discounted and ridiculed: <em>Has she gone native? Has she gone off the deep end? How is any of this scientific? How is any of this publishable?</em></p>
+<p>There is a certain queerness attached to esoteric research, in the sense that admitting to a scientific audience that I work on esoteric topics often feels like ‘coming out’. Queerness appears here as a rejection of ‘normality’ and brings to light what belongs to the margins. It also means to insist on particular forms of subjectivity, and to question what it means to live in a different body, in this case, a psychic, clairvoyant one. As much as I would like to hide these queer, non-conforming parts of myself at work, the need to be whole and to be wholly authentic trumped my concerns. I have to come to scholarship as my fully embodied and spiritual self, to mend the many cuts I have had to endure in order to be legible and recognised in the European academy. It is bell hooks’s sage wisdom in “Theory as Liberatory Practice” (1991) that rings in my ear—</p>
+<blockquote>
+<p>I came to theory because I was hurting—the pain within me was so intense that I could not go on living. I came to theory desperate, wanting to comprehend—to grasp what was happening around and within me. Most importantly, I wanted to make the hurt go away. I saw in theory a location for healing. (1)</p>
+</blockquote>
+<p>These words have long been my anchor. Like hooks who wishes to understand her African-American experience of double oppression as black and female in the US, I have come to theory to narrate my own negotiations of mixed ancestry, gender identity, and subjecthood, growing up in a postcolony between the East and the West. Yet European theory did not offer as much a space of refuge as it created boxes and pigeonholes which I had to contort my body to fit into. And this body of mine, literal and metaphorical, no longer wishes to perform such gymnastics. I have to author different methods and theories, such that theorisations of my somatic life could open up space for others to transform their epistemic practices in ways that could address their lived experiences too. How might we heal the cuts created by hierarchies of mind over body and spirit in our collective lifeworld? How do we relearn the somatic wisdom carried by witches, or the spiritual wisdom practiced by many non-Western formerly-colonised cultures?</p>
+<p>Through channeling, I entered into an epistemic space that had no reference, at least not in scientific books. I embraced “radical vulnerability”, a “politics of indeterminacy, or a politics without guarantees” (Nagar 13, as quoted in McKittrick 17). I sought to understand spiritual technologies that have been passed down in my own ancestral cultures. I realised that a Teacher could be an immaterial one that could only be felt, and never seen. As McKittrick writes, “the unhinging, unknowing ourselves, opens up learning processes that are uninterested in a self that is economized by citations” (16). My desire to push the boundaries of my scholarship into the holistic was answered by unorthodox experiences, where no citations exist. In these experiences, my tolerance for ambiguity grew. I have more bandwidth now for the strange, the uncanny, and the ineffable. In fact, this is one logical conclusion to my commitment to the spirit of decolonisation, to refuse using the term as metaphor (Tuck and Yang). I have to fully accept the consequences of my own curiosity — the female body in mediumship, the Chinese ancestral body in trance, and the edges of my consciousness reflected back to me in the black mirror.</p>
+<p>In accepting these direct experiences as part of my lifeworld, I integrate the parts of myself that I have had to cast out in the name of science. Perhaps, in this sense, the holistic is also an ethic of showing up in authenticity—to be whole again. </p>
+<p>In search of the holistic, I plunged into unknown worlds and re-emerged, transformed and transfigured in the process—to affect and be affected, to feel and be felt, to think and be held in thoughts, to enter into trance, to become a medium between worlds. This radical auto-ethnographic account is not trying to convince you that these parallel worlds exist — I already know they do, but the methods of European science will not transport you there. Following McKittrick’s argument in <em>Dear Science and Other Stories</em>, methodological and theoretical frameworks always already pre-determine the shapes of conclusions—a rational framework will explain away the irrational and the esoteric as fancies of the mind. McKittrick goes on to suggest that “radical theory-making takes place outside existing systems of knowledge” (23)—so, how might we escape these pre-determinations and venture outside? </p>
+<p>To enter these parallel pluriversal worlds, I suggest you take a deep breath and take a detour via the holistic and the somatic. Attend to your body and spirit in addition to your mind. Return to the body and to direct experience. And this detour can take place via artistic modalities of engagement that aim to extend the capacities of our body, retune our senses, and generate such direct experiences. </p>
+<p>The Holistic Technology Salon uses art as a mode of inquiry that invites and enables each of us to ‘research’ our own bodies and our senses. By placing emphasis on intervention through experiential means, the collective holds space for pathways of discovery, bringing voice to the parts of us which have been numbed, muted, and silenced in the capitalist-inflected, rationality-centred lifeworld. </p>
+<p>In this sense, a holistic method, whether in arts or sciences, emerges as an open-ended exploration. It is not universalising as a gesture, and does not attempt to force specific ontological and cosmological visions of different worlds onto this one. Instead, it remains attentive to our bodies and the various cosmovisions they inhabit, in the recognition that there are multiple portals and doorways into the many ‘pluriverses’around us, within and beyond Europe. Like holistic medicine that is often tailored to individual bodily constitution, a holistic method is also about the specificity of each individual body and how one relates differently to oneself, to one’s lineage, to each other, to technologies of the spirit and otherwise, and to the cosmos at large.</p>
+<p>A holistic method is not a hypothetical. It is to be lived.</p>
+<p>As part of the Holistic Technology Salon, I sincerely invite you to join us on this journey of reclaiming our bodies, our hearts, our spirits, and our souls from the grips of capitalist, patriarchal modernity. Together, we insist on the flourishing of other worlds in parallel to and beyond this one.</p>
+<h3 id="notes">Notes</h3>
+<ol class="pub-notes">
+    <li id="fn-1">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio. <a class="pub-note-back" href="#fnref-1" aria-label="Back to note 1 in the text">↩</a></li>
+    <li id="fn-2">Etiam tempor orci eu lobortis elementum, nibh tellus malesuada urna, ut ullamcorper nisl odio ac sem. <a class="pub-note-back" href="#fnref-2" aria-label="Back to note 2 in the text">↩</a></li>
+    <li id="fn-3">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. <a class="pub-note-back" href="#fnref-3" aria-label="Back to note 3 in the text">↩</a></li>
+    <li id="fn-4">Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. <a class="pub-note-back" href="#fnref-4" aria-label="Back to note 4 in the text">↩</a></li>
+    <li id="fn-5">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <a class="pub-note-back" href="#fnref-5" aria-label="Back to note 5 in the text">↩</a></li>
+    <li id="fn-6">Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. <a class="pub-note-back" href="#fnref-6" aria-label="Back to note 6 in the text">↩</a></li>
+    <li id="fn-7">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a class="pub-note-back" href="#fnref-7" aria-label="Back to note 7 in the text">↩</a></li>
+    <li id="fn-8">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio. <a class="pub-note-back" href="#fnref-8" aria-label="Back to note 8 in the text">↩</a></li>
+    <li id="fn-9">Etiam tempor orci eu lobortis elementum, nibh tellus malesuada urna, ut ullamcorper nisl odio ac sem. <a class="pub-note-back" href="#fnref-9" aria-label="Back to note 9 in the text">↩</a></li>
+    <li id="fn-10">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. <a class="pub-note-back" href="#fnref-10" aria-label="Back to note 10 in the text">↩</a></li>
+    <li id="fn-11">Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. <a class="pub-note-back" href="#fnref-11" aria-label="Back to note 11 in the text">↩</a></li>
+    <li id="fn-12">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <a class="pub-note-back" href="#fnref-12" aria-label="Back to note 12 in the text">↩</a></li>
+    <li id="fn-13">Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. <a class="pub-note-back" href="#fnref-13" aria-label="Back to note 13 in the text">↩</a></li>
+    <li id="fn-14">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a class="pub-note-back" href="#fnref-14" aria-label="Back to note 14 in the text">↩</a></li>
+    <li id="fn-15">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio. <a class="pub-note-back" href="#fnref-15" aria-label="Back to note 15 in the text">↩</a></li>
+    <li id="fn-16">Etiam tempor orci eu lobortis elementum, nibh tellus malesuada urna, ut ullamcorper nisl odio ac sem. <a class="pub-note-back" href="#fnref-16" aria-label="Back to note 16 in the text">↩</a></li>
+    <li id="fn-17">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. <a class="pub-note-back" href="#fnref-17" aria-label="Back to note 17 in the text">↩</a></li>
+    <li id="fn-18">Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. <a class="pub-note-back" href="#fnref-18" aria-label="Back to note 18 in the text">↩</a></li>
+    <li id="fn-19">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <a class="pub-note-back" href="#fnref-19" aria-label="Back to note 19 in the text">↩</a></li>
+    <li id="fn-20">Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. <a class="pub-note-back" href="#fnref-20" aria-label="Back to note 20 in the text">↩</a></li>
+    <li id="fn-21">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a class="pub-note-back" href="#fnref-21" aria-label="Back to note 21 in the text">↩</a></li>
+</ol>
+<h3 id="works-cited">Works Cited</h3>
+<ul class="works-cited">
+    <li>Anzaldúa, Gloria. <cite>Borderlands</cite>. Aunt Lute Books, 1987.</li>
+    <li>Cahagnet, Louis-Alphonse. <cite>Magie magnétique</cite>. Baillière, 1858.</li>
+    <li>———. <cite>Specchi magici. Divinazione, evocazione degli spiriti</cite>. Hermes Edizioni, 2021.</li>
+    <li>Chakrabarty, Dipesh. ‘Provincializing Europe: Postcoloniality and the Critique of History’. <cite>Cultural Studies</cite>, vol. 6, no. 3, Oct. 1992, pp. 337–57. </li>
+    <li>Escobar, Arturo. <cite>Pluriversal Politics: The Real and the Possible</cite>. Duke University Press, 2020.</li>
+    <li>Federici, Silvia. <cite>Caliban and the Witch</cite>. Autonomedia, 2004.</li>
+    <li>Fern, Jessica. <cite>Polysecure: Attachment, Trauma and Consensual Non-Monogamy</cite>. Scribe Publications, 2022.</li>
+    <li>Haines, Staci K. <cite>The Politics of Trauma: Somatics, Healing, and Social Justice</cite>. North Atlantic Books, 2019.</li>
+    <li>hooks, bell. ‘Theory as Liberatory Practice’. <cite>Yale Journal of Law and Feminism</cite>, vol. 4, no. 1, 1992 1991, pp. 1–12.</li>
+    <li>Lang, Graeme, and Lars Ragvald. ‘Spirit-Writing and the Development of Chinese Cults’. <cite>Sociology of Religion</cite>, vol. 59, no. 4, 1998, pp. 309–28.</li>
+    <li>McKittrick, Katherine. <cite>Dear Science and Other Stories</cite>. Duke University Press, 2021.</li>
+    <li>Menakem, Resmaa. <cite>My Grandmother’s Hands: Racialized Trauma and the Pathway to Mending Our Hearts and Bodies</cite>. Penguin UK, 2021.</li>
+    <li>Nagar, Richa. <cite>Muddying the Waters: Coauthoring Feminisms across Scholarship and Activism</cite>. University of Illinois Press, 2014.</li>
+    <li>Peters, John Durham. <cite>Speaking Into the Air: A History of the Idea of Communication</cite>. University of Chicago Press, 1999.</li>
+    <li>Sconce, Jeffrey. <cite>Haunted Media: Electronic Presence from Telegraphy to Television</cite>. Duke University Press, 2000.</li>
+    <li>Spatz, Ben. <cite>Blue Sky Body: Thresholds for Embodied Research</cite>. Routledge, 2020.</li>
+    <li>Storm, Jason Ananda Josephson. <cite>The Myth of Disenchantment: Magic, Modernity, and the Birth of the Human Sciences</cite>. University of Chicago Press, 2017.</li>
+    <li>Tuck, Eve, and K. W. Yang. ‘Decolonization Is Not a Metaphor’. <cite>Decolonization: Indigeneity, Education &amp; Society</cite>, vol. 1, no. 1, 2012, pp. 1–40.</li>
+    <li>Vidokle, Anton, Hallie Ayres, Lukas Brasiskis, and Eunju Choi. ‘The 13th Seoul Mediacity Biennale Séance: Technology of the Spirit Guidebook’. Seoul Museum of Art, 2025.</li>
+    <li>Wan, Evelyn. ‘Séance as Method: A More-than-Human Assembly of Ghosts from the Technological Archive’. Global Performance Studies, vol. 8, nos 1–2, 2026.</li>
+    <li>Warner, Marina. <cite>Phantasmagoria: Spirit Visions, Metaphors, and Media into the Twenty-first Century</cite>. Oxford University Press, 2006.</li>
+    <li>Yunkaporta, Tyson. <cite>Sand Talk: How Indigenous Thinking Can Save the World</cite>. HarperCollins, 2020.</li>
 </ul>
-
-<p>None of this is an argument against invention. It is an argument for giving repair a seat at the same table, and for recognising that most futures will be built from things that already exist.</p>
-
-<p>Tavish Ríos works as a conservator and writes about maintenance cultures, small workshops and the ethics of upkeep.</p>
 </article>
-<hr>
-
-<article id="soft-infrastructures">
-<h2>Soft Infrastructures</h2>
-<p>Isolde Varga</p>
-
-<p>When people say infrastructure they usually mean cables, pipes and servers. We would like to propose a softer definition: whatever lets a group keep going when nobody is in charge.</p>
-
-<h3>The kitchen-table network</h3>
-<p>A collective’s most reliable infrastructure is often an unremarkable one. A shared spreadsheet, a group chat with a long memory, a standing Thursday dinner where decisions get made without being called decisions. These arrangements are rarely designed, yet they carry weight: they distribute news, absorb conflict and remember who owes whom a favour.</p>
-<p>What makes them soft is not that they are weak but that they bend. They survive by being rewritten, informally, by everyone who touches them.</p>
-
-<figure>
-    <img src="/images/infrastructure.svg" alt="Pink background with circular nodes of different sizes joined by lines of different thickness, forming an uneven network.">
-    <figcaption>Fig. 1 — Map of who calls whom during an ordinary week. Line thickness shows frequency.</figcaption>
-</figure>
-
-<h4>Maintenance without a budget</h4>
-<p>Soft infrastructures run on goodwill, and goodwill is not renewable by default. The risk is that the same two or three people end up holding the whole structure together, quietly, until they stop. Naming that labour, rotating it and thanking it are modest practices, but they are the difference between a network and a dependency.</p>
-
-<blockquote>
-    <p>What a group can do together is limited by what it is willing to remember together.</p>
-    <footer>Odile Rasmussen, <cite>Minutes of a Small Assembly</cite></footer>
-</blockquote>
-
-<h3>Designing for slowness</h3>
-<p>Fast systems optimise for response; soft ones optimise for return. A letter, a recurring meeting, an annual gathering: each makes a promise that someone will come back. When we design tools for collectives we might therefore ask less how quickly something can be sent and more how reliably it can be picked up again.</p>
-<p>This also changes how we think about failure. A soft infrastructure is allowed to go quiet for a while. Its test is not whether it never stops, but whether it can be started again by someone new.</p>
-
-<p>Isolde Varga is an organiser and researcher whose work looks at how informal groups sustain themselves over time.</p>
-</article>
-<hr>
-
-<article id="a-field-guide-to-machine-moods">
-<h2>A Field Guide to Machine Moods</h2>
-<p>Kenji Abara-Holm</p>
-
-<p>Machines do not have moods, of course. But they have patterns, and patterns are what we read as mood in anything that does not speak.</p>
-
-<h3>How to use this guide</h3>
-<p>Observation works best at a distance and over time. Sit near your device without asking anything of it and note what it does when ignored. The entries below describe three common dispositions; none is permanent, and all can be observed in the same machine within a single afternoon.</p>
-
-<h4>The Sulk</h4>
-<p>Typically appears after an update. The interface responds, but with a lag just long enough to feel pointed. Progress bars hover at ninety-nine per cent. Best approached with patience and a cup of tea; pleading makes no measurable difference.</p>
-
-<h4>The Hum</h4>
-<p>A low, contented drone from the fan or the power supply, usually heard late in the evening. It indicates stable operation and an absence of demands. Many people report that the hum becomes audible only once they stop working, which suggests that it has been there all along.</p>
-
-<h4>The Glitter</h4>
-<p>A brief, startling burst of colour or noise, often from a screen that has been left on too long. Harmless, occasionally beautiful, and the one mood that most reliably makes strangers lean in to look.</p>
-
-<figure>
-    <img src="/images/moods.svg" alt="Three overlapping translucent blobs in orange, teal and yellow on a cream background.">
-    <figcaption>Fig. 1 — Three moods plotted on one surface: sulk (orange), hum (teal), glitter (yellow).</figcaption>
-</figure>
-
-<blockquote>
-    <p>We name the weather so that we can live with it.</p>
-    <footer>Pilar Oyelaran-Wu, <cite>A Dictionary of Small Atmospheres</cite></footer>
-</blockquote>
-
-<h3>A note on projection</h3>
-<p>Reading mood into machines says as much about us as about them. It shows how readily attention turns every steady rhythm into company. The guide does not ask you to stop doing this, only to notice that you are.</p>
-
-<p>Kenji Abara-Holm is a designer and occasional field recordist interested in the everyday behaviour of electronics.</p>
-</article>
-<hr>
-
-<article id="letters-to-a-future-interface">
-<h2>Letters to a Future Interface</h2>
-<p>Noor Benedetti</p>
-
-<p>These letters were written over one winter, each addressed to a device that does not exist yet and might never be built.</p>
-
-<h3>First letter: on touch</h3>
-<p>Dear Interface, I hope that when you arrive you will have learned something about hands. Ours are not tidy. They are cold in the morning, they hesitate, they press harder when they are anxious. I would like you to treat that as information, not as noise.</p>
-<p>I imagine you responding the way a good host does: noticing who has come in and adjusting the room, without announcing it.</p>
-
-<blockquote>
-    <p>To be touched back is the oldest form of being answered.</p>
-    <footer>Marguerite Delacroix-Njoroge, <cite>Small Treatises on Contact</cite></footer>
-</blockquote>
-
-<figure>
-    <img src="/images/letters.svg" alt="A stack of slightly rotated sheets of paper, the top one covered in lines of handwriting.">
-    <figcaption>Fig. 1 — The letters, stacked in the order they were written.</figcaption>
-</figure>
-
-<h3>Second letter: on forgetting</h3>
-<p>Dear Interface, please learn to forget. Not everything we tell you is meant to be kept, and some things are only true for an afternoon. A friend who remembers every remark we ever made would be exhausting; a good one lets us change.</p>
-<p>If you must keep records, let them fade at the edges like pencil. Let us find them again by accident, years later, and be surprised.</p>
-
-<h4>Postscript</h4>
-<p>I realise I am asking for a great deal: tenderness, discretion, a sense of timing. But we asked as much of the telephone, and of the postal service, and of the neighbour who held our spare key. Each of them, imperfectly, learned.</p>
-
-<p>Noor Benedetti writes essays and short fiction about domestic technologies and the manners we develop around them.</p>
-</article>
-<hr>
-
-<section id="bibliography">
-<h2>Bibliography</h2>
-
-<p>Abara-Holm, Kenji. 2021. “Weather Reports from the Desk: Notes on Device Behaviour.” <cite>Quarterly of Small Technologies</cite> 7 (2): 33–48.</p>
-
-<p>Benedetti, Noor. 2019. <cite>Manners for Machines: Short Essays on Living with Things That Answer Back</cite>. Rotterdam: Linden Row Press.</p>
-
-<p>Delacroix-Njoroge, Marguerite. 2008. <cite>Small Treatises on Contact</cite>. Lisbon: Editora Casa Estreita.</p>
-
-<p>Hartmann-Osei, Pia, ed. 2020. <cite>Sound and Shared Attention</cite>. Malmö: Harbour Street Press.</p>
-
-<p>Lindgren-Adeyemi, Sofia. 2015. <cite>Hands, Screens, Habits: A Study of Everyday Touch</cite>. Leeds: Open Palm Press.</p>
-
-<p>Marchetti, Ilse. 2014. <cite>Notes on Quiet Machines</cite>. Turin: Edizioni Soglia Bassa.</p>
-
-<p>Okafor-Lindqvist, Maren. 2020. “Rooms That Listen: A Score for Domestic Acoustics.” In <cite>Sound and Shared Attention</cite>, edited by Pia Hartmann-Osei, 112–131. Malmö: Harbour Street Press.</p>
-
-<p>Oyelaran-Wu, Pilar. 2012. <cite>A Dictionary of Small Atmospheres</cite>. Singapore: Paper Weather Books.</p>
-
-<p>Quist, Anselm. 2003. <cite>The Long Afterlife of Objects</cite>. Leeds: Mending Table Press.</p>
-
-<p>Rasmussen, Odile. 2017. <cite>Minutes of a Small Assembly: Notes on Informal Organising</cite>. Aarhus: Kitchen Table Editions.</p>
-
-<p>Ríos, Tavish. 2018. “The Maintainer’s Calendar.” <cite>Maintenance &amp; Care Review</cite> 3: 9–21.</p>
-
-<p>Sørensen, Leif, and Amara Diop. 2013. <cite>Room Tone</cite>. Field recordings, 48 min. Copenhagen: Quiet Hours Records.</p>
-
-<p>Tanaka-Weiss, Emil. 2016. “On Forgetting Well: Memory as a Design Material.” <cite>Quarterly of Small Technologies</cite> 5 (1): 60–74.</p>
-
-<p>Varga, Isolde. 2022. “Soft Infrastructures: Collectives That Continue.” <cite>Journal of Informal Organisations</cite> 12 (1): 5–27.</p>
-</section>
-<hr>
-
-<p>Placeholder content: titles, authors, quotations and references in this issue are fictional.</p>
 </main>
 </body>
 </html>

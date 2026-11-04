@@ -6,41 +6,47 @@
 {# Archivio: tabella dei progetti. Ordinamento e filtro stanno nell'indirizzo (?sort=...&type=...). #}
 {# Ogni link ricostruisce anche l'altro parametro, altrimenti cliccare un filtro azzererebbe l'ordine e viceversa. #}
 {# I valori arrivano già validati dalla view project_list. La colonna Type non è ordinabile (è una M2M). #}
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5 mb-5">
 
-<div class="col-8 text-center text-uppercase">
-    <a href="?sort={{ current_sort }}"{% if not current_type %} class="active"{% endif %}>All</a> /
-    {% for type in types %}
-    <a href="?sort={{ current_sort }}&type={{ type.slug }}"{% if current_type == type.slug %} class="active"{% endif %}>{{ type.name }} </a>
-    {% if not forloop.last %}/{% endif %}
-    {% endfor %}
-</div>
-</div>
-
-        {% for project in projects %}
-<div class="container row border-bottom border-bottom py-2">
-        <div class="list-label col-9 p-0">{% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
-        <div class="list-label col-3 text-end p-0">{{ project.date|date:"b 'y" }}</div>
-        <div class="list-title p-0 mt-1"><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></div>
-</div>
-        {% empty %}
-        <div class="container row">
-        <div class="list-title">No projects yet.</div>
-</div>
+    <div class="col-8 text-center text-uppercase" id="filter">
+        <a href="?sort={{ current_sort }}" {% if not current_type %} class="active" {% endif %}>All</a> /
+        {% for type in types %}
+        <a href="?sort={{ current_sort }}&type={{ type.slug }}" {% if current_type == type.slug %} class="active"
+            {% endif %}>{{ type.name }}</a>
+        {% if not forloop.last %} / {% endif %}
         {% endfor %}
+    </div>
+</div>
+
+{% for project in projects %}
+<div class="container row border-bottom py-2 archive-row">
+    <div class="list-label col-9 col-lg-2 p-0">
+        {% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+    </div>
+    <div class="list-label col-3 col-lg-1 text-end p-0">{{ project.date|date:"b 'y" }}</div>
+    <div class="list-title col-lg-9 p-0 mt-1 order-lg-first"><a
+            href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></div>
+</div>
+{% empty %}
+<div class="container row">
+    <div class="list-title">No projects yet.</div>
+</div>
+{% endfor %}
 
 
-<table style="width: 100%; margin-top: 40px">
+{% comment %} <table style="width: 100%; margin-top: 40px">
     <thead style="text-align: left;">
         <tr>
             <th>
-                <a href="?sort={% if current_sort == 'title' %}-title{% else %}title{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}">
+                <a
+                    href="?sort={% if current_sort == 'title' %}-title{% else %}title{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}">
                     Title{% if current_sort == 'title' %} ▲{% elif current_sort == '-title' %} ▼{% endif %}
                 </a>
             </th>
             <th>Type</th>
             <th>
-                <a href="?sort={% if current_sort == 'date' %}-date{% else %}date{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}">
+                <a
+                    href="?sort={% if current_sort == 'date' %}-date{% else %}date{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}">
                     Date{% if current_sort == 'date' %} ▲{% elif current_sort == '-date' %} ▼{% endif %}
                 </a>
             </th>
@@ -50,12 +56,15 @@
         {% for project in projects %}
         <tr>
             <td><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></td>
-            <td>{% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+            <td>{% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %},
+                {% endif %}{% endfor %}</td>
             <td>{{ project.date }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="3">No projects yet.</td></tr>
+        <tr>
+            <td colspan="3">No projects yet.</td>
+        </tr>
         {% endfor %}
     </tbody>
-</table>
+</table> {% endcomment %}
 {% endblock %}

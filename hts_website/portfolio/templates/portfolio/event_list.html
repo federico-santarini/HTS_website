@@ -5,31 +5,42 @@
 {% block content %}
 {# upcoming_events e past_events arrivano già divisi e ordinati dalla view event_list. #}
 {# Le due liste hanno lo stesso markup: se cambia il layout di un evento, modificarle entrambe. #}
-<h1>Upcoming Events</h1>
-<ul>
-    {% for event in upcoming_events %}
-    <li style="margin-bottom: 40px;">
-        <strong>{{ event.date }}</strong> — {{ event.title }}
-        {% if event.location %} ({{ event.location }}){% endif %}
-        <p>{{ event.description }}</p>
-        {% if event.event_url %}<a href="{{ event.event_url }}">More info</a>{% endif %}
-    </li>
-    {% empty %}
-    <li>No upcoming events.</li>
-    {% endfor %}
-</ul>
+{# Stesse righe dell'archivio (.archive-row, .list-label); il titolo ha la stessa resa delle references (.event-title in custom.css). #}
+<h1 class="visually-hidden">Events</h1>
 
-<h1>Past Events</h1>
-<ul>
-    {% for event in past_events %}
-    <li style="margin-bottom: 40px;">
-        <strong>{{ event.date }}</strong> — {{ event.title }}
-        {% if event.location %} ({{ event.location }}){% endif %}
-        <p>{{ event.description }}</p>
-        {% if event.event_url %}<a href="{{ event.event_url }}">More info</a>{% endif %}
-    </li>
-    {% empty %}
-    <li>No past events.</li>
-    {% endfor %}
-</ul>
+<h2 class="section-label mt-5">Upcoming events</h2>
+{% for event in upcoming_events %}
+<article class="container row border-bottom py-4 archive-row">
+    <div class="col-lg-3 p-0">
+        <div class="list-label">{{ event.date|date:"j F Y" }}</div>
+        {% if event.location_label %}<div class="reference-label text-break mt-1">{% if event.location_url %}<a href="{{ event.location_url }}">{{ event.location_label }}</a>{% else %}{{ event.location_label }}{% endif %}</div>{% endif %}
+    </div>
+    <div class="col-lg-9 p-0 mt-3 mt-lg-0">
+        <h3 class="event-title">{{ event.title }}</h3>
+        <p class="project-description mt-2 mb-0 col-lg-8">{{ event.description }}</p>
+        {% if event.event_url %}<div class="list-label"><a href="{{ event.event_url }}">More info</a></div>{% endif %}
+    </div>
+</article>
+{% empty %}
+<p class="list-title mt-3">No upcoming events.</p>
+{% endfor %}
+
+
+
+<h2 class="section-label mt-5">Past events</h2>
+{% for event in past_events %}
+<article class="container row border-bottom py-4 archive-row">
+    <div class="col-lg-3 p-0">
+        <div class="list-label">{{ event.date|date:"j F Y" }}</div>
+        {% if event.location_label %}<div class="reference-label text-break mt-1">{% if event.location_url %}<a href="{{ event.location_url }}">{{ event.location_label }}</a>{% else %}{{ event.location_label }}{% endif %}</div>{% endif %}
+    </div>
+    <div class="col-lg-9 p-0 mt-3 mt-lg-0">
+        <h3 class="event-title">{{ event.title }}</h3>
+        <p class="project-description mt-2 mb-0 col-lg-8">{{ event.description }}</p>
+        {% if event.event_url %}<div class="list-label"><a href="{{ event.event_url }}">More info</a></div>{% endif %}
+    </div>
+</article>
+{% empty %}
+<p class="list-title mt-3">No past events.</p>
+{% endfor %}
 {% endblock %}

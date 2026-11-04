@@ -66,7 +66,11 @@ def contributor_list(request):
 
 
 def contributor_detail(request, pk):
-    contributor = get_object_or_404(Contributor, pk=pk)
+    # I progetti arrivano già ordinati (più recenti prima) e con le tipologie: il template non fa query per ogni riga.
+    projects = Project.objects.order_by("-date").prefetch_related("project_types")
+    contributor = get_object_or_404(
+        Contributor.objects.prefetch_related("images", Prefetch("projects", queryset=projects)), pk=pk
+    )
     return render(request, "portfolio/contributor_detail.html", {"contributor": contributor})
 
 

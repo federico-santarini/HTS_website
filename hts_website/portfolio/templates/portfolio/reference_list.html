@@ -4,25 +4,46 @@
 
 {% block content %}
 {# Il filtro per tipo usa ?kind=...; il valore è validato dalla view reference_list. #}
-<h1>References</h1>
 
-<div>
-    Type:
-    <a href="?"{% if not current_kind %} class="active"{% endif %}>All /</a>
+<div class="row justify-content-center mt-5 mb-5">
+<div class="col-8 text-center text-uppercase" id="filter">
+    <a href="?"{% if not current_kind %} class="active"{% endif %}>All</a> /
     {% for value, label in kinds %}
-    <a href="?kind={{ value }}"{% if current_kind == value %} class="active"{% endif %}>{{ label }} /</a>
+    <a href="?kind={{ value }}"{% if current_kind == value %} class="active"{% endif %}>{{ label }}s</a>
+    {% if not forloop.last %} / {% endif %}
     {% endfor %}
 </div>
+</div>
 
-<ul>
+<div class="row">
     {% for reference in references %}
-    <li style="margin-bottom: 40px;">
+    <div class="mb-5 border-bottom">
+        <div class="reference-title m-0">{{ reference.title }}</div>
+        <div class="reference-author-date mt-2">{{ reference.author }}{% if reference.author and reference.year %}, {% endif %}{{ reference.year|default_if_none:"" }} ({{ reference.kind }}) </div>
+        {% if reference.notes %}<p class="reference-notes mt-2 mb-0 col-6"> <span class="reference-label">Notes:</span><br>{{ reference.notes }}</p>{% endif %}
+        <div class="mt-3 mb-5"><span class="reference-label">Projects:</span>
+            {% if reference.projects.all %}
+            {% for project in reference.projects.all %}
+            <br><a class="reference-project" href="{% url 'project_detail' project.pk %}">{{ project.title }}</a>
+            {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            {% else %}
+            <span class="text-muted">No projects</span>
+            {% endif %}
+        </div>
+        {% if reference.image %}<img src="{{ reference.image.url }}" alt="{{ reference.title }}" style="max-width: 300px;">{% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% comment %} <ul>
+    {% for reference in references %}
+    <li style="margin-bottom: 40px;" class="col-6">
         <strong>{% if reference.url %}<a href="{{ reference.url }}">{{ reference.title }}</a>{% else %}{{ reference.title }}{% endif %}</strong>
         ({{ reference.get_kind_display }})
         {% if reference.author or reference.year %}
         <div>{{ reference.author }}{% if reference.author and reference.year %}, {% endif %}{{ reference.year|default_if_none:"" }}</div>
         {% endif %}
-        {% if reference.notes %}<p>{{ reference.notes }}</p>{% endif %}
+        {% if reference.notes %}<p>Notes: {{ reference.notes }}</p>{% endif %}
         {% if reference.projects.all %}
         <div>Projects: {% for project in reference.projects.all %}<a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
         {% endif %}
@@ -31,5 +52,5 @@
     {% empty %}
     <li>No references yet.</li>
     {% endfor %}
-</ul>
+</ul> {% endcomment %}
 {% endblock %}
