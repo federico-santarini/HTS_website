@@ -36,7 +36,9 @@ HTS_website/
     ├── publication/              # la pubblicazione statica (index.html + publication.css + images/)
     ├── static/                   # file statici del sito
     │   ├── css/custom.css        # lo stile personale, caricato dopo Bootstrap
+    │   ├── audio/intro.mp3       # suono dell'intro animato (15 s)
     │   ├── fonts/trial/          # font in versione trial (ignorata da git, vedi Frontend)
+    │   ├── js/                   # gallery.js (modale immagini), players.js (player), intro.js (intro animato)
     │   └── vendor/bootstrap/     # Bootstrap 5.3.8, copia locale (non si modifica)
     └── media/                    # immagini caricate dall'admin (non versionata)
 ```
@@ -185,6 +187,24 @@ comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione "Playe
   Dei parametri di `SOUNDCLOUD_PARAMS` oggi conta poco: l'interfaccia ufficiale non si vede.
 - **Da verificare su iPhone**: Safari iOS può rifiutare il `play()` dato da JavaScript al widget di SoundCloud (gli serve
   un gesto dentro l'iframe). Provato solo su desktop.
+
+**Intro animato della homepage.** Sulla homepage (solo lì) appare uno strato nero a tutto schermo: "welcome to HTS", un
+clic fa partire il suono di un modem 56k (`static/audio/intro.mp3`, 15 secondi), il testo sparisce, tre linee disegnano il
+triskele e una dissolvenza porta alla pagina. Dura quanto l'audio, dal clic in poi.
+- **Si accende e si spegne** dall'admin: **Site settings** (un solo record, `SiteSettings` in `models.py`; acceso di default).
+- **Audio come blob**: `intro.js` scarica il file e lo dà al player come blob, perché Safari non riproduce un audio che il server non sa servire a pezzi (HTTP Range) e il server di sviluppo di Django non lo sa fare.
+- **Perché serve il clic**: i browser non fanno partire l'audio senza un gesto della persona (su iPhone mai). Il clic sul testo
+  sblocca l'audio. Se l'audio non parte comunque, la sequenza va avanti senza suono.
+- **Una volta per sessione del browser** (`sessionStorage`, chiave `htsIntroSeen`), e **mai** con "riduci movimento" attivo.
+  Il tasto **Skip** (o Esc) lo chiude subito e ferma l'audio. Mentre dura, il resto della pagina non è cliccabile (`inert`).
+- **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `triskele.svg` con `pathLength="1"`: si disegna con
+  `stroke-dashoffset`, come il trim paths di After Effects), comportamento e **tempi** in `static/js/intro.js` (oggetto
+  `TIMELINE` in cima), aspetto in `custom.css` (sezione "Intro animato": colori, spessore, dimensioni, in variabili `--intro-...`).
+- **Rete di sicurezza**: senza JavaScript lo strato non compare; se `intro.js` non parte, sparisce da solo dopo 4 secondi.
+- **Audio**: ritagliato da un video YouTube ("The Sound of dial-up Internet", William Termini, licenza YouTube standard):
+  **prima di pubblicare il sito va verificato il diritto d'uso**, o sostituito con una registrazione libera (stesso
+  nome di file e stessa durata, o cambiare `fallbackDuration` in `intro.js`). Se si cambia la durata dell'audio i tempi si adattano.
+- Non provato su iPhone/Safari: lì il comportamento dell'audio è il più delicato.
 
 **Cancellare una tipologia.** Per una many-to-many Django non ha `on_delete=PROTECT`: senza protezione
 cancellerebbe in silenzio i collegamenti con i progetti. Per questo `ProjectTypeAdmin` (in `admin.py`) elenca i

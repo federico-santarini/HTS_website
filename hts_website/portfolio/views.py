@@ -3,11 +3,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Contributor, Event, Project, ProjectType, Reference
+from .models import Contributor, Event, Project, ProjectType, Reference, SiteSettings
 
 
 def home(request):
-    return render(request, "portfolio/home.html")
+    """Homepage. L'intro animato si mostra solo qui, e solo se acceso nelle impostazioni del sito (admin)."""
+    return render(request, "portfolio/home.html", {"intro_enabled": SiteSettings.load().intro_enabled})
 
 
 def project_list(request):

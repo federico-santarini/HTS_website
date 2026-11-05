@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Contributor, ContributorImage, Event, Project, ProjectImage, ProjectType, Reference
+from django.shortcuts import redirect
+
+from .models import Contributor, ContributorImage, Event, Project, ProjectImage, ProjectType, Reference, SiteSettings
 
 
 # Inline: le immagini si caricano dalla stessa pagina del progetto/contributor,
@@ -95,3 +97,17 @@ class ReferenceAdmin(admin.ModelAdmin):
     list_filter = ["kind"]
     search_fields = ["title", "author", "notes"]
     filter_horizontal = ["projects"]  # widget a due colonne per scegliere i progetti collegati
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    """Un solo record: la voce nel menu porta dritta alla scheda, senza "aggiungi" né "cancella"."""
+
+    def has_add_permission(self, request):
+        return False  # il record lo crea SiteSettings.load() al primo uso
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        return redirect("admin:portfolio_sitesettings_change", SiteSettings.load().pk)

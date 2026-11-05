@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from django.test import Client, SimpleTestCase, TestCase, override_settings
 
 from .embeds import soundcloud_embed_url, youtube_embed_url, youtube_thumbnail_url
-from .models import Contributor, Project, Reference
+from .models import Contributor, Project, Reference, SiteSettings
 
 
 class PublicationMiddlewareTests(SimpleTestCase):
@@ -365,3 +365,44 @@ class ProjectEmbedTests(TestCase):
                 with self.assertRaises(ValidationError) as ctx:
                     project.full_clean()
                 self.assertIn(field, ctx.exception.message_dict)
+
+
+class SiteSettingsTests(TestCase):
+    """Intro animato della homepage: interruttore nelle impostazioni del sito (un solo record) e comparsa solo sulla home."""
+
+    def test_load_creates_the_single_record_with_the_intro_on(self):
+        settings = SiteSettings.load()
+        self.assertTrue(settings.intro_enabled)
+        self.assertEqual(SiteSettings.objects.count(), 1)
+
+    def test_saving_another_record_overwrites_instead_of_adding(self):
+        SiteSettings.load()
+        SiteSettings.objects.create(intro_enabled=False)
+        self.assertEqual(SiteSettings.objects.count(), 1)
+        self.assertFalse(SiteSettings.load().intro_enabled)
+
+    def test_home_has_the_intro_when_enabled(self):
+        html = self.client.get("/").content.decode()
+        self.assertIn('id="intro"', html)
+        self.assertIn("welcome to HTS", html)
+        self.assertIn("audio/intro.mp3", html)
+        self.assertEqual(html.count("<path pathLength"), 3)
+
+    def test_home_has_no_intro_when_disabled(self):
+        settings = SiteSettings.load()
+        settings.intro_enabled = False
+        settings.save()
+        self.assertNotIn('id="intro"', self.client.get("/").content.decode())
+
+    def test_other_pages_never_have_the_intro(self):
+        for path in ["/about/", "/projects/", "/events/", "/contributors/"]:
+            with self.subTest(path=path):
+                self.assertNotIn('id="intro"', self.client.get(path).content.decode())
+
+    def test_admin_entry_goes_straight_to_the_single_record_and_cannot_add_or_delete(self):
+        admin_user = get_user_model().objects.create_superuser("admin_user", password="x")
+        self.client.force_login(admin_user)
+        response = self.client.get("/admin/portfolio/sitesettings/")
+        self.assertRedirects(response, f"/admin/portfolio/sitesettings/{SiteSettings.load().pk}/change/")
+        self.assertEqual(self.client.get("/admin/portfolio/sitesettings/add/").status_code, 403)
+        self.assertEqual(self.client.get(f"/admin/portfolio/sitesettings/{SiteSettings.load().pk}/delete/").status_code, 403)

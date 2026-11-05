@@ -600,3 +600,99 @@ mask-composite: intersect;
     font-size: 1.25rem;
     line-height: 1.2;
 }
+
+/* ---------- Intro animato della homepage (markup: _intro.html, comportamento e tempi: static/js/intro.js) ---------- */
+.intro {
+    /* Valori da cambiare qui. Linea e testo: colori, spessore, dimensioni. */
+    --intro-bg: #000;
+    --intro-text-color: #fff;
+    --intro-text-size: clamp(1.5rem, 4vw, 2.5rem);
+    --intro-text-letter-spacing: 0.05em;
+    --intro-line-color: #fff;
+    --intro-line-width: 15;                      /* nelle unità del disegno (500 di larghezza): 15 è lo spessore del file originale */
+    --intro-triskele-size: min(60vmin, 28rem);   /* larghezza del triskele */
+    --intro-skip-color: var(--hts-muted);
+
+    position: fixed;
+    inset: 0;
+    z-index: 2000; /* sopra la navbar (1020) e i modali (1055) */
+    display: grid;
+    place-items: center;
+    background: var(--intro-bg);
+}
+
+/* Testo e triskele stanno nella stessa cella: il secondo prende il posto del primo. */
+.intro > .intro-enter,
+.intro > .intro-triskele {
+    grid-area: 1 / 1;
+}
+
+.intro-enter {
+    padding: 1rem 2rem;
+    background: none;
+    border: 0;
+    color: var(--intro-text-color);
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: var(--intro-text-size);
+    letter-spacing: var(--intro-text-letter-spacing);
+    cursor: pointer;
+}
+/* Il cursore lampeggiante dice che il testo è cliccabile. */
+.intro-enter::after {
+    content: "_";
+    animation: intro-blink 1s steps(1) infinite;
+}
+@keyframes intro-blink {
+    50% { opacity: 0; }
+}
+
+.intro-triskele {
+    width: var(--intro-triskele-size);
+    height: auto;
+    overflow: visible;
+    /* Sta nella stessa cella del testo e, venendo dopo nel codice, gli finirebbe SOPRA intercettando il clic: va lasciato passare. */
+    pointer-events: none;
+}
+.intro-triskele path {
+    fill: none;
+    stroke: var(--intro-line-color);
+    stroke-width: var(--intro-line-width);
+    stroke-linecap: round;
+    stroke-dasharray: 1; /* con pathLength="1" ogni linea è lunga 1: dashoffset 1 = nascosta, 0 = disegnata (lo imposta intro.js) */
+    stroke-dashoffset: 1;
+    visibility: hidden;
+}
+
+.intro-skip {
+    position: absolute;
+    right: max(1.5rem, env(safe-area-inset-right));
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    padding: 0.5rem;
+    background: none;
+    border: 0;
+    color: var(--intro-skip-color);
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.intro-skip:hover,
+.intro-skip:focus-visible {
+    color: var(--hts-accent);
+}
+
+/* Mentre l'intro è attivo la pagina sotto non scorre. */
+html.intro-ready {
+    overflow: hidden;
+}
+
+/* Rete di sicurezza: se intro.js non parte (non si carica, errore) lo strato nero sparisce da solo dopo 4 secondi. */
+html:not(.intro-ready) .intro {
+    animation: intro-failsafe 0.3s 4s forwards;
+}
+@keyframes intro-failsafe {
+    to { opacity: 0; visibility: hidden; }
+}

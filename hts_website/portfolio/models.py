@@ -6,6 +6,7 @@ Modelli del portfolio e relazioni tra loro (schema completo nel README):
 - Project <-> Reference: M2M, si modifica dall'admin della referenza.
 - ProjectImage / ContributorImage: immagini multiple, ForeignKey con related_name="images".
 - Event: indipendente, nessuna relazione con gli altri modelli.
+- SiteSettings: un solo record con gli interruttori del sito (oggi: l'intro animato della homepage).
 """
 from django.db import models
 from django.utils import timezone
@@ -170,3 +171,30 @@ class Reference(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SiteSettings(models.Model):
+    """Interruttori del sito, modificabili dall'admin. C'è un solo record (sempre pk=1): si legge con SiteSettings.load()."""
+
+    intro_enabled = models.BooleanField(
+        default=True,
+        help_text="Show the animated intro on the homepage. Visitors see it once per browser session.",
+    )
+
+    class Meta:
+        verbose_name = "site settings"
+        verbose_name_plural = "site settings"
+
+    def __str__(self):
+        return "Site settings"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # un record solo: salvarne un altro lo sovrascrive invece di aggiungerlo
+        kwargs["force_insert"] = False  # objects.create() chiederebbe un INSERT, che con pk=1 già presente darebbe errore
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """Il record delle impostazioni; se non esiste ancora (primo avvio) lo crea con i valori di default."""
+        settings, _ = cls.objects.get_or_create(pk=1)
+        return settings

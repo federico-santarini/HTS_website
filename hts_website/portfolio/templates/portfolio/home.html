@@ -1,4 +1,7 @@
 {% extends "portfolio/base.html" %}
 
+{# L'intro parte solo se acceso in Admin -> Site settings (view home). Aspetto e comportamento: _intro.html, custom.css, static/js/intro.js. #}
+{% block intro %}{% if intro_enabled %}{% include "portfolio/_intro.html" %}{% endif %}{% endblock %}
+
 {% block content %}
 {% endblock %}

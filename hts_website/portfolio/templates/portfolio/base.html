@@ -12,6 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Alegreya&family=Alegreya+SC&display=swap" rel="stylesheet">
 </head>
 <body>
+    {# Strato a tutto schermo sopra la pagina (l'intro animato della homepage). Vuoto nelle altre pagine. #}
+    {% block intro %}{% endblock %}
+
     {# Navbar comune a tutte le pagine: ogni pagina estende questo template. #}
     {# "Publication" compare solo se PUBLICATION_URL è impostata (context processor in portfolio/context_processors.py). #}
     {# Sempre visibile in cima (sticky-top): il contenuto le scorre sotto. Marchio a sinistra, voci a destra. #}
