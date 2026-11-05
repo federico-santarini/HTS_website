@@ -46,3 +46,20 @@ class PublicationMiddleware:
         if static_file is None:
             return HttpResponseNotFound("Not found")
         return WhiteNoiseMiddleware.serve(static_file, request)
+
+
+class NoIndexMiddleware:
+    """Con settings.NOINDEX acceso aggiunge "X-Robots-Tag: noindex, nofollow" a ogni risposta.
+
+    Dice ai motori di ricerca di non indicizzare né seguire nulla: serve online finché il sito non è finito.
+    Usa l'intestazione e non robots.txt, perché un "Disallow" impedirebbe ai motori di leggere proprio il "noindex".
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if settings.NOINDEX:
+            response["X-Robots-Tag"] = "noindex, nofollow"
+        return response

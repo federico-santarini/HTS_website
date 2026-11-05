@@ -1,0 +1,9 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "deploy": {
+    "preDeployCommand": ["python manage.py migrate --noinput", "python manage.py ensure_superuser"],
+    "startCommand": "sh -c 'python manage.py collectstatic --noinput && gunicorn hts_website.wsgi --bind 0.0.0.0:$PORT --workers 2 --access-logfile -'",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  }
+}

@@ -7,7 +7,7 @@ from .models import Contributor, Event, Project, ProjectType, Reference, SiteSet
 
 
 def home(request):
-    """Homepage. L'intro animato si mostra solo qui, e solo se acceso nelle impostazioni del sito (admin)."""
+    """Homepage. L'intro animato si mostra solo qui, e solo se acceso nelle impostazioni del sito (admin; spento di default)."""
     return render(request, "portfolio/home.html", {"intro_enabled": SiteSettings.load().intro_enabled})
 
 

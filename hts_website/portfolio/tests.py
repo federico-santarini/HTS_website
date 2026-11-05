@@ -5,12 +5,17 @@ Le classi basate su TestCase usano il database: Django crea un database temporan
 (test_<nome del db>) e lo cancella alla fine, quindi l'utente Postgres deve poter
 creare database. Il database vero non viene toccato.
 """
+import os
 import re
 import tempfile
+from io import StringIO
+from unittest import mock
 from pathlib import Path
 from urllib.parse import parse_qs, urljoin, urlparse
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.core.management import call_command
 from django.core.exceptions import ValidationError
 from django.test import Client, SimpleTestCase, TestCase, override_settings
 
@@ -370,18 +375,19 @@ class ProjectEmbedTests(TestCase):
 class SiteSettingsTests(TestCase):
     """Intro animato della homepage: interruttore nelle impostazioni del sito (un solo record) e comparsa solo sulla home."""
 
-    def test_load_creates_the_single_record_with_the_intro_on(self):
+    def test_load_creates_the_single_record_with_the_intro_off(self):
         settings = SiteSettings.load()
-        self.assertTrue(settings.intro_enabled)
+        self.assertFalse(settings.intro_enabled)
         self.assertEqual(SiteSettings.objects.count(), 1)
 
     def test_saving_another_record_overwrites_instead_of_adding(self):
         SiteSettings.load()
-        SiteSettings.objects.create(intro_enabled=False)
+        SiteSettings.objects.create(intro_enabled=True)
         self.assertEqual(SiteSettings.objects.count(), 1)
-        self.assertFalse(SiteSettings.load().intro_enabled)
+        self.assertTrue(SiteSettings.load().intro_enabled)
 
     def test_home_has_the_intro_when_enabled(self):
+        SiteSettings.objects.create(intro_enabled=True)
         html = self.client.get("/").content.decode()
         self.assertIn('id="intro"', html)
         self.assertIn("welcome to HTS", html)
@@ -389,9 +395,7 @@ class SiteSettingsTests(TestCase):
         self.assertEqual(html.count("<path pathLength"), 3)
 
     def test_home_has_no_intro_when_disabled(self):
-        settings = SiteSettings.load()
-        settings.intro_enabled = False
-        settings.save()
+        SiteSettings.objects.create(intro_enabled=False)
         self.assertNotIn('id="intro"', self.client.get("/").content.decode())
 
     def test_other_pages_never_have_the_intro(self):
@@ -406,3 +410,68 @@ class SiteSettingsTests(TestCase):
         self.assertRedirects(response, f"/admin/portfolio/sitesettings/{SiteSettings.load().pk}/change/")
         self.assertEqual(self.client.get("/admin/portfolio/sitesettings/add/").status_code, 403)
         self.assertEqual(self.client.get(f"/admin/portfolio/sitesettings/{SiteSettings.load().pk}/delete/").status_code, 403)
+
+
+class NoIndexTests(TestCase):
+    """NOINDEX: l'intestazione che chiede ai motori di ricerca di non indicizzare, su ogni risposta."""
+
+    @override_settings(NOINDEX=True)
+    def test_header_is_on_pages_and_static_files_when_enabled(self):
+        for path in ["/about/", "/static/css/custom.css"]:
+            with self.subTest(path=path):
+                self.assertEqual(self.client.get(path)["X-Robots-Tag"], "noindex, nofollow")
+
+    @override_settings(NOINDEX=False)
+    def test_no_header_when_disabled(self):
+        self.assertNotIn("X-Robots-Tag", self.client.get("/about/"))
+
+
+class AuthorsGroupTests(TestCase):
+    """Il gruppo "Authors" (creato da migrate): gestisce i contenuti, non utenti né impostazioni del sito."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.author = get_user_model().objects.create_user("an_author", password="x", is_staff=True)
+        cls.author.groups.add(Group.objects.get(name="Authors"))
+
+    def setUp(self):
+        self.client.force_login(self.author)
+
+    def test_author_can_manage_content(self):
+        for model in ["project", "contributor", "event", "reference", "projecttype"]:
+            with self.subTest(model=model):
+                self.assertEqual(self.client.get(f"/admin/portfolio/{model}/").status_code, 200)
+                self.assertEqual(self.client.get(f"/admin/portfolio/{model}/add/").status_code, 200)
+
+    def test_author_cannot_touch_site_settings_or_accounts(self):
+        for path in ["/admin/portfolio/sitesettings/", "/admin/auth/user/", "/admin/auth/group/"]:
+            with self.subTest(path=path):
+                self.assertEqual(self.client.get(path).status_code, 403)
+
+
+class EnsureSuperuserTests(TestCase):
+    """Comando ensure_superuser: crea il superuser dall'ambiente se manca, senza mai toccarne uno esistente."""
+
+    ENV = {"DJANGO_SUPERUSER_USERNAME": "boss", "DJANGO_SUPERUSER_PASSWORD": "a-long-test-password"}
+
+    def run_command(self, env):
+        with mock.patch.dict(os.environ, env, clear=False):
+            call_command("ensure_superuser", stdout=StringIO())
+
+    def test_creates_the_superuser_once(self):
+        self.run_command(self.ENV)
+        user = get_user_model().objects.get(username="boss")
+        self.assertTrue(user.is_superuser and user.is_staff)
+        self.assertTrue(user.check_password("a-long-test-password"))
+
+    def test_existing_user_is_left_alone(self):
+        get_user_model().objects.create_superuser("boss", password="the-original-password")
+        self.run_command({**self.ENV, "DJANGO_SUPERUSER_PASSWORD": "something-else-entirely"})
+        self.assertTrue(get_user_model().objects.get(username="boss").check_password("the-original-password"))
+
+    def test_does_nothing_without_the_variables(self):
+        with mock.patch.dict(os.environ, {}, clear=False):
+            for name in self.ENV:
+                os.environ.pop(name, None)
+            call_command("ensure_superuser", stdout=StringIO())
+        self.assertFalse(get_user_model().objects.filter(username="boss").exists())

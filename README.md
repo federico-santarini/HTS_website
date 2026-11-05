@@ -191,7 +191,7 @@ comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione "Playe
 **Intro animato della homepage.** Sulla homepage (solo lì) appare uno strato nero a tutto schermo: "welcome to HTS", un
 clic fa partire il suono di un modem 56k (`static/audio/intro.mp3`, 15 secondi), il testo sparisce, tre linee disegnano il
 triskele e una dissolvenza porta alla pagina. Dura quanto l'audio, dal clic in poi.
-- **Si accende e si spegne** dall'admin: **Site settings** (un solo record, `SiteSettings` in `models.py`; acceso di default).
+- **Si accende e si spegne** dall'admin: **Site settings** (un solo record, `SiteSettings` in `models.py`; spento di default).
 - **Audio come blob**: `intro.js` scarica il file e lo dà al player come blob, perché Safari non riproduce un audio che il server non sa servire a pezzi (HTTP Range) e il server di sviluppo di Django non lo sa fare.
 - **Perché serve il clic**: i browser non fanno partire l'audio senza un gesto della persona (su iPhone mai). Il clic sul testo
   sblocca l'audio. Se l'audio non parte comunque, la sequenza va avanti senza suono.
@@ -250,17 +250,62 @@ python manage.py check
 - **Aggiornare la pubblicazione**: modifica `hts_website/publication/index.html` (istruzioni in un commento in cima al file); per l'aspetto, i valori in cima a `publication/publication.css`.
 - **Cambiare il nome di una pagina in `urls.py`**: aggiorna anche i `{% url '...' %}` nei template che lo usano.
 
-## Deploy checklist
+## Deploy su Railway
 
-Nel repository non c'è ancora nessuna configurazione di deploy. Da fare prima di pubblicare su Railway:
+Il repository è pronto per il deploy: la configurazione sta in `hts_website/railway.json` (comandi di avvio), nelle
+impostazioni lette dall'ambiente (`settings.py`) e nel file `.python-version`. **Provato in locale** simulando la
+produzione (DEBUG spento, HTTPS dietro proxy, Gunicorn, WhiteNoise, login dell'admin con CSRF); **non ancora provato su Railway**:
+`railway.json` è scritto sullo schema di Railway senza averlo potuto verificare lì, quindi al primo deploy controlla
+Settings del servizio -> Deploy: se i comandi non risultano, vanno incollati a mano (sono quelli del file).
 
-- [ ] `ALLOWED_HOSTS` (oggi `["*"]`): restringere a dominio principale e `publication.<dominio>`; aggiungere `CSRF_TRUSTED_ORIGINS` con gli indirizzi `https://...` (serve per il login dell'admin). Aggiornare di conseguenza i test del middleware, che usano `publication.localhost`.
-- [ ] `DEBUG` non impostata (o `False`) e una `SECRET_KEY` nuova e casuale nelle variabili del servizio.
-- [ ] Variabili `PG*` del database Postgres di Railway e `PUBLICATION_URL=https://publication.<dominio>`.
-- [ ] Comando di avvio con Gunicorn (`gunicorn hts_website.wsgi`) e `python manage.py collectstatic --noinput` in fase di build; `python manage.py migrate` a ogni deploy. La radice del servizio è la cartella `hts_website/`.
-- [ ] Impostazioni HTTPS dietro il proxy di Railway (`SECURE_PROXY_SSL_HEADER`, cookie sicuri), da verificare nella guida Railway.
-- [ ] **Storage delle immagini**: il filesystem di Railway si azzera a ogni deploy, quindi le immagini caricate andrebbero perse. Serve uno storage esterno (idea: Cloudflare R2 con `django-storages`) e in produzione `MEDIA_URL` non può più puntare a `media/`.
-- [ ] Domini: collegare sia il dominio principale sia `publication.<dominio>` allo stesso servizio (controllare il limite di domini personalizzati del piano).
+**Cosa succede a ogni deploy.** Prima di avviare la nuova versione: `python manage.py migrate --noinput` (aggiorna il
+database; crea anche il gruppo *Authors*) e `python manage.py ensure_superuser` (crea il superuser dalle variabili
+d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e Gunicorn.
+
+**Variabili d'ambiente del servizio web** (Railway -> servizio -> Variables):
+
+| Variabile | Valore |
+|---|---|
+| `SECRET_KEY` | stringa lunga e casuale (`python -c "import secrets; print(secrets.token_urlsafe(50))"`) |
+| `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE` | riferimenti al servizio Postgres di Railway: `${{Postgres.PGHOST}}` ecc. |
+| `NOINDEX` | `True` finché il sito non è pronto (i motori di ricerca non lo indicizzano) |
+| `R2_BUCKET_NAME`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_PUBLIC_DOMAIN` | storage delle immagini (vedi sotto) |
+| `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_PASSWORD`, `DJANGO_SUPERUSER_EMAIL` | il tuo account admin. Dopo il primo deploy la password si cambia dall'admin; quella nella variabile non serve più |
+| `DEBUG` | **non impostarla** (vale False) |
+| `ALLOWED_HOSTS` | non serve con l'indirizzo gratuito (`RAILWAY_PUBLIC_DOMAIN` lo imposta Railway); con il dominio vero: `dominio.it,www.dominio.it,publication.dominio.it` |
+| `PUBLICATION_URL` | vuota finché non c'è il dominio (il link "Publication" resta nascosto) |
+
+**Passi, in ordine**
+1. **GitHub**: pubblicare i commit (`git push`). Il repository non contiene segreti né i font trial.
+2. **Cloudflare R2** (immagini): R2 -> Create bucket -> nel bucket Settings -> attivare l'accesso pubblico (dominio `r2.dev`, che diventa
+   `R2_PUBLIC_DOMAIN`, senza `https://`) -> "Manage R2 API tokens" -> Create token con permesso *Object Read & Write* sul solo bucket.
+   Si ottengono Account ID, Access Key ID e Secret Access Key. Il bucket ha un CORS di default che basta (le immagini si caricano dall'admin sul server, non dal browser).
+3. **Railway**: New Project -> Deploy from GitHub repo -> servizio -> Settings -> **Root Directory: `hts_website`**. Add -> Database -> PostgreSQL.
+   Inserire le variabili della tabella sopra. Settings -> Networking -> **Generate Domain** (indirizzo `*.up.railway.app`) e rifare il deploy:
+   fino ad allora il sito risponde 400 perché non conosce il proprio indirizzo.
+4. **Primo accesso**: `https://<indirizzo>/admin/` con le credenziali delle variabili. In *Site settings* si accende o spegne l'intro
+   animato (online parte **spento**: il suo audio ha una licenza da verificare).
+5. **Autori**: Users -> Add user (nome e password), poi nella scheda dell'utente spuntare **Staff status** e aggiungerlo al gruppo **Authors**.
+   Gli autori gestiscono progetti, contributor, eventi, referenze, tipologie e immagini; non vedono utenti, gruppi né Site settings.
+   **Mai** spuntare "Superuser status" agli autori.
+
+**Cose da sapere**
+- **Database online = quello vero.** Non si copia sopra il database locale (contiene dati di prova). Le migrazioni si applicano a ogni deploy:
+  conviene che le modifiche ai modelli siano *additive* (aggiungere campi con valore predefinito o facoltativi); per rinominare o togliere un campo, prima un backup.
+- **Immagini**: finiscono su R2 e non si perdono ai deploy. Senza le variabili `R2_*`, online le immagini non si vedrebbero (con DEBUG spento Django non serve `media/`).
+  Le immagini nel `media/` locale non vengono caricate online.
+- **Font**: online mancano i font Machina (trial, ignorati da git): sito e pubblicazione usano il carattere di riserva.
+- **Pubblicazione**: vive su `publication.<dominio>`; con l'indirizzo gratuito di Railway non è raggiungibile (l'host `publication.*.up.railway.app` non è ammesso).
+- **Backup**: i dati sono nel Postgres di Railway: controllare nel suo pannello le opzioni di backup prima di affidargli contenuti importanti.
+
+**Quando ci sarà il dominio**
+- [ ] Collegare in Railway il dominio principale e `publication.<dominio>` allo stesso servizio (controllare il limite di domini del piano) e configurare il DNS.
+- [ ] `ALLOWED_HOSTS` con i tre indirizzi e `PUBLICATION_URL=https://publication.<dominio>`.
+- [ ] Attivare HSTS (`SECURE_HSTS_SECONDS`, prima con valore basso) solo col dominio definitivo; `check --deploy` lo segnala finché manca.
+- [ ] Valutare un dominio proprio per le immagini (es. `media.<dominio>`) al posto di `r2.dev`: se cambia, `R2_PUBLIC_DOMAIN` si aggiorna, ma gli indirizzi delle immagini già salvate restano quelli vecchi se il bucket resta lo stesso.
+- [ ] Con i font veri (licenza) nel repository, passare a `CompressedManifestStaticFilesStorage` in `settings.py` (nomi dei file con impronta: risolve la cache dei browser).
+- [ ] Spegnere `NOINDEX` quando il sito è pronto.
+- [ ] Verificare i diritti dell'audio dell'intro prima di accenderlo online.
 
 ## Idee rimandate
 

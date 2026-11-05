@@ -176,8 +176,9 @@ class Reference(models.Model):
 class SiteSettings(models.Model):
     """Interruttori del sito, modificabili dall'admin. C'è un solo record (sempre pk=1): si legge con SiteSettings.load()."""
 
+    # Spento di default: su un database nuovo (online) l'intro non compare finché non lo si accende. Il suo audio ha una licenza da verificare.
     intro_enabled = models.BooleanField(
-        default=True,
+        default=False,
         help_text="Show the animated intro on the homepage. Visitors see it once per browser session.",
     )
 

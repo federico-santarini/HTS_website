@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 
 from .models import Contributor, ContributorImage, Event, Project, ProjectImage, ProjectType, Reference, SiteSettings
@@ -110,4 +111,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         return False
 
     def changelist_view(self, request, extra_context=None):
+        if not self.has_view_or_change_permission(request):
+            raise PermissionDenied  # senza questo controllo il redirect partirebbe anche per chi non ha accesso
         return redirect("admin:portfolio_sitesettings_change", SiteSettings.load().pk)

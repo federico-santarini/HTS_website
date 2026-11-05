@@ -41,9 +41,38 @@ PUBLICATION_URL = os.environ.get("PUBLICATION_URL", "")
 PUBLICATION_DIR = BASE_DIR / "publication"
 PUBLICATION_SUBDOMAIN = "publication"
 
-# TODO prima del deploy: "*" va bene solo in sviluppo. Restringere ai domini veri
-# (dominio principale + publication.<dominio>) e aggiungere CSRF_TRUSTED_ORIGINS. Vedi README.
-ALLOWED_HOSTS = ["*"]
+def env_list(name):
+    """Variabile d'ambiente con valori separati da virgola -> lista (vuota se manca)."""
+    return [value.strip() for value in os.environ.get(name, "").split(",") if value.strip()]
+
+
+# Host ammessi. In sviluppo qualsiasi (anche il telefono in rete locale); online solo quelli elencati:
+# - ALLOWED_HOSTS nell'ambiente: indirizzi separati da virgola (con il dominio vero: dominio, www e publication.<dominio>;
+#   un punto davanti, ".esempio.it", vale per il dominio e tutti i suoi sottodomini);
+# - RAILWAY_PUBLIC_DOMAIN: lo imposta Railway da solo (l'indirizzo gratuito *.up.railway.app del servizio).
+# CSRF_TRUSTED_ORIGINS (serve al login dell'admin dietro HTTPS) si ricava dagli stessi indirizzi.
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+    CSRF_TRUSTED_ORIGINS = []
+else:
+    ALLOWED_HOSTS = env_list("ALLOWED_HOSTS") + env_list("RAILWAY_PUBLIC_DOMAIN")
+    CSRF_TRUSTED_ORIGINS = [
+        f"https://*{host}" if host.startswith(".") else f"https://{host}" for host in ALLOWED_HOSTS
+    ]
+
+# Dietro il proxy di Railway la richiesta arriva a Gunicorn in HTTP: questa riga dice a Django di fidarsi
+# dell'intestazione che dice com'era davvero ("https"). Online: reindirizza a HTTPS e cookie solo su HTTPS.
+# SECURE_SSL_REDIRECT=False nell'ambiente lo spegne (se mai desse un ciclo di reindirizzamenti).
+# HSTS (SECURE_HSTS_SECONDS) non è attivo apposta: si accende col dominio definitivo, perché una volta visto dai browser non si torna indietro.
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "True") == "True"
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+# NOINDEX=True: ogni risposta porta "X-Robots-Tag: noindex, nofollow" (i motori di ricerca non indicizzano nulla).
+# Da tenere acceso finché il sito non è pronto (vedi portfolio/middleware.py).
+NOINDEX = os.environ.get("NOINDEX", "False") == "True"
 
 
 # Application definition
@@ -62,6 +91,7 @@ INSTALLED_APPS = [
 # la pubblicazione se la richiesta arriva dal sottodominio, poi il resto di Django.
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "portfolio.middleware.NoIndexMiddleware",  # prima di tutto il resto: marca anche file statici, immagini e pubblicazione
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "portfolio.middleware.PublicationMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -150,6 +180,20 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+# Online (DEBUG spento) WhiteNoise comprime i file statici raccolti da collectstatic. Non si usa ancora la versione con i nomi
+# "a impronta" (CompressedManifestStaticFilesStorage): fallirebbe, perché custom.css cita i font trial, che non sono nel repository.
+# Con i font veri nel repository conviene passarci (risolve anche la cache dei browser). Senza, i file statici stanno in cache 60 secondi.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": (
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+            if DEBUG
+            else "whitenoise.storage.CompressedStaticFilesStorage"
+        ),
+    },
+}
+
 
 # Media files (user uploads)
 # Immagini caricate dall'admin (progetti, contributor, referenze). In sviluppo le serve
@@ -158,6 +202,28 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Online le immagini vanno su Cloudflare R2 (compatibile con Amazon S3), attivato dalla sola presenza di R2_BUCKET_NAME.
+# Senza, le immagini caricate finiscono sul disco del servizio, che si azzera a ogni deploy (e con DEBUG spento Django non le serve).
+# Variabili: R2_BUCKET_NAME, R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, e R2_PUBLIC_DOMAIN = dominio pubblico
+# del bucket senza "https://" (es. pub-xxxx.r2.dev oppure media.<dominio>). Passi per crearle: README, "Deploy".
+if os.environ.get("R2_BUCKET_NAME"):
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": os.environ["R2_BUCKET_NAME"],
+            "endpoint_url": f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com",
+            "access_key": os.environ["R2_ACCESS_KEY_ID"],
+            "secret_key": os.environ["R2_SECRET_ACCESS_KEY"],
+            "custom_domain": os.environ["R2_PUBLIC_DOMAIN"],
+            "region_name": "auto",
+            "signature_version": "s3v4",
+            "querystring_auth": False,   # indirizzi pubblici semplici, senza firme che scadono
+            "file_overwrite": False,     # un nome già usato riceve un suffisso: un file esistente non si sovrascrive mai
+            "default_acl": None,
+            "object_parameters": {"CacheControl": "public, max-age=31536000"},  # i nomi non si riusano: cache lunga
+        },
+    }
 
 
 # Default primary key field type
