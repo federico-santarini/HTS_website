@@ -4,11 +4,13 @@
 {% block intro %}{% if intro_enabled %}{% include "portfolio/_intro.html" %}{% endif %}{% endblock %}
 
 {% block content %}
-<div >
-    <svg class="intro-triskele" viewBox="0 0 500 500">
-        <path pathLength="1" d="M228.5,167.7c-4.5-8.5,3.4-18.5,12.8-18.5c10.1,0,18.8,10,18.8,20.2c0,11.6-13.3,24.1-24.8,25.5 c-12,1.4-30.5-10.5-34.2-29.9c-4.6-24.9,22-43.2,39.9-44.1c18.2-1,49.9,15.4,49.9,50.9c0,18.9-19.5,55-55.1,55 c-35.3,0-67.9-26.2-67.9-65.3c0-30.1,22.9-74.9,77.2-74.9c36,0,80.6,31.5,80.6,88c0,49-46.5,87.8-87.4,87.8 c-33.5,0-42.6-14.5-76.1-15.7"/>
-        <path pathLength="1" d="M162,344.2c-2.8,9.2-15.5,10.6-22.1,4c-7.2-7.2-6.2-20.4,1-27.6c8.2-8.2,26.4-7.7,35.6-0.5 c9.5,7.5,14.2,29,3,45.3c-14.3,20.9-46.1,15-59.4,3c-13.6-12.2-24.4-46.1,0.7-71.2c13.4-13.4,52.7-25.1,77.9,0.1 c24.9,24.9,29.5,66.6,1.9,94.2c-21.3,21.3-69.2,36.8-107.6-1.6c-25.4-25.4-34.7-79.3,5.2-119.2c34.6-34.6,95-29.3,123.9-0.3 c23.7,23.7,26.7,36,30.9,62.7"/>
-        <path pathLength="1" d="M347.8,313.3c8.5-4.5,18.5,3.4,18.5,12.8c0,10.1-10,18.8-20.2,18.8c-11.6,0-24.1-13.3-25.5-24.8 c-1.4-12,10.5-30.5,29.9-34.2c24.9-4.6,43.2,22,44.1,39.9c1,18.2-15.4,49.9-50.9,49.9c-18.9,0-55-19.5-55-55.1 c0-35.3,26.2-67.9,65.3-67.9c30.1,0,74.9,22.9,74.9,77.2c0,36-31.5,80.6-88,80.6c-49,0-87.8-46.5-87.8-87.4 c0-33.5,12.5-59.8,32.2-76.1"/>
-    </svg>
-</div>
+{# Il triskele della home: stesso disegno, stessa posizione (centro dello schermo) e stessa dimensione di quello dell'intro, così l'intro #}
+{# si dissolve su di lui senza salti. Ogni tracciato è un link a un progetto a caso di una categoria (project_category): #}
+{# 1 = relationality, 2 = perception, 3 = cognition (sono i valori di Project.CATEGORIES). Stile: custom.css, "Triskele della home". #}
+{% url 'random_project' 'relationality' as relationality_url %}
+{% url 'random_project' 'perception' as perception_url %}
+{% url 'random_project' 'cognition' as cognition_url %}
+<nav class="home-triskele" aria-label="Project categories">
+    {% include "portfolio/_triskele.html" with css_class="home-triskele-svg" link1=relationality_url label1="Relationality" link2=perception_url label2="Perception" link3=cognition_url label3="Cognition" %}
+</nav>
 {% endblock %}

@@ -9,6 +9,7 @@ urlpatterns = [
     path("projects/", views.project_list, name="project_list"),
     path("projects/<int:pk>/", views.project_detail, name="project_detail"),  # redirect al feed
     path("projects/feed/", views.project_feed, name="project_feed"),
+    path("projects/random/<slug:category>/", views.random_project, name="random_project"),  # redirect a un progetto a caso
     path("contributors/", views.contributor_list, name="contributor_list"),
     path("contributors/<int:pk>/", views.contributor_detail, name="contributor_detail"),
     path("events/", views.event_list, name="event_list"),

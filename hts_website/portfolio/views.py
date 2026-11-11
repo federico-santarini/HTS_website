@@ -1,7 +1,9 @@
 from django.db.models import Prefetch
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
 
 from .models import Contributor, Event, Project, ProjectType, Reference, SiteSettings
 
@@ -9,6 +11,21 @@ from .models import Contributor, Event, Project, ProjectType, Reference, SiteSet
 def home(request):
     """Homepage. L'intro animato si mostra solo qui, e solo se acceso nelle impostazioni del sito (admin; spento di default)."""
     return render(request, "portfolio/home.html", {"intro_enabled": SiteSettings.load().intro_enabled})
+
+
+@never_cache  # ogni clic deve poter dare un progetto diverso: la risposta non va riusata dal browser
+def random_project(request, category):
+    """Porta a un progetto a caso della categoria (Project.project_category). Lo usano i tre tracciati del triskele nella home.
+
+    Reindirizza a project_detail, che a sua volta porta al feed già scrollato sul progetto. Se in quella categoria non
+    c'è ancora nessun progetto va al feed intero. Una categoria che non esiste dà 404.
+    """
+    if category not in dict(Project.CATEGORIES):
+        raise Http404("Unknown category")
+    pk = Project.objects.filter(project_category=category).order_by("?").values_list("pk", flat=True).first()
+    if pk is None:
+        return redirect("project_feed")
+    return redirect("project_detail", pk=pk)
 
 
 def project_list(request):

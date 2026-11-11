@@ -107,10 +107,11 @@ Chi modifica cosa nell'admin (le relazioni many-to-many si modificano da **un so
 
 | Indirizzo | View | Cosa fa |
 |---|---|---|
-| `/` | `home` | Home (vuota per ora) |
+| `/` | `home` | Home: il triskele a schermo intero, con l'intro animato sopra (se acceso). Ogni tracciato è un link a un progetto a caso di una categoria |
 | `/projects/` | `project_list` | Archivio: tabella con ordinamento (`?sort=`) e filtro per tipologia (`?type=`) |
 | `/projects/feed/` | `project_feed` | Tutti i progetti uno dopo l'altro, con i player YouTube/SoundCloud |
 | `/projects/<id>/` | `project_detail` | Non ha pagina propria: reindirizza al feed, scrollato su quel progetto |
+| `/projects/random/<categoria>/` | `random_project` | Reindirizza a un progetto a caso di quella categoria (`project_category`); se non ce ne sono, al feed. Categoria inesistente: 404. Mai in cache |
 | `/contributors/`, `/contributors/<id>/` | `contributor_*` | Elenco e dettaglio dei contributor |
 | `/events/` | `event_list` | Eventi futuri e passati in due sezioni |
 | `/references/` | `reference_list` | Referenze, filtro per tipo (`?kind=`) |
@@ -188,6 +189,13 @@ comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione "Playe
 - **Da verificare su iPhone**: Safari iOS può rifiutare il `play()` dato da JavaScript al widget di SoundCloud (gli serve
   un gesto dentro l'iframe). Provato solo su desktop.
 
+**Triskele della home.** La home mostra il triskele (`home.html`, disegno in `_triskele.html`, condiviso con l'intro): stesso
+disegno, stessa posizione (centro dello schermo) e stessa dimensione (`--hts-triskele-size` in `custom.css`) di quello dell'intro, così
+quando l'intro si dissolve si vede lo stesso disegno senza salti. Ogni tracciato è un link a `/projects/random/<categoria>/`:
+tracciato 1 (in alto) = **relationality**, 2 (in basso a sinistra) = **perception**, 3 (in basso a destra) = **cognition**.
+La categoria è il campo `project_category` del progetto, che si imposta dall'admin (valori: `relationality`, `perception`, `cognition`).
+Aspetto e area cliccabile (più larga della linea) sono variabili `--home-triskele-...` in `custom.css`, sezione "Triskele della home".
+
 **Intro animato della homepage.** Sulla homepage (solo lì) appare uno strato nero a tutto schermo: "welcome to HTS", un
 clic fa partire il suono di un modem 56k (`static/audio/intro.mp3`, 15 secondi), il testo sparisce, tre linee disegnano il
 triskele e una dissolvenza porta alla pagina. Dura `TIMELINE.duration` secondi dal clic (in `intro.js`, oggi 15), qualunque sia la lunghezza dell'audio:
@@ -232,8 +240,8 @@ vedi la checklist.
 **Migration scritte a mano.** `0009_copy_project_type_to_project_types.py` è una migration dei dati, commentata:
 fa parte della sequenza 0008-0010 che ha sostituito il vecchio campo `project_type` con la many-to-many.
 
-**Refuso nelle categorie.** In `Project.CATEGORIES` il valore è `"cogniton"` (probabile refuso di "cognition"). Se lo
-correggi serve una migration dei dati per aggiornare i progetti già salvati con il vecchio valore.
+**Refuso nelle categorie (corretto).** In `Project.CATEGORIES` la terza categoria era scritta `"cogniton"`; ora è `"cognition"`.
+Le migrazioni `0020` (scelte del campo) e `0021` (aggiorna i progetti già salvati con il vecchio valore, reversibile) lo correggono su qualsiasi database.
 
 ## Operazioni comuni
 

@@ -69,6 +69,7 @@
     --hts-font-serif: "Alegreya", serif;
     --hts-font-label: "Alegreya SC", serif;
     --hts-navbar-height: 3.5rem;
+    --hts-triskele-size: min(60vmin, 28rem);   /* larghezza del triskele: la stessa nell'intro e nella home, così coincidono */
 }
 
 /* La navbar è fissa in cima (sticky-top in base.html) e alta quanto --hts-navbar-height: serve un valore fisso perché
@@ -619,7 +620,7 @@ mask-composite: intersect;
     --intro-text-letter-spacing: 0.05em;
     --intro-line-color: #fff;
     --intro-line-width: 15;                      /* nelle unità del disegno (500 di larghezza): 15 è lo spessore del file originale */
-    --intro-triskele-size: min(60vmin, 28rem);   /* larghezza del triskele */
+    --intro-triskele-size: var(--hts-triskele-size);   /* larghezza del triskele (vale anche per quello della home) */
     --intro-skip-color: var(--hts-muted);
     /* Effetto TV static (stile VHS: strisce orizzontali colorate) sullo sfondo. */
     --intro-static-opacity: 0.8;                 /* intensità: 0 = spento, 0.4 smorzato, 1 = pieno */
@@ -740,4 +741,51 @@ html:not(.intro-ready) .intro {
 }
 @keyframes intro-failsafe {
     to { opacity: 0; visibility: hidden; }
+}
+
+/* ---------- Triskele della home (markup: home.html + _triskele.html) ----------
+   Occupa lo schermo intero, centrato come lo strato dell'intro, con la stessa dimensione (--hts-triskele-size) e lo stesso
+   spessore e colore: quando l'intro si dissolve si vede lo stesso disegno, nello stesso punto. Il contenitore lascia passare i clic;
+   solo i tracciati (i link ai progetti a caso) li ricevono. */
+.home-triskele {
+    --home-triskele-color: #fff;
+    --home-triskele-width: 15;                   /* nelle unità del disegno (500 di larghezza): come nell'intro */
+    --home-triskele-hover-color: var(--hts-accent);
+    --home-triskele-hover-width: 20;             /* spessore al passaggio del mouse o con il focus */
+    --home-triskele-hit-width: 30;               /* area cliccabile (invisibile): più larga della linea, per colpirla più facilmente */
+
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+}
+.home-triskele-svg {
+    width: var(--hts-triskele-size);
+    height: auto;
+    overflow: visible;
+}
+.home-triskele-svg a {
+    cursor: pointer;
+    outline: none; /* il segno di focus è il tracciato che cambia colore e spessore (sotto) */
+}
+.home-triskele-svg .triskele-line {
+    fill: none;
+    stroke: var(--home-triskele-color);
+    stroke-width: var(--home-triskele-width);
+    stroke-linecap: round;
+    pointer-events: none;
+    transition: stroke 0.2s, stroke-width 0.2s;
+}
+.home-triskele-svg .triskele-hit {
+    fill: none;
+    stroke: transparent;
+    stroke-width: var(--home-triskele-hit-width);
+    stroke-linecap: round;
+    pointer-events: stroke; /* riceve il clic solo lungo la linea (e il suo margine), non nello spazio dentro la spirale */
+}
+.home-triskele-svg a:hover .triskele-line,
+.home-triskele-svg a:focus-visible .triskele-line {
+    stroke: var(--home-triskele-hover-color);
+    stroke-width: var(--home-triskele-hover-width);
 }

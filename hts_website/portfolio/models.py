@@ -38,7 +38,7 @@ class Project(models.Model):
     # I valori salvati nel database sono quelli a sinistra: se cambi un valore
     # servirà una data migration per aggiornare i progetti già salvati.
     CATEGORIES = [
-        ("cogniton", "cogniton"),
+        ("cognition", "cognition"),
         ("perception", "perception"),
         ("relationality", "relationality"),
     ]
@@ -47,7 +47,8 @@ class Project(models.Model):
     date = models.DateField(default=timezone.localdate)
     # Una o più tipologie. Dalla tipologia si risale ai progetti con project_type.projects.
     project_types = models.ManyToManyField(ProjectType, related_name="projects", blank=True)
-    # Non è usata nelle pagine pubbliche (filtro e colonna tolti dall'archivio): tenuta per usi futuri.
+    # Non compare nelle pagine (filtro e colonna tolti dall'archivio), ma la usa la home: ogni tracciato del triskele porta
+    # a un progetto a caso di una categoria (random_project in views.py).
     project_category = models.CharField(max_length=255, choices=CATEGORIES, default=CATEGORIES[0][0])
     project_url = models.URLField(blank=True, null=True)
     description = models.TextField()

@@ -475,3 +475,53 @@ class EnsureSuperuserTests(TestCase):
                 os.environ.pop(name, None)
             call_command("ensure_superuser", stdout=StringIO())
         self.assertFalse(get_user_model().objects.filter(username="boss").exists())
+
+
+class RandomProjectTests(TestCase):
+    """I tre tracciati del triskele nella home portano a un progetto a caso della loro categoria (project_category)."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.by_category = {
+            category: [Project.objects.create(title=f"{category} {i}", description="d", project_category=category) for i in range(3)]
+            for category in ["relationality", "perception"]
+        }
+
+    def pk_from_redirect(self, category):
+        """Segue i reindirizzamenti fino al feed e restituisce il progetto in fondo all'ancora (#project-<pk>)."""
+        response = self.client.get(f"/projects/random/{category}/", follow=True)
+        self.assertEqual(response.redirect_chain[-1][0].split("#")[0], "/projects/feed/")
+        return int(response.redirect_chain[-1][0].split("#project-")[1])
+
+    def test_always_lands_on_a_project_of_that_category(self):
+        for category, projects in self.by_category.items():
+            allowed = {project.pk for project in projects}
+            with self.subTest(category=category):
+                self.assertTrue(all(self.pk_from_redirect(category) in allowed for _ in range(15)))
+
+    def test_it_is_actually_random(self):
+        landed = {self.pk_from_redirect("perception") for _ in range(40)}
+        self.assertGreater(len(landed), 1)  # su 3 progetti e 40 prove: restare su uno solo ha probabilità ~1 su 10^19
+
+    def test_category_without_projects_goes_to_the_whole_feed(self):
+        response = self.client.get("/projects/random/cognition/")
+        self.assertRedirects(response, "/projects/feed/", fetch_redirect_response=False)
+
+    def test_unknown_category_is_404(self):
+        self.assertEqual(self.client.get("/projects/random/nonsense/").status_code, 404)
+
+    def test_response_is_not_cacheable(self):
+        self.assertIn("no-cache", self.client.get("/projects/random/perception/")["Cache-Control"])
+
+    def test_home_links_follow_the_path_order(self):
+        """Tracciato 1 = relationality, 2 = perception, 3 = cognition (i valori di Project.CATEGORIES)."""
+        html = self.client.get("/").content.decode()
+        self.assertEqual(re.findall(r'<a href="/projects/random/(\w+)/"', html), ["relationality", "perception", "cognition"])
+        self.assertEqual(re.findall(r'aria-label="(Relationality|Perception|Cognition)"', html), ["Relationality", "Perception", "Cognition"])
+
+    def test_intro_triskele_stays_decorative_without_links(self):
+        SiteSettings.objects.create(intro_enabled=True)
+        html = self.client.get("/").content.decode()
+        intro_svg = html.split('class="intro-triskele"')[1].split("</svg>")[0]
+        self.assertNotIn("<a ", intro_svg)
+        self.assertEqual(intro_svg.count("<path"), 3)
