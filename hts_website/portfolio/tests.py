@@ -516,8 +516,13 @@ class RandomProjectTests(TestCase):
     def test_home_links_follow_the_path_order(self):
         """Tracciato 1 = relationality, 2 = perception, 3 = cognition (i valori di Project.CATEGORIES)."""
         html = self.client.get("/").content.decode()
-        self.assertEqual(re.findall(r'<a href="/projects/random/(\w+)/"', html), ["relationality", "perception", "cognition"])
+        self.assertEqual(re.findall(r'href="/projects/random/(\w+)/"', html), ["relationality", "perception", "cognition"])
         self.assertEqual(re.findall(r'aria-label="(Relationality|Perception|Cognition)"', html), ["Relationality", "Perception", "Cognition"])
+
+    def test_home_shows_a_category_name_for_each_path(self):
+        html = self.client.get("/").content.decode()
+        label = html.split('class="home-triskele-label"')[1].split("</p>")[0]
+        self.assertEqual(re.findall(r">(\w+)</span>", label), ["Relationality", "Perception", "Cognition"])
 
     def test_intro_triskele_stays_decorative_without_links(self):
         SiteSettings.objects.create(intro_enabled=True)

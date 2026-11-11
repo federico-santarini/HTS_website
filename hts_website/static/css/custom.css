@@ -1,3 +1,23 @@
+/* ==========================================================================
+   STILE DEL SITO (custom.css)
+
+   INDICE: per saltare a una sezione cerca il suo numero tra parentesi quadre, per esempio  [07]
+
+   [01] FONT                         caratteri Machina (trial) e @font-face
+   [02] VARIABILI DEL SITO           colori, caratteri e misure usati in più punti (:root)
+   [03] BASE                         pagina, titoli, link
+   [04] NAVBAR E MENU                barra in cima e menu "liquid glass"
+   [05] TESTO CONDIVISO              etichette e titoli di lista usati in più pagine
+   [06] ARCHIVIO                     lista dei progetti (/projects/)
+   [07] FEED DEI PROGETTI            un progetto dopo l'altro (/projects/feed/)
+   [08] GALLERIA IMMAGINI            miniature dei progetti e modale con carosello
+   [09] PLAYER YOUTUBE E SOUNDCLOUD  copertina con "Play" e controlli custom
+   [10] CONTRIBUTOR                  card dell'elenco e pagina del singolo contributor
+   [11] EVENTI E REFERENZE           titoli e testi di /events/ e /references/
+   [12] HOME                         triskele cliccabile con bagliore e nome della categoria
+   [13] INTRO ANIMATO                schermata iniziale con TV static, testo d'ingresso e disegno del triskele
+   ========================================================================== */
+
 /*
  * Stile personale del sito.
  *
@@ -19,6 +39,10 @@
  *
  * Elenco completo delle variabili: https://getbootstrap.com/docs/5.3/customize/css-variables/
  */
+
+/* ==========================================================================
+   [01] FONT
+   ========================================================================== */
 
 /*
  * FONT: PP Neue Machina, versione TRIAL (cartella static/fonts/trial/, ignorata da git).
@@ -44,15 +68,20 @@
 @font-face { font-family: "Machina Inktrap"; font-weight: 800; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapUltrabold.otf") format("opentype"); }
 @font-face { font-family: "Machina Inktrap"; font-weight: 800; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapUltraboldItalic.otf") format("opentype"); }
 
+/* ==========================================================================
+   [02] VARIABILI DEL SITO
+   Le variabili dei singoli componenti stanno nella loro sezione: navbar [04], home [12], intro [13].
+   ========================================================================== */
+
 :root {
     /* Da sostituire con le scelte di design, per esempio:
-    --bs-body-font-family: ...;
-    --bs-body-font-size: ...;
-    --bs-body-color: ...;
-    --bs-body-bg: ...;
-    --bs-heading-color: ...;
-    --bs-link-color-rgb: 0, 0, 0;     (i colori dei link vogliono la forma "r, g, b")
-    */
+       --bs-body-font-family: ...;
+       --bs-body-font-size: ...;
+       --bs-body-color: ...;
+       --bs-body-bg: ...;
+       --bs-heading-color: ...;
+       --bs-link-color-rgb: 0, 0, 0;     (i colori dei link vogliono la forma "r, g, b")
+       */
     --bs-body-font-family: "Machina Plain", sans-serif;
     --bs-body-font-size: 1rem;
     --bs-body-color: #ffffff;
@@ -69,8 +98,12 @@
     --hts-font-serif: "Alegreya", serif;
     --hts-font-label: "Alegreya SC", serif;
     --hts-navbar-height: 3.5rem;
-    --hts-triskele-size: min(60vmin, 28rem);   /* larghezza del triskele: la stessa nell'intro e nella home, così coincidono */
+    --hts-triskele-size: min(100vmin, 40rem);   /* larghezza del triskele: la stessa nell'intro e nella home, così coincidono */
 }
+
+/* ==========================================================================
+   [03] BASE
+   ========================================================================== */
 
 /* La navbar è fissa in cima (sticky-top in base.html) e alta quanto --hts-navbar-height: serve un valore fisso perché
    scroll-padding-top lo usa per lasciarle lo spazio. Senza, ancore e snap porterebbero l'inizio di un progetto
@@ -78,6 +111,30 @@
 html {
     scroll-padding-top: var(--hts-navbar-height);
 }
+
+/* Bootstrap non ha una variabile per il font dei titoli (usano quello del testo): serve una regola. */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--hts-font-display);
+}
+
+h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: 400;
+    font-style: italic;
+}
+
+h1, .h1 {
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   [04] NAVBAR E MENU
+   base.html
+   ========================================================================== */
 
 /* La navbar ridefinisce --bs-nav-link-color per conto suo (la prende da --bs-navbar-color),
    quindi un valore messo su :root non arriva mai ai link: va cambiata la variabile della navbar. */
@@ -128,32 +185,95 @@ html {
     .navbar-collapse {
         background:
             /* linear-gradient(135deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.04) 45%, rgb(255 255 255 / 0.12)),
-            rgb(0 0 0 / 0.25); */
+               rgb(0 0 0 / 0.25); */
             linear-gradient(135deg, rgb(255 255 255 / 0), rgb(255 255 255 / 0) 45%, rgb(255 255 255 / 0)),
             rgb(0 0 0 / 0.25);
-            -webkit-backdrop-filter: blur(8px) saturate(180%); /* Safari fino alla 17 vuole il prefisso */
+        -webkit-backdrop-filter: blur(8px) saturate(180%); /* Safari fino alla 17 vuole il prefisso */
         backdrop-filter: blur(8px) saturate(180%);
     }
 }
 
-/* Bootstrap non ha una variabile per il font dei titoli (usano quello del testo): serve una regola. */
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: var(--hts-font-display);
-}
+/* ==========================================================================
+   [05] TESTO CONDIVISO
+   section-label, list-label, list-title, reference-label: compaiono nel feed, nell'archivio, negli eventi e nei contributor.
+   ========================================================================== */
 
-h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
+/* Etichetta piccola sopra un gruppo di dati ("with the contribution of", "references"). */
+.section-label, .section-label a {
+    font-family: var(--hts-font-label);
     font-weight: 400;
-    font-style: italic;
+    font-style: normal;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: var(--hts-muted);
+    padding-top: 1.5rem;
+    margin-bottom: 0;
 }
 
-h1, .h1{
-    font-weight: 800;
+.list-label {
+    font-family: var(--hts-font-label);
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: white;
+    padding-top: 1.5rem;
+    margin-bottom: 0;
+    letter-spacing: 0.05rem;
+}
+
+.list-title a {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.5;
+    line-height: 1.2;
+}
+
+.reference-label {
+    font-family: var(--hts-font-display);
+    font-weight: 400;
+    font-size: .75rem;
+    line-height: 1.2;
+    color: var(--hts-muted);
     text-transform: uppercase;
+    letter-spacing: 0.1rem;
 }
 
-a {
-    text-decoration: none;
+/* Un'etichetta che è anche un link (il luogo di un evento) resta grigia; il hover usa l'accento di Bootstrap. */
+.reference-label a {
+    color: inherit;
 }
+
+/* ==========================================================================
+   [06] ARCHIVIO
+   project_list.html
+   ========================================================================== */
+
+#filter a {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-style: normal;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: white;
+}
+
+#filter a.active {
+    text-decoration: underline;
+    text-decoration-thickness: 0.05rem;
+    text-underline-offset: 0.3rem;
+}
+
+.archive-row {
+    border-bottom: 1px solid var(--hts-accent) !important;
+}
+
+/* ==========================================================================
+   [07] FEED DEI PROGETTI
+   project_feed.html, _project.html
+   ========================================================================== */
 
 /* Feed dei progetti (project_feed.html). Il centraggio del testo è dato da .text-center di Bootstrap sul <section>. */
 .project-header {
@@ -182,7 +302,6 @@ a {
     html:has(.project-feed) {
         scroll-snap-type: y mandatory;
         /* scroll-snap-type: none; */
-
     }
 
     .project-feed > section {
@@ -208,31 +327,21 @@ a {
     line-height: 1.2;
 }
 
-/* Etichetta piccola sopra un gruppo di dati ("with the contribution of", "references"). */
-.section-label, .section-label a {
-    font-family: var(--hts-font-label);
-    font-weight: 400;
-    font-style: normal;
-    font-size: 1rem;
-    line-height: 1.2;
-    color: var(--hts-muted);
-    padding-top: 1.5rem;
-    margin-bottom: 0;
-}
-
 .contributors {
     font-family: var(--hts-font-display);
     font-weight: 400;
     font-size: 1rem;
 }
+
 .contributors a {
-text-decoration: underline;
-text-decoration-thickness: 0.05rem;
-text-underline-offset: 0.3rem;
+    text-decoration: underline;
+    text-decoration-thickness: 0.05rem;
+    text-underline-offset: 0.3rem;
 }
+
 .contributors a:hover {
-text-decoration: none;
-color: white;
+    text-decoration: none;
+    color: white;
 }
 
 .references {
@@ -240,10 +349,11 @@ color: white;
     font-weight: 400;
     font-size: 1rem;
 }
+
 .references a {
-text-decoration: underline;
-text-decoration-thickness: 0.05rem;
-text-underline-offset: 0.3rem;
+    text-decoration: underline;
+    text-decoration-thickness: 0.05rem;
+    text-underline-offset: 0.3rem;
 }
 
 /* Iniziali maiuscole su ogni parola, senza toccare le altre lettere (resta "McDonald"). Solo visivo: il dato nell'admin non cambia. */
@@ -258,152 +368,18 @@ text-underline-offset: 0.3rem;
     line-height: 1.2;
 }
 
-.gallery-minuature{
+/* ==========================================================================
+   [08] GALLERIA IMMAGINI
+   _project.html, static/js/gallery.js
+   ========================================================================== */
+
+.gallery-minuature {
     -webkit-mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1rem), transparent),
-                    linear-gradient(to bottom, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
-mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1rem), transparent),
-            linear-gradient(to bottom, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
--webkit-mask-composite: source-in;
-mask-composite: intersect;
-
-}
-
-
-
-
-
-
-
-
-.list-label {
-    font-family: var(--hts-font-label);
-    font-weight: 400;
-    font-style: normal;
-    font-size: 1rem;
-    line-height: 1.2;
-    color: white;
-    padding-top: 1.5rem;
-    margin-bottom: 0;
-    letter-spacing: 0.05rem;
-}
-
-.list-title a {
-    font-family: var(--hts-font-display);
-    font-weight: 300;
-    font-size: 1.5;
-    line-height: 1.2;
-}
-
-#filter a {
-    text-decoration: none;
-    text-transform: uppercase;
-    font-family: var(--hts-font-display);
-    font-weight: 300;
-    font-style: normal;
-    font-size: 1rem;
-    line-height: 1.2;
-    color: white;
-}
-#filter a.active {
-    text-decoration: underline;
-    text-decoration-thickness: 0.05rem;
-    text-underline-offset: 0.3rem;
-
-}
-
-.archive-row {
-border-bottom: 1px solid var(--hts-accent) !important;
-}
-
-
-
-
-
-
-
-.reference-title,
-.event-title{
-    font-family: var(--hts-font-display);
-    font-weight: 300;
-    font-size: 1.5rem;
-    line-height: 1.2;
-    text-transform: uppercase;
-}
-
-/* Gli <h3> sono in corsivo di default (stile globale dei titoli): qui il titolo dell'evento resta dritto. */
-.event-title{
-    font-style: normal;
-}
-
-.reference-author-date{
-    font-family: var(--hts-font-display);
-    font-weight: 300;
-    font-size: 1.25rem;
-    line-height: 1.2;
-    text-transform: capitalize;
-}
-
-.reference-notes{
-    font-family: var(--hts-font-serif);
-    font-weight: 400;
-    font-size: 1rem;
-    line-height: 1.2;
-}
-
-.reference-label{
-    font-family: var(--hts-font-display);
-    font-weight: 400;
-    font-size: .75rem;
-    line-height: 1.2;
-    color: var(--hts-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1rem;
-}
-
-/* Un'etichetta che è anche un link (il luogo di un evento) resta grigia; il hover usa l'accento di Bootstrap. */
-.reference-label a{
-    color: inherit;
-}
-
-
-
-.card-title{
-    font-family: var(--hts-font-display);
-    font-weight: 300;
-    font-size: 1.25rem;
-    line-height: 1.2;
-    text-transform: uppercase;
-    font-style: normal;
-}
-
-.card-subtitle{
-    font-family: var(--hts-font-label);
-    color: var(--hts-muted);
-    font-weight: 300;
-    font-size: 1rem;
-    line-height: 1.2;
-    text-transform: uppercase;
-    font-style: normal;
-}
-
-.card{
-    --bs-card-border-width: 0;
-}
-
-.card-img-top{
-    height: 15rem;
-    object-fit: cover;
-    border-radius: 1rem;
-    /* Bordi sfumati: opaca fino al 45% dal centro, poi sempre più trasparente fino al 75%. */
-    /* -webkit-mask-image: radial-gradient(ellipse at center, #000 70%, transparent 75%);
-    mask-image: radial-gradient(ellipse at center, #000 70%, transparent 75%); */
-    
--webkit-mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
-                    linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
-mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
-            linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
--webkit-mask-composite: source-in;
-mask-composite: intersect;
+        linear-gradient(to bottom, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1rem), transparent),
+        linear-gradient(to bottom, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
 }
 
 /* Galleria immagini dei progetti (modale con carosello: vedi _project.html e static/js/gallery.js). */
@@ -418,10 +394,12 @@ mask-composite: intersect;
 .modal-backdrop {
     --bs-backdrop-opacity: 0.92;
 }
+
 .gallery-modal .modal-content {
     background: transparent;
     border: 0;
 }
+
 .gallery-modal .carousel-item img {
     max-width: 100%;
     max-height: 85vh;
@@ -429,7 +407,10 @@ mask-composite: intersect;
     height: auto;
 }
 
-/* ---------- Player YouTube e SoundCloud (markup in _project.html, comportamento in static/js/players.js) ---------- */
+/* ==========================================================================
+   [09] PLAYER YOUTUBE E SOUNDCLOUD
+   _project.html, static/js/players.js
+   ========================================================================== */
 
 /* Etichetta "Play": riquadro a spigoli vivi, testo maiuscolo leggero come le voci della navbar. Sfondo scuro semitrasparente
    per restare leggibile sopra la copertina. */
@@ -456,6 +437,7 @@ mask-composite: intersect;
     background: #000;
     text-decoration: none;
 }
+
 .yt-facade img {
     position: absolute;
     inset: 0;
@@ -465,15 +447,18 @@ mask-composite: intersect;
     filter: brightness(0.7);
     transition: filter 0.2s;
 }
+
 .yt-facade .player-play {
     position: relative;
     background: rgb(0 0 0 / 0.5);
     transition: color 0.2s, border-color 0.2s;
 }
+
 .yt-facade:hover img,
 .yt-facade:focus-visible img {
     filter: brightness(0.9);
 }
+
 .yt-facade:hover .player-play,
 .yt-facade:focus-visible .player-play {
     color: var(--hts-accent);
@@ -493,26 +478,31 @@ mask-composite: intersect;
     border-block: 1px solid var(--hts-accent);
     text-align: left;
 }
+
 .sc-toggle {
     background: none;
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s;
 }
+
 .sc-toggle:hover:not(:disabled),
 .sc-toggle:focus-visible {
     color: var(--hts-accent);
     border-color: var(--hts-accent);
 }
+
 .sc-toggle:disabled {
     color: var(--hts-muted);
     border-color: var(--hts-muted);
     cursor: default;
 }
+
 .sc-meta {
     display: flex;
     flex-direction: column;
     line-height: 1.2;
 }
+
 .sc-title {
     font-family: var(--hts-font-display);
     font-weight: 300;
@@ -522,10 +512,12 @@ mask-composite: intersect;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 .sc-artist {
     font-family: var(--hts-font-label);
     color: var(--hts-muted);
 }
+
 .sc-time {
     font-family: var(--hts-font-display);
     font-weight: 300;
@@ -547,14 +539,17 @@ mask-composite: intersect;
     background: transparent;
     cursor: pointer;
 }
+
 .sc-seek:disabled {
     opacity: 0.4;
     cursor: default;
 }
+
 .sc-seek::-webkit-slider-runnable-track {
     height: 1px;
     background: linear-gradient(to right, var(--hts-accent) var(--progress, 0%), rgb(255 255 255 / 0.35) var(--progress, 0%));
 }
+
 .sc-seek::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 0.5rem;
@@ -564,14 +559,17 @@ mask-composite: intersect;
     border: 0;
     border-radius: 0;
 }
+
 .sc-seek::-moz-range-track {
     height: 1px;
     background: rgb(255 255 255 / 0.35);
 }
+
 .sc-seek::-moz-range-progress {
     height: 1px;
     background: var(--hts-accent);
 }
+
 .sc-seek::-moz-range-thumb {
     width: 0.5rem;
     height: 0.75rem;
@@ -590,6 +588,50 @@ mask-composite: intersect;
     pointer-events: none;
 }
 
+/* ==========================================================================
+   [10] CONTRIBUTOR
+   contributor_list.html, contributor_detail.html
+   ========================================================================== */
+
+.card-title {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    font-style: normal;
+}
+
+.card-subtitle {
+    font-family: var(--hts-font-label);
+    color: var(--hts-muted);
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    font-style: normal;
+}
+
+.card {
+    --bs-card-border-width: 0;
+}
+
+.card-img-top {
+    height: 15rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    /* Bordi sfumati: opaca fino al 45% dal centro, poi sempre più trasparente fino al 75%. */
+    /* -webkit-mask-image: radial-gradient(ellipse at center, #000 70%, transparent 75%);
+       mask-image: radial-gradient(ellipse at center, #000 70%, transparent 75%); */
+
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
+        linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
+        linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+}
+
 /* Pagina del singolo contributor (contributor_detail.html). La foto ha lo stesso trattamento delle card dell'elenco:
    angoli arrotondati e bordi sfumati, ma con le proporzioni originali. */
 .contributor-photo {
@@ -597,9 +639,9 @@ mask-composite: intersect;
     width: 100%;
     border-radius: 1rem;
     -webkit-mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
-                        linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+        linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
     mask-image: linear-gradient(to right, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent),
-                linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+        linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
     -webkit-mask-composite: source-in;
     mask-composite: intersect;
 }
@@ -611,7 +653,154 @@ mask-composite: intersect;
     line-height: 1.2;
 }
 
-/* ---------- Intro animato della homepage (markup: _intro.html, comportamento e tempi: static/js/intro.js) ---------- */
+/* ==========================================================================
+   [11] EVENTI E REFERENZE
+   event_list.html, reference_list.html
+   ========================================================================== */
+
+.reference-title,
+.event-title {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+/* Gli <h3> sono in corsivo di default (stile globale dei titoli): qui il titolo dell'evento resta dritto. */
+.event-title {
+    font-style: normal;
+}
+
+.reference-author-date {
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    text-transform: capitalize;
+}
+
+.reference-notes {
+    font-family: var(--hts-font-serif);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+/* ==========================================================================
+   [12] HOME
+   home.html, _triskele.html
+   Occupa lo schermo intero, centrato come lo strato dell'intro, con la stessa dimensione (--hts-triskele-size) e lo stesso
+   spessore e colore: quando l'intro si dissolve si vede lo stesso disegno, nello stesso punto. Il contenitore lascia passare i clic;
+   solo i tracciati (i link ai progetti a caso) li ricevono.
+   Variabili: --home-triskele-... sul selettore .home-triskele.
+   ========================================================================== */
+
+.home-triskele {
+    --home-triskele-color: #fff;
+    --home-triskele-width: 12;                   /* nelle unità del disegno (500 di larghezza): come nell'intro */
+    --home-triskele-glow-color: var(--hts-accent);   /* bagliore al passaggio del mouse o con il focus (la linea resta bianca e dello stesso spessore) */
+    --home-triskele-glow-width: 22;                  /* spessore dello strato che si sfuma: più alto = bagliore più largo (la sfocatura è in _triskele.html) */
+    --home-triskele-glow-opacity: 1;                 /* intensità del bagliore: da 0 a 1 */
+    --home-triskele-glow-fade: 0.3s;                 /* durata della comparsa e della scomparsa */
+    --home-triskele-label-size: 1.25rem;         /* testo della categoria sotto il triskele */
+    --home-triskele-label-color: #fff;
+    --home-triskele-label-gap: 2rem;             /* distanza tra il triskele e il nome */
+    --home-triskele-hit-width: 30;               /* area cliccabile (invisibile): più larga della linea, per colpirla più facilmente */
+
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+}
+
+.home-triskele-svg {
+    width: var(--hts-triskele-size);
+    height: auto;
+    overflow: visible;
+}
+
+.home-triskele-svg a {
+    cursor: pointer;
+    outline: none; /* il segno di focus è il bagliore (sotto) */
+}
+
+.home-triskele-svg .triskele-line {
+    fill: none;
+    stroke: var(--home-triskele-color);
+    stroke-width: var(--home-triskele-width);
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+/* Bagliore: lo stesso tracciato, viola e più spesso, sfocato da un filtro SVG (#triskele-glow-blur), dietro la linea bianca.
+   Resta invisibile finché non c'è hover o focus; si anima l'opacità, perché i filtri non si possono animare. */
+.home-triskele-svg .triskele-glow {
+    fill: none;
+    stroke: var(--home-triskele-glow-color);
+    stroke-width: var(--home-triskele-glow-width);
+    stroke-linecap: round;
+    filter: url(#triskele-glow-blur);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--home-triskele-glow-fade);
+}
+
+.home-triskele-svg a:hover .triskele-glow,
+.home-triskele-svg a:focus-visible .triskele-glow {
+    opacity: var(--home-triskele-glow-opacity);
+}
+
+.home-triskele-svg .triskele-hit {
+    fill: none;
+    stroke: transparent;
+    stroke-width: var(--home-triskele-hit-width);
+    stroke-linecap: round;
+    pointer-events: stroke; /* riceve il clic solo lungo la linea (e il suo margine), non nello spazio dentro la spirale */
+}
+
+/* Nome della categoria sotto il triskele: tre testi nello stesso punto, ognuno visibile solo con hover o focus del suo tracciato.
+   Sta sotto il triskele, centrato: la posizione parte dal centro dello schermo (50%) e scende di metà triskele più la distanza.
+   Per metterlo in fondo allo schermo basta cambiare "top" con "bottom: 2rem". Usa :has() (Safari 15.4+, Chrome 105+, Firefox 121+):
+   nei browser più vecchi il nome non compare, ma il resto funziona. */
+.home-triskele-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    /* Il più basso tra "sotto il triskele" e "3rem dal fondo dello schermo": con un triskele grande su una finestra bassa il nome resta visibile. */
+    top: min(calc(50% + var(--hts-triskele-size) / 2 + var(--home-triskele-label-gap)), calc(100% - 3rem));
+    text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: se capita sopra le linee bianche si legge lo stesso */
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: var(--home-triskele-label-size);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--home-triskele-label-color);
+    pointer-events: none;
+}
+
+.home-triskele-label > span {
+    grid-area: 1 / 1; /* i tre nomi si sovrappongono: ne compare uno alla volta */
+    opacity: 0;
+    transition: opacity var(--home-triskele-glow-fade);
+}
+
+.home-triskele:has(.triskele-link-1:hover, .triskele-link-1:focus-visible) .home-triskele-label-1,
+.home-triskele:has(.triskele-link-2:hover, .triskele-link-2:focus-visible) .home-triskele-label-2,
+.home-triskele:has(.triskele-link-3:hover, .triskele-link-3:focus-visible) .home-triskele-label-3 {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   [13] INTRO ANIMATO
+   _intro.html, static/js/intro.js (comportamento e tempi: oggetto TIMELINE)
+   Variabili: --intro-... sul selettore .intro.
+   ========================================================================== */
+
 .intro {
     /* Valori da cambiare qui. Linea e testo: colori, spessore, dimensioni. */
     --intro-bg: #000;
@@ -653,6 +842,7 @@ mask-composite: intersect;
     will-change: transform;
     animation: intro-static var(--intro-static-speed) steps(1) infinite;
 }
+
 @keyframes intro-static {
     0%   { transform: translate(0, 0); }
     10%  { transform: translate(-5%, -10%); }
@@ -684,11 +874,13 @@ mask-composite: intersect;
     text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: il testo resta leggibile sopra il rumore colorato */
     cursor: pointer;
 }
+
 /* Il cursore lampeggiante dice che il testo è cliccabile. */
 .intro-enter::after {
     content: "_";
     animation: intro-blink 1s steps(1) infinite;
 }
+
 @keyframes intro-blink {
     50% { opacity: 0; }
 }
@@ -700,6 +892,7 @@ mask-composite: intersect;
     /* Sta nella stessa cella del testo e, venendo dopo nel codice, gli finirebbe SOPRA intercettando il clic: va lasciato passare. */
     pointer-events: none;
 }
+
 .intro-triskele path {
     fill: none;
     stroke: var(--intro-line-color);
@@ -725,6 +918,7 @@ mask-composite: intersect;
     text-transform: uppercase;
     cursor: pointer;
 }
+
 .intro-skip:hover,
 .intro-skip:focus-visible {
     color: var(--hts-accent);
@@ -739,53 +933,7 @@ html.intro-ready {
 html:not(.intro-ready) .intro {
     animation: intro-failsafe 0.3s 4s forwards;
 }
+
 @keyframes intro-failsafe {
     to { opacity: 0; visibility: hidden; }
-}
-
-/* ---------- Triskele della home (markup: home.html + _triskele.html) ----------
-   Occupa lo schermo intero, centrato come lo strato dell'intro, con la stessa dimensione (--hts-triskele-size) e lo stesso
-   spessore e colore: quando l'intro si dissolve si vede lo stesso disegno, nello stesso punto. Il contenitore lascia passare i clic;
-   solo i tracciati (i link ai progetti a caso) li ricevono. */
-.home-triskele {
-    --home-triskele-color: #fff;
-    --home-triskele-width: 15;                   /* nelle unità del disegno (500 di larghezza): come nell'intro */
-    --home-triskele-hover-color: var(--hts-accent);
-    --home-triskele-hover-width: 20;             /* spessore al passaggio del mouse o con il focus */
-    --home-triskele-hit-width: 30;               /* area cliccabile (invisibile): più larga della linea, per colpirla più facilmente */
-
-    position: fixed;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    pointer-events: none;
-}
-.home-triskele-svg {
-    width: var(--hts-triskele-size);
-    height: auto;
-    overflow: visible;
-}
-.home-triskele-svg a {
-    cursor: pointer;
-    outline: none; /* il segno di focus è il tracciato che cambia colore e spessore (sotto) */
-}
-.home-triskele-svg .triskele-line {
-    fill: none;
-    stroke: var(--home-triskele-color);
-    stroke-width: var(--home-triskele-width);
-    stroke-linecap: round;
-    pointer-events: none;
-    transition: stroke 0.2s, stroke-width 0.2s;
-}
-.home-triskele-svg .triskele-hit {
-    fill: none;
-    stroke: transparent;
-    stroke-width: var(--home-triskele-hit-width);
-    stroke-linecap: round;
-    pointer-events: stroke; /* riceve il clic solo lungo la linea (e il suo margine), non nello spazio dentro la spirale */
-}
-.home-triskele-svg a:hover .triskele-line,
-.home-triskele-svg a:focus-visible .triskele-line {
-    stroke: var(--home-triskele-hover-color);
-    stroke-width: var(--home-triskele-hover-width);
 }

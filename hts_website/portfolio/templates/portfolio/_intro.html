@@ -2,7 +2,7 @@
 {# Intro animato della homepage. Incluso da home.html solo se acceso nelle impostazioni del sito (admin). #}
 {# Sequenza: schermo nero con "welcome to HTS"; il CLIC su quel testo sblocca l'audio (i browser non lo fanno partire da soli), #}
 {# parte il suono del modem, il testo sparisce, tre linee disegnano il triskele, dissolvenza verso la pagina. #}
-{# Dura TIMELINE.duration secondi dal clic (non dipende dalla lunghezza dell'audio). Tempi: static/js/intro.js (TIMELINE). Aspetto: custom.css (sezione "Intro animato"). #}
+{# Dura TIMELINE.duration secondi dal clic (non dipende dalla lunghezza dell'audio). Tempi: static/js/intro.js (TIMELINE). Aspetto: custom.css (sezione [13]). #}
 {# Le tre linee (il file triskele.svg) stanno in _triskele.html, condiviso con la home: serve per disegnarle con stroke-dashoffset (come il trim paths). #}
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Welcome to HTS">
     <button type="button" class="intro-enter">You are entering the digital space of the Holistic Technology Salon.<br>Click here to connect</button>

@@ -35,7 +35,7 @@ HTS_website/
     │   └── tests.py
     ├── publication/              # la pubblicazione statica (index.html + publication.css + images/)
     ├── static/                   # file statici del sito
-    │   ├── css/custom.css        # lo stile personale, caricato dopo Bootstrap
+    │   ├── css/custom.css        # lo stile personale, caricato dopo Bootstrap; in sezioni numerate [01]-[13], indice in cima
     │   ├── audio/intro.mp3       # suono dell'intro animato (15 s)
     │   ├── fonts/trial/          # font in versione trial (ignorata da git, vedi Frontend)
     │   ├── js/                   # gallery.js (modale immagini), players.js (player), intro.js (intro animato)
@@ -174,7 +174,7 @@ variabile messo nel feed (player, immagini) deve riservare il suo spazio allo st
 o di "Condividi"), mai codice HTML. `portfolio/embeds.py` riconosce il servizio, ricava l'indirizzo di embed e accetta
 solo YouTube e SoundCloud: l'indirizzo finisce in un `<iframe>` e non deve poter puntare a un sito qualsiasi. I
 player compaiono solo nel feed dei progetti (`_project.html`, incluso da `project_feed.html`) e sono custom:
-comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione "Player YouTube e SoundCloud").
+comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione [09]).
 
 - **YouTube**: finché non si preme play c'è solo una copertina (`hqdefault.jpg` da `i.ytimg.com`, indirizzo da
   `youtube_thumbnail_url`) con un'etichetta "Play"; nessun iframe e nessuno script di Google. Al clic `players.js` crea
@@ -194,7 +194,11 @@ disegno, stessa posizione (centro dello schermo) e stessa dimensione (`--hts-tri
 quando l'intro si dissolve si vede lo stesso disegno senza salti. Ogni tracciato è un link a `/projects/random/<categoria>/`:
 tracciato 1 (in alto) = **relationality**, 2 (in basso a sinistra) = **perception**, 3 (in basso a destra) = **cognition**.
 La categoria è il campo `project_category` del progetto, che si imposta dall'admin (valori: `relationality`, `perception`, `cognition`).
-Aspetto e area cliccabile (più larga della linea) sono variabili `--home-triskele-...` in `custom.css`, sezione "Triskele della home".
+Con hover o focus compare anche il **nome della categoria** sotto il triskele (solo CSS, con `:has()`; variabili `--home-triskele-label-...`;
+per metterlo in fondo allo schermo basta usare `bottom` al posto di `top` in `.home-triskele-label`).
+Con hover o focus il tracciato resta bianco e dello stesso spessore, ma ha un **bagliore viola** (uno strato sfocato dietro la linea).
+Colore, spessore, intensità e durata del bagliore, e l'area cliccabile (più larga della linea), sono variabili `--home-triskele-...` in `custom.css`,
+sezione [12]; la quantità di sfocatura (`stdDeviation`) sta nel filtro in `_triskele.html` (un filtro SVG, perché Safari non applica `filter: blur()` agli elementi dentro un SVG).
 
 **Intro animato della homepage.** Sulla homepage (solo lì) appare uno strato nero a tutto schermo: "welcome to HTS", un
 clic fa partire il suono di un modem 56k (`static/audio/intro.mp3`, 15 secondi), il testo sparisce, tre linee disegnano il
@@ -208,7 +212,7 @@ se l'audio è più corto il resto va avanti in silenzio, se è più lungo il vol
   Il tasto **Skip** (o Esc) lo chiude subito e ferma l'audio. Mentre dura, il resto della pagina non è cliccabile (`inert`).
 - **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `triskele.svg` con `pathLength="1"`: si disegna con
   `stroke-dashoffset`, come il trim paths di After Effects), comportamento e **tempi** in `static/js/intro.js` (oggetto
-  `TIMELINE` in cima), aspetto in `custom.css` (sezione "Intro animato": colori, spessore, dimensioni, in variabili `--intro-...`).
+  `TIMELINE` in cima), aspetto in `custom.css` (sezione [13]: colori, spessore, dimensioni, in variabili `--intro-...`).
   Lo sfondo ha un effetto **TV static**: un'immagine di rumore a strisce orizzontali colorate, stile videoregistratore (`static/img/tv-static.png`, 512x256px)
   ripetuta su uno strato che salta di posizione a scatti (`.intro::before`); intensità, grana e velocità sono le variabili `--intro-static-opacity`, `--intro-static-grain` e `--intro-static-speed`.
 - **Rete di sicurezza**: senza JavaScript lo strato non compare; se `intro.js` non parte, sparisce da solo dopo 4 secondi.

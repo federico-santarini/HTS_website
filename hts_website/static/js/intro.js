@@ -1,4 +1,4 @@
-// Intro animato della homepage (markup: portfolio/_intro.html, aspetto: custom.css, sezione "Intro animato").
+// Intro animato della homepage (markup: portfolio/_intro.html, aspetto: custom.css, sezione [13]).
 //
 // Perché serve un clic: i browser non fanno partire l'audio finché la persona non ha toccato la pagina (su iPhone mai da soli).
 // Il clic sul testo d'ingresso sblocca l'audio e dà il via alla sequenza. Dura TIMELINE.duration secondi dal clic, qualunque sia la lunghezza

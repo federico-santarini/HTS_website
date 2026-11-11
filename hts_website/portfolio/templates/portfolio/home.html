@@ -12,5 +12,12 @@
 {% url 'random_project' 'cognition' as cognition_url %}
 <nav class="home-triskele" aria-label="Project categories">
     {% include "portfolio/_triskele.html" with css_class="home-triskele-svg" link1=relationality_url label1="Relationality" link2=perception_url label2="Perception" link3=cognition_url label3="Cognition" %}
+    {# Il nome della categoria sotto il triskele: compare con hover o focus del tracciato corrispondente (solo CSS, con :has(): vedi custom.css). #}
+    {# aria-hidden: i link hanno già il loro nome (aria-label), non va letto due volte. Se cambi un nome, cambialo anche nell'include qui sopra. #}
+    <p class="home-triskele-label" aria-hidden="true">
+        <span class="home-triskele-label-1">Relationality</span>
+        <span class="home-triskele-label-2">Perception</span>
+        <span class="home-triskele-label-3">Cognition</span>
+    </p>
 </nav>
 {% endblock %}
