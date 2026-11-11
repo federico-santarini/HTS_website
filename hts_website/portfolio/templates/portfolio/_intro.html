@@ -2,10 +2,10 @@
 {# Intro animato della homepage. Incluso da home.html solo se acceso nelle impostazioni del sito (admin). #}
 {# Sequenza: schermo nero con "welcome to HTS"; il CLIC su quel testo sblocca l'audio (i browser non lo fanno partire da soli), #}
 {# parte il suono del modem, il testo sparisce, tre linee disegnano il triskele, dissolvenza verso la pagina. #}
-{# Dura quanto l'audio dal clic in poi. Tempi: static/js/intro.js (TIMELINE). Aspetto: custom.css (sezione "Intro animato"). #}
+{# Dura TIMELINE.duration secondi dal clic (non dipende dalla lunghezza dell'audio). Tempi: static/js/intro.js (TIMELINE). Aspetto: custom.css (sezione "Intro animato"). #}
 {# Le tre linee sono il file triskele.svg ricevuto, con pathLength="1": serve per disegnarle con stroke-dashoffset (come il trim paths). #}
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Welcome to HTS">
-    <button type="button" class="intro-enter">welcome to HTS</button>
+    <button type="button" class="intro-enter">You are entering the digital space of the Holistic Technology Salon.<br>Click here to connect</button>
     <svg class="intro-triskele" viewBox="0 0 500 500" aria-hidden="true" focusable="false">
         <path pathLength="1" d="M228.5,167.7c-4.5-8.5,3.4-18.5,12.8-18.5c10.1,0,18.8,10,18.8,20.2c0,11.6-13.3,24.1-24.8,25.5 c-12,1.4-30.5-10.5-34.2-29.9c-4.6-24.9,22-43.2,39.9-44.1c18.2-1,49.9,15.4,49.9,50.9c0,18.9-19.5,55-55.1,55 c-35.3,0-67.9-26.2-67.9-65.3c0-30.1,22.9-74.9,77.2-74.9c36,0,80.6,31.5,80.6,88c0,49-46.5,87.8-87.4,87.8 c-33.5,0-42.6-14.5-76.1-15.7"/>
         <path pathLength="1" d="M162,344.2c-2.8,9.2-15.5,10.6-22.1,4c-7.2-7.2-6.2-20.4,1-27.6c8.2-8.2,26.4-7.7,35.6-0.5 c9.5,7.5,14.2,29,3,45.3c-14.3,20.9-46.1,15-59.4,3c-13.6-12.2-24.4-46.1,0.7-71.2c13.4-13.4,52.7-25.1,77.9,0.1 c24.9,24.9,29.5,66.6,1.9,94.2c-21.3,21.3-69.2,36.8-107.6-1.6c-25.4-25.4-34.7-79.3,5.2-119.2c34.6-34.6,95-29.3,123.9-0.3 c23.7,23.7,26.7,36,30.9,62.7"/>

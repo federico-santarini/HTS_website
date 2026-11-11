@@ -390,7 +390,7 @@ class SiteSettingsTests(TestCase):
         SiteSettings.objects.create(intro_enabled=True)
         html = self.client.get("/").content.decode()
         self.assertIn('id="intro"', html)
-        self.assertIn("welcome to HTS", html)
+        self.assertIn('class="intro-enter"', html)  # il bottone d'ingresso (il suo testo si può cambiare liberamente)
         self.assertIn("audio/intro.mp3", html)
         self.assertEqual(html.count("<path pathLength"), 3)
 

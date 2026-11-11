@@ -190,7 +190,8 @@ comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione "Playe
 
 **Intro animato della homepage.** Sulla homepage (solo lì) appare uno strato nero a tutto schermo: "welcome to HTS", un
 clic fa partire il suono di un modem 56k (`static/audio/intro.mp3`, 15 secondi), il testo sparisce, tre linee disegnano il
-triskele e una dissolvenza porta alla pagina. Dura quanto l'audio, dal clic in poi.
+triskele e una dissolvenza porta alla pagina. Dura `TIMELINE.duration` secondi dal clic (in `intro.js`, oggi 15), qualunque sia la lunghezza dell'audio:
+se l'audio è più corto il resto va avanti in silenzio, se è più lungo il volume sfuma con la dissolvenza finale e si ferma.
 - **Si accende e si spegne** dall'admin: **Site settings** (un solo record, `SiteSettings` in `models.py`; spento di default).
 - **Audio come blob**: `intro.js` scarica il file e lo dà al player come blob, perché Safari non riproduce un audio che il server non sa servire a pezzi (HTTP Range) e il server di sviluppo di Django non lo sa fare.
 - **Perché serve il clic**: i browser non fanno partire l'audio senza un gesto della persona (su iPhone mai). Il clic sul testo
@@ -200,10 +201,12 @@ triskele e una dissolvenza porta alla pagina. Dura quanto l'audio, dal clic in p
 - **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `triskele.svg` con `pathLength="1"`: si disegna con
   `stroke-dashoffset`, come il trim paths di After Effects), comportamento e **tempi** in `static/js/intro.js` (oggetto
   `TIMELINE` in cima), aspetto in `custom.css` (sezione "Intro animato": colori, spessore, dimensioni, in variabili `--intro-...`).
+  Lo sfondo ha un effetto **TV static**: un'immagine di rumore a strisce orizzontali colorate, stile videoregistratore (`static/img/tv-static.png`, 512x256px)
+  ripetuta su uno strato che salta di posizione a scatti (`.intro::before`); intensità, grana e velocità sono le variabili `--intro-static-opacity`, `--intro-static-grain` e `--intro-static-speed`.
 - **Rete di sicurezza**: senza JavaScript lo strato non compare; se `intro.js` non parte, sparisce da solo dopo 4 secondi.
 - **Audio**: ritagliato da un video YouTube ("The Sound of dial-up Internet", William Termini, licenza YouTube standard):
-  **prima di pubblicare il sito va verificato il diritto d'uso**, o sostituito con una registrazione libera (stesso
-  nome di file e stessa durata, o cambiare `fallbackDuration` in `intro.js`). Se si cambia la durata dell'audio i tempi si adattano.
+  **prima di pubblicare il sito va verificato il diritto d'uso**, o sostituito con una registrazione libera (stesso nome
+  di file `static/audio/intro.mp3`). La durata dell'intro non dipende dal file: si regola con `TIMELINE.duration`.
 - Non provato su iPhone/Safari: lì il comportamento dell'audio è il più delicato.
 
 **Cancellare una tipologia.** Per una many-to-many Django non ha `on_delete=PROTECT`: senza protezione

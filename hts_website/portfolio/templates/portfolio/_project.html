@@ -30,7 +30,7 @@
         {# L'iframe non ha src: players.js lo imposta da data-src quando il player sta per entrare nello schermo. #}
         {# Titolo e artista (attribuzione richiesta da SoundCloud) li riempie il JavaScript; senza, resta il link al brano. #}
         <div class="row justify-content-center">
-            <div class="sc-player col-lg-8" data-sc-player>
+            <div class="sc-player col-10 col-lg-8" data-sc-player>
                 <button type="button" class="sc-toggle" disabled>Play</button>
                 <div class="sc-meta">
                     <a class="sc-title" href="{{ project.soundcloud_url }}">Listen on SoundCloud</a>
@@ -74,7 +74,7 @@
                     <button type="button" class="gallery-thumb" data-bs-toggle="modal"
                         data-bs-target="#gallery-{{ project.pk }}" data-gallery-index="{{ forloop.counter0 }}"
                         aria-label="Open image {{ forloop.counter }} of {{ images|length }}">
-                        <img class="w-100 h-100 object-fit-contain" src="{{ project_image.image.url }}"
+                        <img class="w-100 h-100 object-fit-cover gallery-minuature" src="{{ project_image.image.url }}"
                             alt="{{ project.title }}" loading="lazy" {% if project_image.image_width %}
                             width="{{ project_image.image_width }}" height="{{ project_image.image_height }}"
                             {% endif %}>

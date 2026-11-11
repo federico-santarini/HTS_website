@@ -257,6 +257,15 @@ text-underline-offset: 0.3rem;
     line-height: 1.2;
 }
 
+.gallery-minuature{
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1rem), transparent),
+                    linear-gradient(to bottom, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
+mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1rem), transparent),
+            linear-gradient(to bottom, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
+-webkit-mask-composite: source-in;
+mask-composite: intersect;
+
+}
 
 
 
@@ -612,13 +621,48 @@ mask-composite: intersect;
     --intro-line-width: 15;                      /* nelle unità del disegno (500 di larghezza): 15 è lo spessore del file originale */
     --intro-triskele-size: min(60vmin, 28rem);   /* larghezza del triskele */
     --intro-skip-color: var(--hts-muted);
+    /* Effetto TV static (stile VHS: strisce orizzontali colorate) sullo sfondo. */
+    --intro-static-opacity: 0.8;                 /* intensità: 0 = spento, 0.4 smorzato, 1 = pieno */
+    --intro-static-grain: 1024px;                /* larghezza di un riquadro di rumore: più piccolo = strisce più sottili (il file è 512px, ingrandito 2x) */
+    --intro-static-speed: .8s;                  /* durata di un giro di 10 "salti": più basso = sfarfallio più veloce */
 
     position: fixed;
     inset: 0;
     z-index: 2000; /* sopra la navbar (1020) e i modali (1055) */
     display: grid;
     place-items: center;
+    overflow: hidden; /* lo strato del rumore è più grande dello schermo: il resto va tagliato */
     background: var(--intro-bg);
+}
+
+/* TV static: un'immagine di rumore a strisce colorate (static/img/tv-static.png, 512x256px) ripetuta su uno strato grande il doppio dello schermo, che salta
+   di posizione a scatti (steps(1) = nessuna interpolazione tra un salto e l'altro). Si muove con transform, non con
+   background-position, così non ridisegna l'immagine a ogni salto. z-index -1: sta dietro al testo e al triskele, sopra il nero.
+   Si dissolve insieme all'intro, perché l'opacità di .intro la imposta intro.js. */
+.intro::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    z-index: -1;
+    background: url("../img/tv-static_2.jpg") repeat;
+    background-size: var(--intro-static-grain);
+    image-rendering: pixelated; /* il rumore ingrandito resta a quadretti netti, non sfocato */
+    opacity: var(--intro-static-opacity);
+    pointer-events: none;
+    will-change: transform;
+    animation: intro-static var(--intro-static-speed) steps(1) infinite;
+}
+@keyframes intro-static {
+    0%   { transform: translate(0, 0); }
+    10%  { transform: translate(-5%, -10%); }
+    20%  { transform: translate(-15%, 5%); }
+    30%  { transform: translate(7%, -20%); }
+    40%  { transform: translate(-5%, 20%); }
+    50%  { transform: translate(-15%, 10%); }
+    60%  { transform: translate(15%, 0); }
+    70%  { transform: translate(0, 15%); }
+    80%  { transform: translate(3%, 20%); }
+    90%  { transform: translate(-10%, 10%); }
 }
 
 /* Testo e triskele stanno nella stessa cella: il secondo prende il posto del primo. */
@@ -636,6 +680,7 @@ mask-composite: intersect;
     font-weight: 300;
     font-size: var(--intro-text-size);
     letter-spacing: var(--intro-text-letter-spacing);
+    text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: il testo resta leggibile sopra il rumore colorato */
     cursor: pointer;
 }
 /* Il cursore lampeggiante dice che il testo è cliccabile. */

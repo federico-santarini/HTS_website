@@ -1,18 +1,21 @@
 // Intro animato della homepage (markup: portfolio/_intro.html, aspetto: custom.css, sezione "Intro animato").
 //
 // Perché serve un clic: i browser non fanno partire l'audio finché la persona non ha toccato la pagina (su iPhone mai da soli).
-// Il clic su "welcome to HTS" sblocca l'audio e dà il via alla sequenza. Tutto dura quanto l'audio, dal clic in poi.
+// Il clic sul testo d'ingresso sblocca l'audio e dà il via alla sequenza. Dura TIMELINE.duration secondi dal clic, qualunque sia la lunghezza
+// del file audio: se l'audio è più corto, il resto va avanti in silenzio; se è più lungo, il volume scende con la dissolvenza finale e si ferma.
 //
 // La sequenza è una funzione del tempo: render(t) dice come sta ogni elemento a t secondi dal clic. Cambiare i valori
 // in TIMELINE basta per cambiare i tempi; non serve toccare il resto.
 
 const TIMELINE = {
+    duration: 18,           // secondi: durata totale dell'intro dal clic (la dissolvenza finale finisce qui)
     textFadeOut: 0.8,       // secondi: il testo "welcome to HTS" sparisce subito dopo il clic
-    drawStart: 1.2,         // secondi dal clic: la prima linea del triskele comincia a disegnarsi
-    drawDuration: 9,        // secondi: quanto ci mette ogni linea a disegnarsi
-    stagger: 0.5,           // secondi di ritardo tra una linea e la successiva
-    fadeOutDuration: 2.5,   // secondi: dissolvenza finale verso la pagina (finisce insieme all'audio)
-    fallbackDuration: 15,   // secondi: durata se l'audio non si carica (di norma vale la durata del file)
+    drawStart: 3,         // secondi dal clic: la prima linea del triskele comincia a disegnarsi
+    drawDuration: 12,        // secondi: quanto ci mette ogni linea a disegnarsi
+    stagger: 0,           // secondi di ritardo tra una linea e la successiva
+    minLength: 1,           // una linea compare solo quando è lunga almeno così tante volte il proprio spessore (sotto sarebbe un puntino)
+    lineFadeIn: 0.5,        // secondi: dissolvenza con cui ogni linea compare, appena raggiunge minLength
+    fadeOutDuration: 2.5,   // secondi: dissolvenza finale verso la pagina (finisce a TIMELINE.duration; sfuma anche il volume)
 };
 
 (() => {
@@ -23,6 +26,11 @@ const TIMELINE = {
     const skip = intro.querySelector('.intro-skip');
     const audio = intro.querySelector('.intro-audio');
     const paths = [...intro.querySelectorAll('.intro-triskele path')];
+    // Progresso (0-1) a cui ogni linea è lunga minLength volte il proprio spessore, e istante (t) in cui è comparsa.
+    // Spessore e lunghezza sono nelle stesse unità del disegno (viewBox), quindi il rapporto non dipende dalla dimensione a schermo.
+    const strokeWidth = parseFloat(getComputedStyle(paths[0]).strokeWidth) || 0;
+    const minProgress = paths.map((path) => (strokeWidth * TIMELINE.minLength) / (path.getTotalLength() || 1));
+    const appearedAt = paths.map(() => null);
     // Il resto della pagina non è cliccabile né raggiungibile con Tab finché dura l'intro.
     const page = [...document.body.children].filter((el) => el !== intro && el.tagName !== 'SCRIPT');
     page.forEach((el) => { el.inert = true; });
@@ -61,16 +69,25 @@ const TIMELINE = {
 
         paths.forEach((path, i) => {
             const progress = easeInOut(clamp01((t - TIMELINE.drawStart - i * TIMELINE.stagger) / TIMELINE.drawDuration));
-            path.style.visibility = progress > 0 ? 'visible' : 'hidden';
+            // Le estremità sono tonde: una linea cortissima si vede come un puntino largo quanto lo spessore. Finché non è
+            // lunga almeno minLength volte lo spessore resta nascosta; poi compare con una breve dissolvenza.
+            if (progress < minProgress[i]) {
+                path.style.visibility = 'hidden';
+                return;
+            }
+            if (appearedAt[i] === null) appearedAt[i] = t;
+            path.style.visibility = 'visible';
+            path.style.opacity = String(clamp01((t - appearedAt[i]) / TIMELINE.lineFadeIn));
             path.style.strokeDashoffset = String(1 - progress); // 1 = linea nascosta, 0 = tutta disegnata
         });
 
         const fade = clamp01((t - (duration - TIMELINE.fadeOutDuration)) / TIMELINE.fadeOutDuration);
         intro.style.opacity = String(1 - fade);
+        audio.volume = 1 - fade; // il suono sfuma con l'immagine (su iPhone il volume non si può cambiare: lì resta com'è)
     }
 
     function run() {
-        const duration = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : TIMELINE.fallbackDuration;
+        const duration = TIMELINE.duration;
         const startedAt = performance.now();
         const tick = (now) => {
             const t = (now - startedAt) / 1000;
