@@ -18,7 +18,7 @@
   {% comment %} <img src="{{ contributor.image.url }}" class="card-img-top" alt="..."> {% endcomment %}
   <div class="card-body">
     <h5 class="card-title"><a href="{% url 'contributor_detail' contributor.pk %}">{{ contributor.name }} {{ contributor.surname }}</a></h5>
-    <h6 class="card-subtitle">{% if contributor.affiliation %}{{ contributor.affiliation}} {% else %} {% endif %}</h6>
+    <h6 class="card-subtitle">{% if contributor.affiliation %}{{ contributor.affiliation}} {% else %}<br> {% endif %}</h6>
     <p class="card-text">{{ contributor.short_bio }}</p>
   </div>
 </div>

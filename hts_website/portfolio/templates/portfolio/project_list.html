@@ -20,11 +20,11 @@
 
 {% for project in projects %}
 <div class="container row border-bottom py-2 archive-row">
-    <div class="list-label col-9 col-lg-2 p-0">
+    <div class="list-label col-9 col-lg-2 p-0 d-flex align-items-center">
         {% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
     </div>
-    <div class="list-label col-3 col-lg-1 text-end p-0">{{ project.date|date:"b 'y" }}</div>
-    <div class="list-title col-lg-9 p-0 mt-1 order-lg-first"><a
+    <div class="list-label col-3 col-lg-1 p-0 d-flex align-items-center justify-content-end">{{ project.date|date:"b 'y" }}</div>
+    <div class="list-title col-lg-9 p-0 mt-1 order-lg-first text-truncate"><a
             href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></div>
 </div>
 {% empty %}

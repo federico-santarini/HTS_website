@@ -29,8 +29,8 @@
         {# SoundCloud: il widget ufficiale (iframe) è nascosto e fa solo da motore audio; i controlli sono i nostri. #}
         {# L'iframe non ha src: players.js lo imposta da data-src quando il player sta per entrare nello schermo. #}
         {# Titolo e artista (attribuzione richiesta da SoundCloud) li riempie il JavaScript; senza, resta il link al brano. #}
-        <div class="row justify-content-center">
-            <div class="sc-player col-10 col-lg-8" data-sc-player>
+        <div class="row justify-content-center mt-5 mb-5">
+            <div class="sc-player col-10 col-lg-6" data-sc-player>
                 <button type="button" class="sc-toggle" disabled>Play</button>
                 <div class="sc-meta">
                     <a class="sc-title" href="{{ project.soundcloud_url }}">Listen on SoundCloud</a>
@@ -43,33 +43,22 @@
             </div>
         </div>
         {% endif %}
-        {% if project.youtube_embed_url %}
-        {# YouTube: finché non si preme play c'è solo la copertina (nessun iframe, nessuno script di Google). Al clic players.js #}
-        {# crea l'<iframe> con data-embed-url e lo fa partire. Senza JavaScript resta un normale link al video. #}
-        <div class="row justify-content-center">
-            <div class="col-10 col-lg-8">
-                <div class="ratio ratio-16x9">
-                    <a class="yt-facade" href="{{ project.youtube_url }}"
-                        data-embed-url="{{ project.youtube_embed_url }}" data-title="{{ project.title }} (YouTube)"
-                        aria-label="Play video: {{ project.title }}">
-                        <img src="{{ project.youtube_thumbnail_url }}" alt="" width="480" height="360" loading="lazy">
-                        <span class="player-play">Play</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        {% endif %}
 
         {% with images=project.images.all %}
         {% if images %}
         {# Miniature: ogni immagine è un bottone che apre la galleria del progetto (modale qui sotto) sulla sua immagine. #}
         {# data-gallery-index è la posizione nella galleria: lo legge static/js/gallery.js. #}
-        <div class="row g-2 justify-content-center">
+        {# Come la griglia dei contributors: row-cols-N decide quante miniature stanno in una riga, senza fissare la larghezza di ogni colonna. #}
+        {# L'involucro .col-lg-8 centrato lascia 2 colonne vuote per lato (su 12) dai 992px in su; sotto, la galleria usa tutta la larghezza. #}
+        {# Per cambiare le miniature per riga: row-cols-4 = 4 sempre; row-cols-3 row-cols-lg-4 = 3 sotto i 992px e 4 sopra. #}
+        <div class="row justify-content-center">
+        <div class="col-lg-6">
+        <div class="row row-cols-4 g-2">
             {# Le miniature sono quadrate, con l'immagine centrata e adattata senza tagli né deformazioni (object-fit-contain). #}
             {% for project_image in images %}
             {# .ratio-1x1 è il contenitore quadrato; object-fit-contain adatta l'immagine intera, senza tagli né deformazioni, al centro. #}
             {# (object-fit-cover la riempirebbe tagliando i bordi.) width/height restano per le proporzioni dell'immagine. #}
-            <div class="col-3 col-lg-2">
+            <div class="col">
                 <div class="ratio ratio-1x1">
                     <button type="button" class="gallery-thumb" data-bs-toggle="modal"
                         data-bs-target="#gallery-{{ project.pk }}" data-gallery-index="{{ forloop.counter0 }}"
@@ -83,6 +72,8 @@
             </div>
             {% endfor %}
 
+        </div>
+        </div>
         </div>
 
         {# Galleria: un modale di Bootstrap con un carosello. Le immagini della galleria sono "lazy" e il modale chiuso è nascosto, #}
@@ -120,6 +111,24 @@
         </div>
         {% endif %}
         {% endwith %}
+
+        {% if project.youtube_embed_url %}
+        {# YouTube: finché non si preme play c'è solo la copertina (nessun iframe, nessuno script di Google). Al clic players.js #}
+        {# crea l'<iframe> con data-embed-url e lo fa partire. Senza JavaScript resta un normale link al video. #}
+        <div class="row justify-content-center mt-5 mb-5">
+            <div class="col-10 col-lg-4">
+                <div class="ratio ratio-16x9">
+                    <a class="yt-facade" href="{{ project.youtube_url }}"
+                        data-embed-url="{{ project.youtube_embed_url }}" data-title="{{ project.title }} (YouTube)"
+                        aria-label="Play video: {{ project.title }}">
+                        <img src="{{ project.youtube_thumbnail_url }}" alt="" width="480" height="360" loading="lazy">
+                        <span class="player-play">Play</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="row justify-content-center mt-5">
             {# References: autore con le iniziali maiuscole (CSS, .reference-author); titolo in corsivo con la sola prima lettera maiuscola. #}
             {# Se c'è l'url, il tipo di riferimento è un link; altrimenti è solo testo. #}
