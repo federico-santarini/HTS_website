@@ -128,7 +128,7 @@ README di quella cartella.
   e poi `static/css/custom.css`; **l'ordine conta**, perché così le regole personali vincono. Il JavaScript di
   Bootstrap è in fondo alla pagina (serve alla navbar, che è sempre collassata dietro "Menu").
 - **Struttura base**: navbar Bootstrap fissa in cima e sempre collassata (nessun `navbar-expand-*`: le voci si aprono in
-  un box "liquid glass", vedi `custom.css`) e contenuto in un `<main class="container">`. Le pagine
+  un menu "liquid glass" a tutta la viewport con dissolvenza in apertura e chiusura, sezione [04] di `custom.css`) e contenuto in un `<main class="container">`. Le pagine
   interne non usano ancora la griglia a colonne (`row`/`col-*`): è il lavoro di design da fare, pagina per pagina.
 - **Come sovrascrivere Bootstrap**: le istruzioni sono in cima a `static/css/custom.css`. In breve: ridefinire le
   variabili `--bs-*` su `:root`, poi le variabili dei singoli componenti, poi regole normali; niente `!important`.
@@ -196,9 +196,12 @@ tracciato 1 (in alto) = **relationality**, 2 (in basso a sinistra) = **perceptio
 La categoria è il campo `project_category` del progetto, che si imposta dall'admin (valori: `relationality`, `perception`, `cognition`).
 Con hover o focus compare anche il **nome della categoria** sotto il triskele (solo CSS, con `:has()`; variabili `--home-triskele-label-...`;
 per metterlo in fondo allo schermo basta usare `bottom` al posto di `top` in `.home-triskele-label`).
-Con hover o focus il tracciato resta bianco e dello stesso spessore, ma ha un **bagliore viola** (uno strato sfocato dietro la linea).
-Colore, spessore, intensità e durata del bagliore, e l'area cliccabile (più larga della linea), sono variabili `--home-triskele-...` in `custom.css`,
-sezione [12]; la quantità di sfocatura (`stdDeviation`) sta nel filtro in `_triskele.html` (un filtro SVG, perché Safari non applica `filter: blur()` agli elementi dentro un SVG).
+Con hover o focus il tracciato resta bianco e dello stesso spessore, ma ha lo stesso **bagliore dei testi**: `--hts-glow` (`custom.css`,
+sezione [02]). Un'ombra CSS non si applica a un tracciato SVG, quindi `static/js/triskele-glow.js` legge `--hts-glow` e lo traduce in un filtro
+SVG (`#triskele-glow-filter` in `_triskele.html`): cambiando `--hts-glow` cambia anche il triskele. Le misure restano in pixel, come nei testi
+(il filtro si ricalcola se la finestra cambia). Senza JavaScript resta un alone viola sfocato. Intensità e durata del bagliore, e l'area
+cliccabile (più larga della linea), sono variabili `--home-triskele-...` in `custom.css`, sezione [12]. È un filtro SVG e non `filter: drop-shadow()`
+perché Safari non applica i filtri CSS agli elementi dentro un SVG.
 
 **Intro animato della homepage.** Sulla homepage (solo lì) appare uno strato nero a tutto schermo: "welcome to HTS", un
 clic fa partire il suono di un modem 56k (`static/audio/intro.mp3`, 15 secondi), il testo sparisce, tre linee disegnano il
