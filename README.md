@@ -343,8 +343,12 @@ d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e G
 - **Backup**: i dati sono nel Postgres di Railway: controllare nel suo pannello le opzioni di backup prima di affidargli contenuti importanti.
 
 **Quando ci sarà il dominio**
-- [ ] Collegare in Railway il dominio principale e `publication.<dominio>` allo stesso servizio (controllare il limite di domini del piano) e configurare il DNS.
-- [ ] `ALLOWED_HOSTS` con i tre indirizzi e `PUBLICATION_URL=https://publication.<dominio>`.
+- [x] Collegare in Railway il dominio principale e `publication.<dominio>` allo stesso servizio (Settings -> Networking -> Custom Domain) e creare in
+  Cloudflare i record DNS che Railway indica (CNAME per `@` e per `publication`, più il TXT di verifica), lasciandoli su "DNS only".
+  Il piano Hobby ha un limite di domini personalizzati per servizio: se non basta per `www.`, in Cloudflare si può reindirizzare `www.` al dominio principale.
+- [x] Creare la variabile `ALLOWED_HOSTS` (`dominio,publication.dominio`, separati da virgola, senza `https://`) e impostare
+  `PUBLICATION_URL=https://publication.<dominio>`. **`ALLOWED_HOSTS` non esiste finché non la si crea**: con l'indirizzo gratuito non serviva
+  (lo aggiunge `RAILWAY_PUBLIC_DOMAIN`), ma con un dominio proprio, senza, ogni pagina risponde **400 Bad Request**.
 - [ ] Attivare HSTS (`SECURE_HSTS_SECONDS`, prima con valore basso) solo col dominio definitivo; `check --deploy` lo segnala finché manca.
 - [ ] Valutare un dominio proprio per le immagini (es. `media.<dominio>`) al posto di `r2.dev`: se cambia, `R2_PUBLIC_DOMAIN` si aggiorna, ma gli indirizzi delle immagini già salvate restano quelli vecchi se il bucket resta lo stesso.
 - [ ] Con i font veri (licenza) nel repository, passare a `CompressedManifestStaticFilesStorage` in `settings.py` (nomi dei file con impronta: risolve la cache dei browser).
