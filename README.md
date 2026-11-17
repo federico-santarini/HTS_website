@@ -232,13 +232,30 @@ progetti collegati come "protetti" e non mostra il pulsante di conferma. Funzion
 `publication.` serve i file di `hts_website/publication/` (con `index.html` per le cartelle) e risponde 404 a tutto il
 resto, `/admin/` compreso. Per gli altri host non fa nulla. Con `DEBUG=True` le modifiche ai file si vedono subito;
 in produzione l'elenco dei file è fissato all'avvio, quindi dopo ogni modifica serve un nuovo deploy.
-La pubblicazione è una pagina unica: titolo, indice e tre sezioni (`<article id="...">`: Introduction, How to read, In
-Search of Holistic Methods, quest'ultima con la bibliografia "Works Cited" in fondo), con link ad ancore (`#slug`).
-Il contenuto è la conversione di un file markdown (`pubblicazione.md`, non nel repository): da ora `index.html` si
-modifica a mano. **Le note**: i 21 numeri in apice nel testo (classe `pub-fnref`) sono link a un elenco
-"Notes" in fondo al saggio, prima di "Works Cited" (`<li id="fn-N">`, con freccia di ritorno a `id="fnref-N"`). **Il testo
-delle note è finto (lorem ipsum)**: nel markdown non c'era, e il capitolo è solo un campione. Le immagini usate stanno in `publication/images/`; dei file immagine ricevuti insieme al markdown
-sono state copiate solo quelle citate nel testo.
+La pubblicazione è una pagina unica: titolo, indice e un `<article id="...">` per ogni testo (Introduction, How to
+Read, i saggi, le opere, Acknowledgements), con link ad ancore (`#slug`). Il contenuto è la conversione della versione
+finale (`FINAL_epub.md`, non nel repository): da ora `index.html` si modifica a mano. **Le note**: il numero in apice nel testo (classe `pub-fnref`) apre e chiude la nota (`<span class="pub-note" id="fn-AUTORE-N">`),
+che sta dentro il paragrafo subito dopo il numero (e dopo la virgola o il punto che lo segue) ed è in grigio; il comportamento è in `publication/publication.js`
+(`aria-expanded`, e un indirizzo `#fn-AUTORE-N` apre la nota), l'aspetto nei valori `--pub-note-*` di `publication.css`.
+Senza JavaScript le note restano sempre visibili.
+**Barra in alto e indice**: con JavaScript compaiono una barra fissa (`.pub-topbar`) con il nome del testo in cui si è e il suo
+autore, e il pulsante "Contents" che apre l'indice a tutto schermo (`.pub-menu`, con velo sfocato e dissolvenza come il menu
+del sito; si chiude con lo stesso pulsante, con Esc o scegliendo una voce). Nome e autore vengono da `data-title` e
+`data-author` di ogni `<article>` in `index.html`: per correggerli basta cambiare quegli attributi; i valori
+`--pub-topbar-*` e `--pub-menu-*` in `publication.css` regolano l'aspetto. Senza JavaScript resta l'indice in pagina.
+**Indice e barra dei numeri**: la tavola dei contenuti iniziale (`<nav class="pub-toc">`) è "a tabulazioni", come in InDesign: elenco
+piatto con il numero a sinistra e il titolo che comincia alla prima tabulazione (capitoli) o alla seconda (sottotitoli e
+sotto-sottotitoli), con le righe a capo allineate al titolo; le tabulazioni e gli spazi sono i valori `--pub-toc-*` in
+`publication.css`. L'indice a tutto schermo, invece, è l'elenco con i rientri (`.pub-contents`). In entrambi sono link solo i
+titoli dei testi (h2); i sottotitoli sono testo semplice. Ogni voce ha un numero (1, 1.1, 1.1.1), calcolato da `index.html` nell'ordine dei titoli. Per
+saltare a un sottocapitolo c'è la barra laterale (`<nav class="pub-sidebar">`): un elenco piatto, senza rientri, con solo i
+numeri (ognuno è un link), fissa a sinistra dai 1024px in su. Compare solo dal primo capitolo in poi (non sulla copertina né
+sull'indice iniziale), con una freccia → davanti al numero della sezione corrente (`--pub-sidebar-arrow`), e al passaggio del mouse mostra il nome del titolo
+(`data-title`): tutto questo lo fa `publication.js`, quindi senza JavaScript la barra non compare. Se cambi, aggiungi o togli un titolo, vanno rinumerati a mano la voce dell'indice e quella
+della barra (i valori `--pub-sidebar-*` e `--pub-num-color` in `publication.css` ne regolano l'aspetto).
+Le bibliografie sono `<ul class="works-cited">`. Il titolo "Introduction"
+del primo articolo non c'è nel markdown: serve all'indice. Le immagini stanno in `publication/images/` (20 file,
+`image1` … `image20`, con le didascalie in `<figcaption>`; `alt` è vuoto dove il markdown non aveva didascalia).
 
 **Immagini caricate.** Finiscono in `hts_website/media/`, cartella ignorata da git: chi clona il repository non le
 riceve, e se servono vanno salvate a parte. In sviluppo le serve Django. In produzione non funzionerà così:

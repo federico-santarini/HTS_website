@@ -14,92 +14,240 @@
 
 /* Font titoli: PP Neue Machina Inktrap, versione TRIAL (static/fonts/trial/, ignorata da git). I percorsi partono dalla radice
    del sottodominio: /static/ è servito anche da qui. Il corpo del testo usa Alegreya, caricata da index.html (Google Fonts). */
-@font-face { font-family: "Machina Inktrap"; font-weight: 300; font-style: normal; font-display: swap; src: url("/static/fonts/trial/PPNeueMachina-InktrapLight.otf") format("opentype"); }
-@font-face { font-family: "Machina Inktrap"; font-weight: 400; font-style: normal; font-display: swap; src: url("/static/fonts/trial/PPNeueMachina-InktrapRegular.otf") format("opentype"); }
+@font-face {
+    font-family: "Machina Inktrap";
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url("/static/fonts/trial/PPNeueMachina-InktrapLight.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Machina Inktrap";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/static/fonts/trial/PPNeueMachina-InktrapRegular.otf") format("opentype");
+}
 
 :root {
     color-scheme: dark;
 
     /* ---------- Colori ---------- */
-    --pub-bg: #000000;                       /* sfondo della pagina */
-    --pub-text: #ffffff;                     /* testo */
-    --pub-muted: #989898;                    /* etichette, didascalie, voci secondarie */
-    --pub-accent: #b026ff;                   /* viola: filetti, link al passaggio del mouse, numeri delle note */
-    --pub-rule: rgb(255 255 255 / 0.25);     /* filetti discreti (dizionario, bibliografia) */
-    --pub-selection-bg: #b026ff;             /* sfondo del testo selezionato */
-    --pub-selection-text: #ffffff;           /* colore del testo selezionato */
+    --pub-bg: #000000;
+    /* sfondo della pagina */
+    --pub-text: #ffffff;
+    /* testo */
+    --pub-muted: #989898;
+    /* etichette, didascalie, voci secondarie */
+    --pub-accent: #b026ff;
+    /* viola: filetti, link al passaggio del mouse, numeri delle note */
+    --pub-rule: rgb(255 255 255 / 0.25);
+    /* filetti discreti (dizionario, bibliografia) */
+    --pub-selection-bg: #b026ff;
+    /* sfondo del testo selezionato */
+    --pub-selection-text: #ffffff;
+    /* colore del testo selezionato */
 
     /* ---------- Caratteri ---------- */
-    --pub-font-body: "Alegreya", Georgia, serif;                              /* testo lungo */
-    --pub-font-heading: "Machina Inktrap", "Machina Plain", sans-serif;       /* titoli e indice */
-    --pub-font-label: "Alegreya SC", "Alegreya", Georgia, serif;              /* etichette piccole ("Contents"), didascalie */
-    --pub-heading-weight: 300;               /* 300 = leggero, 400 = normale (sono i due pesi caricati sopra) */
-    --pub-heading-transform: uppercase;      /* uppercase | none */
-    --pub-heading-letter-spacing: 0.02em;    /* spaziatura tra le lettere dei titoli */
-    --pub-label-letter-spacing: 0.05em;      /* spaziatura delle etichette */
+    --pub-font-body: "Alegreya", Georgia, serif;
+    /* testo lungo */
+    --pub-font-heading: "Machina Inktrap", "Machina Plain", sans-serif;
+    /* titoli e indice */
+    --pub-font-label: "Alegreya SC", "Alegreya", Georgia, serif;
+    /* etichette piccole ("Contents"), didascalie */
+    --pub-heading-weight: 300;
+    /* 300 = leggero, 400 = normale (sono i due pesi caricati sopra) */
+    --pub-heading-transform: uppercase;
+    /* uppercase | none */
+    --pub-heading-letter-spacing: 0.02em;
+    /* spaziatura tra le lettere dei titoli */
+    --pub-label-letter-spacing: 0.05em;
+    /* spaziatura delle etichette */
 
     /* ---------- Testo ---------- */
-    --pub-text-size: 1.25rem;                /* corpo del testo (Alegreya ha le lettere piccole: 1.25rem = 20px è comodo) */
-    --pub-text-line-height: 1.5;             /* interlinea (numero senza unità: multiplo del corpo) */
-    --pub-text-align: left;                  /* left | justify */
-    --pub-paragraph-gap: 1.25rem;            /* spazio tra un paragrafo e il successivo */
-    --pub-hyphens: manual;                   /* manual = a capo solo dove la parola ha già un trattino; auto = sillabazione automatica */
-    --pub-small-size: 1rem;                  /* bibliografia, didascalie, etichette */
+    --pub-text-size: 1.25rem;
+    /* corpo del testo (Alegreya ha le lettere piccole: 1.25rem = 20px è comodo) */
+    --pub-text-line-height: 1.5;
+    /* interlinea (numero senza unità: multiplo del corpo) */
+    --pub-text-align: left;
+    /* left | justify */
+    --pub-paragraph-gap: 1.25rem;
+    /* spazio tra un paragrafo e il successivo */
+    --pub-hyphens: manual;
+    /* manual = a capo solo dove la parola ha già un trattino; auto = sillabazione automatica */
+    --pub-small-size: 1rem;
+    /* bibliografia, didascalie, etichette */
     --pub-small-line-height: 1.4;
 
     /* ---------- Titoli ---------- */
-    --pub-h1-size: clamp(2.5rem, 9vw, 6rem);     /* titolo in copertina */
+    --pub-h1-size: clamp(2.5rem, 9vw, 6rem);
+    /* titolo in copertina */
     --pub-h1-line-height: 1.05;
-    --pub-h2-size: clamp(1.75rem, 4vw, 2.5rem);  /* titoli delle sezioni */
+    --pub-h2-size: clamp(1.75rem, 4vw, 2.5rem);
+    /* titoli delle sezioni */
     --pub-h2-line-height: 1.15;
-    --pub-h3-size: 1.25rem;                      /* sottotitoli */
+    --pub-h3-size: 1.25rem;
+    /* sottotitoli */
     --pub-h3-line-height: 1.25;
-    --pub-h3-color: var(--pub-text);             /* colore dei sottotitoli (es. var(--pub-muted) o var(--pub-accent)) */
+    --pub-h3-color: var(--pub-text);
+    /* colore dei sottotitoli (es. var(--pub-muted) o var(--pub-accent)) */
+    --pub-h4-size: 1.25rem;
+    /* sotto-sottotitoli (terzo livello) */
+    --pub-h4-line-height: 1.3;
+    --pub-h4-color: var(--pub-muted);
+    /* colore dei sotto-sottotitoli */
+    --pub-byline-size: 1.125rem;
+    /* riga dell'autore (o sottotitolo) sotto il titolo di un testo */
 
     /* ---------- Pagina e colonne ---------- */
-    --pub-gutter: 2rem;                      /* margine a destra e a sinistra della pagina */
-    --pub-measure: 36rem;                    /* larghezza della colonna di testo (circa 60-70 caratteri per riga) */
-    --pub-figure-width: 44rem;               /* larghezza massima delle figure (più larga del testo, se vuoi) */
-    --pub-figure-max-height: 85svh;          /* le figure alte non superano questa altezza */
+    --pub-gutter: 2rem;
+    /* margine a destra e a sinistra della pagina */
+    --pub-measure: 36rem;
+    /* larghezza della colonna di testo (circa 60-70 caratteri per riga) */
+    --pub-figure-width: 44rem;
+    /* larghezza massima delle figure (più larga del testo, se vuoi) */
+    --pub-tableofcontent-width: 44rem;
+    /* larghezza massima delle figure (più larga del testo, se vuoi) */
+
+    --pub-figure-max-height: 85svh;
+    /* le figure alte non superano questa altezza */
 
     /* ---------- Spazi verticali ---------- */
-    --pub-cover-min-height: 80svh;           /* altezza minima della copertina (il titolo sta al centro) */
-    --pub-section-gap: 8rem;                 /* spazio sopra ogni sezione */
-    --pub-heading-gap: 1.5rem;               /* spazio tra un titolo e il testo che segue */
-    --pub-subheading-gap: 3.5rem;            /* spazio sopra ogni sottotitolo */
-    --pub-block-gap: 2.5rem;                 /* spazio sopra e sotto figure, citazioni e dizionario */
+    --pub-cover-min-height: 80svh;
+    /* altezza minima della copertina (il titolo sta al centro) */
+    --pub-section-gap: 8rem;
+    /* spazio sopra ogni sezione */
+    --pub-heading-gap: 1.5rem;
+    /* spazio tra un titolo e il testo che segue */
+    --pub-subheading-gap: 3.5rem;
+    /* spazio sopra ogni sottotitolo */
+    --pub-block-gap: 2.5rem;
+    /* spazio sopra e sotto figure, citazioni e dizionario */
 
     /* ---------- Filetti ---------- */
-    --pub-rule-width: 1px;                   /* spessore dei filetti */
-    --pub-section-rule-color: var(--pub-accent); /* filetto sopra ogni sezione */
+    --pub-rule-width: 1px;
+    /* spessore dei filetti */
+    --pub-section-rule-color: var(--pub-accent);
+    /* filetto sopra ogni sezione */
 
     /* ---------- Indice ---------- */
-    --pub-contents-size: 1.25rem;            /* voci principali */
-    --pub-contents-sub-size: 1rem;           /* sottovoci */
-    --pub-contents-gap: 0.5rem;              /* spazio tra le voci */
-    --pub-contents-indent: 1.5rem;           /* rientro delle sottovoci */
+    --pub-contents-size: 1.25rem;
+    /* voci principali */
+    --pub-contents-sub-size: 1rem;
+    /* sottovoci */
+    --pub-contents-gap: 0.5rem;
+    /* spazio tra le voci */
+    --pub-contents-indent: 2rem;
+    /* rientro delle sottovoci */
+
+    /* ---------- Tavola dei contenuti iniziale (a tabulazioni) ---------- */
+    --pub-toc-width: var(--pub-tableofcontent-width);
+    /* larghezza della tavola (le righe troppo lunghe vanno a capo) */
+    --pub-toc-tab-1: 3.5rem;
+    /* prima tabulazione: dove comincia il titolo dei capitoli (dopo il numero) */
+    --pub-toc-tab-2: 5.5rem;
+    /* seconda tabulazione: dove comincia il titolo di sottocapitoli e sotto-sottocapitoli (deve stare dopo numeri come 10.1.2) */
+    --pub-toc-chapter-gap: 1.5rem;
+    /* spazio in più sopra ogni capitolo */
+    --pub-toc-line-gap: 0.25rem;
+    /* spazio tra una voce e la successiva */
 
     /* ---------- Citazioni ---------- */
-    --pub-quote-indent: 1.5rem;              /* rientro del testo citato */
-    --pub-quote-style: italic;               /* italic | normal */
-    --pub-quote-rule-color: var(--pub-accent); /* filetto a sinistra della citazione */
+    --pub-quote-indent: 1.5rem;
+    /* rientro del testo citato */
+    --pub-quote-style: italic;
+    /* italic | normal */
+    --pub-quote-rule-color: var(--pub-accent);
+    /* filetto a sinistra della citazione */
 
-    /* ---------- Note (i numeri in apice nel testo) ---------- */
-    --pub-note-size: 0.7em;                  /* dimensione del numero in apice nel testo, rispetto al testo */
+    /* ---------- Note (si aprono cliccando il numero in apice nel testo) ---------- */
+    --pub-note-size: 1rem;
+    /* dimensione del numero in apice nel testo, rispetto al testo */
     --pub-note-color: var(--pub-accent);
-    --pub-notes-gap: 0.75rem;                /* spazio tra una nota e la successiva, nell'elenco "Notes" */
-    --pub-notes-indent: 2rem;                /* spazio a sinistra del testo delle note, dove sta il numero */
-    --pub-notes-back-color: var(--pub-muted); /* freccia ↩ che riporta al punto del testo */
+    /* colore del numero in apice (e del numero davanti al testo della nota) */
+    --pub-note-text-size: var(--pub-small-size);
+    /* dimensione del testo della nota aperta */
+    --pub-note-text-line-height: var(--pub-small-line-height);
+    --pub-note-text-color: var(--pub-muted);
+    /* colore del testo della nota aperta */
+    --pub-note-gap: 0.5rem;
+    /* spazio sopra e sotto il testo della nota aperta */
+    --pub-note-duration: 0.3s;
+    /* durata dell'apertura (0s = nessuna animazione) */
+    /* ---------- Barra in alto e indice a tutto schermo (solo con JavaScript) ---------- */
+    --pub-topbar-height: 3.5rem;
+    /* altezza della barra (le ancore si fermano sotto di lei) */
+    --pub-topbar-bg: var(--pub-bg);
+    /* sfondo della barra */
+    --pub-topbar-size: 1rem;
+    /* dimensione del testo della barra */
+    --pub-topbar-rule: var(--pub-rule);
+    /* filetto sotto la barra (transparent = nessuno) */
+    --pub-menu-bg: rgb(0 0 0 / 0.25);
+    /* velo dell'indice a tutto schermo, sopra la pagina sfocata */
+    --pub-menu-blur: 8px;
+    /* sfocatura della pagina dietro l'indice (0px = nessuna) */
+    --pub-menu-fade: 0.3s;
+    /* durata di comparsa e scomparsa dell'indice */
+    --pub-menu-current-color: var(--pub-accent);
+    /* voce dell'indice del testo in cui si è */
+
+    /* ---------- Barra laterale dei numeri (solo schermi larghi) ---------- */
+    --pub-sidebar-size: 0.875rem;
+    /* dimensione dei numeri */
+    --pub-sidebar-width: 5.25rem;
+    /* larghezza della barra (compreso lo spazio della freccia: numeri come 10.1.2 devono starci) */
+    --pub-sidebar-gap: 0.35rem;
+    /* spazio tra un numero e il successivo */
+    --pub-sidebar-chapter-gap: 0.9rem;
+    /* spazio in più sopra il numero di ogni capitolo */
+    --pub-sidebar-color: var(--pub-muted);
+    /* numeri dei sottocapitoli */
+    --pub-sidebar-chapter-color: var(--pub-text);
+    /* numeri dei capitoli */
+    --pub-sidebar-current-color: var(--pub-accent);
+    /* numero su cui si passa il mouse (o che ha il focus) */
+    --pub-sidebar-arrow: "→";
+    /* freccia davanti al numero della sezione in cui si è (qualsiasi carattere: "▸", "›", "—"...) */
+    --pub-sidebar-arrow-color: var(--pub-text);
+    /* colore della freccia */
+    --pub-sidebar-arrow-width: 1.25rem;
+    /* spazio a sinistra dei numeri riservato alla freccia (uguale per tutti, così i numeri restano allineati) */
+    --pub-sidebar-fade: 0.3s;
+    /* durata della comparsa della barra (dal primo capitolo in poi) */
+    --pub-sidebar-label-size: 0.9375rem;
+    /* nome del titolo che compare al passaggio del mouse: dimensione */
+    --pub-sidebar-label-color: var(--pub-text);
+    /* colore del nome */
+    --pub-sidebar-label-bg: var(--pub-bg);
+    /* sfondo del nome (copre il testo che c'è sotto) */
+    --pub-sidebar-label-rule: transparent;
+    /* filetto attorno al nome (transparent = nessuno) */
+    --pub-sidebar-label-max-width: 22rem;
+    /* larghezza massima del nome (poi va a capo) */
+    --pub-num-color: var(--pub-muted);
+    /* numeri davanti alle voci dell'indice testuale */
 
     /* ---------- Bibliografia ---------- */
-    --pub-works-gap: 0.75rem;                /* spazio tra le voci */
-    --pub-works-hanging-indent: 2rem;        /* rientro della seconda riga di ogni voce */
+    --pub-works-gap: 0.75rem;
+    /* spazio tra le voci */
+    --pub-works-hanging-indent: 2rem;
+    /* rientro della seconda riga di ogni voce */
 
     /* ---------- Link ---------- */
     --pub-link-color: var(--pub-text);
-    --pub-link-hover-color: var(--pub-accent);
+    --pub-link-hover-color: white;
     --pub-link-underline-offset: 0.25em;
     --pub-link-underline-thickness: 0.05em;
+
+    /* ---------- Sfumatura ---------- */
+    --pub-glow:
+        0 0 5px white,
+        0 0 12px var(--pub-accent),
+        0 0 25px var(--pub-accent),
+        0 0 40px var(--pub-accent);
+
 }
 
 /* Schermi stretti (telefono): stessi nomi, valori più piccoli. */
@@ -114,6 +262,7 @@
     }
 }
 
+
 /* ============================================================================================================
    Da qui in giù le regole leggono solo i valori sopra: non serve modificarle per cambiare l'aspetto.
    ============================================================================================================ */
@@ -126,8 +275,15 @@
 
 @media (prefers-reduced-motion: no-preference) {
     html {
-        scroll-behavior: smooth;   /* i link dell'indice scorrono invece di saltare */
+        scroll-behavior: smooth;
+        /* i link dell'indice scorrono invece di saltare */
+        font-variant-numeric: tabular-nums;
     }
+}
+
+html {
+    scroll-padding-top: var(--pub-topbar-height);
+    /* i titoli raggiunti da un link si fermano sotto la barra in alto */
 }
 
 body {
@@ -152,9 +308,16 @@ a {
     text-decoration-thickness: var(--pub-link-underline-thickness);
     text-underline-offset: var(--pub-link-underline-offset);
 }
+
 a:hover,
 a:focus-visible {
     color: var(--pub-link-hover-color);
+    text-shadow: var(--pub-glow);
+}
+
+/* Gli indirizzi web nelle note e nella bibliografia sono lunghissimi: possono andare a capo ovunque, invece di allargare la pagina. */
+.pub-section a {
+    overflow-wrap: anywhere;
 }
 
 /* ---------- Copertina ---------- */
@@ -169,7 +332,8 @@ a:focus-visible {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
     font-family: var(--pub-font-heading);
     font-weight: var(--pub-heading-weight);
     font-style: normal;
@@ -179,16 +343,23 @@ h3 {
     text-wrap: balance;
     margin: 0;
 }
+
 h1 {
     font-size: var(--pub-h1-size);
     line-height: var(--pub-h1-line-height);
     text-align: center;
+    text-shadow: var(--pub-glow);
+
 }
+
 h2 {
     font-size: var(--pub-h2-size);
     line-height: var(--pub-h2-line-height);
     margin-bottom: var(--pub-heading-gap);
+    text-shadow: var(--pub-glow);
+    margin-top: 10rem;
 }
+
 h3 {
     font-size: var(--pub-h3-size);
     line-height: var(--pub-h3-line-height);
@@ -197,12 +368,30 @@ h3 {
     margin-bottom: var(--pub-heading-gap);
 }
 
+h4 {
+    font-size: var(--pub-h4-size);
+    line-height: var(--pub-h4-line-height);
+    color: var(--pub-h4-color);
+    margin-top: var(--pub-subheading-gap);
+    margin-bottom: var(--pub-heading-gap);
+}
+
+/* Riga dell'autore sotto il titolo di un testo. */
+.pub-byline {
+    margin-top: calc(-1 * var(--pub-heading-gap) / 2);
+    font-family: var(--pub-font-label);
+    font-size: var(--pub-byline-size);
+    letter-spacing: var(--pub-label-letter-spacing);
+    color: var(--pub-muted);
+}
+
 /* ---------- Indice ---------- */
 .pub-contents {
     max-width: var(--pub-measure);
     margin-inline: auto;
     padding-inline: var(--pub-gutter);
 }
+
 .pub-label {
     margin: 0 0 var(--pub-heading-gap);
     font-family: var(--pub-font-label);
@@ -210,6 +399,7 @@ h3 {
     letter-spacing: var(--pub-label-letter-spacing);
     color: var(--pub-muted);
 }
+
 .pub-contents ol {
     list-style: none;
     margin: 0;
@@ -222,16 +412,85 @@ h3 {
     letter-spacing: var(--pub-heading-letter-spacing);
     text-align: left;
 }
+
 .pub-contents li {
     margin-bottom: var(--pub-contents-gap);
 }
+
 .pub-contents ol ol {
     margin-top: var(--pub-contents-gap);
     padding-left: var(--pub-contents-indent);
-    font-size: var(--pub-contents-sub-size);
-    color: var(--pub-muted);
+    font-size: var(--pub-contents-size);
 }
+
 .pub-contents a {
+    text-decoration: none;
+}
+
+/* Numero davanti a ogni voce dell'indice (1, 1.1, 1.1.1): lo stesso che sta nella barra laterale. */
+.pub-num {
+    margin-right: 0.25em;
+    color: var(--pub-num-color);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Tavola dei contenuti iniziale, "a tabulazioni" (come in InDesign): il numero sta a sinistra, il titolo comincia a una tabulazione
+   (--pub-toc-tab-1 per i capitoli, --pub-toc-tab-2 per sottotitoli e sotto-sottotitoli) e le righe a capo si allineano all'inizio del
+   titolo. È un elenco piatto: ogni voce è una griglia a due colonne (numero | titolo) e data-level dice il livello.
+   Solo i titoli dei testi sono link. L'indice a tutto schermo (.pub-menu) usa invece l'elenco con i rientri (.pub-contents). */
+.pub-toc {
+    max-width: var(--pub-toc-width);
+    margin-inline: auto;
+    padding-inline: var(--pub-gutter);
+}
+
+.pub-toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--pub-font-heading);
+    font-weight: var(--pub-heading-weight);
+    font-size: var(--pub-contents-size);
+    line-height: var(--pub-h3-line-height);
+    text-transform: var(--pub-heading-transform);
+    letter-spacing: var(--pub-heading-letter-spacing);
+    text-align: left;
+}
+
+.pub-toc li {
+    display: grid;
+    grid-template-columns: var(--pub-toc-tab-2) minmax(0, 1fr);
+    margin-top: var(--pub-toc-line-gap);
+}
+
+.pub-toc li[data-level="1"] {
+    grid-template-columns: var(--pub-toc-tab-1) minmax(0, 1fr);
+    margin-top: var(--pub-toc-chapter-gap);
+}
+
+.pub-toc li:first-child {
+    margin-top: 0;
+}
+
+.pub-toc .pub-num {
+    margin-right: 0;
+}
+
+.pub-toc li[data-level="1"] a {
+    /* text-shadow: var(--pub-glow); */
+}
+
+.pub-toc li[data-level="2"],
+.pub-toc li[data-level="3"] {
+    text-transform: capitalize;
+}
+
+.pub-toc li[data-level="3"] .pub-toc-item {
+    color: var(--pub-muted);
+    font-size: var(--pub-contents-sub-size);
+}
+
+.pub-toc a {
     text-decoration: none;
 }
 
@@ -239,16 +498,19 @@ h3 {
 main {
     padding-inline: var(--pub-gutter);
 }
+
 .pub-section {
     margin-top: var(--pub-section-gap);
     padding-top: var(--pub-heading-gap);
     border-top: var(--pub-rule-width) solid var(--pub-section-rule-color);
 }
-.pub-section > * {
+
+.pub-section>* {
     max-width: var(--pub-measure);
     margin-inline: auto;
 }
-.pub-section > h2:first-child {
+
+.pub-section>h2:first-child {
     margin-bottom: var(--pub-heading-gap);
 }
 
@@ -258,38 +520,80 @@ p {
     text-wrap: pretty;
 }
 
-/* Numeri delle note nel testo: sono link all'elenco "Notes" in fondo al saggio. */
+/* Numeri delle note nel testo: cliccandoli si apre la nota, che sta subito dopo il paragrafo (vedi più sotto e publication.js). */
 .pub-fnref {
     font-size: var(--pub-note-size);
     line-height: 0;
+    font-family: var(--pub-font-heading);
+
 }
+
 .pub-fnref a {
     color: var(--pub-note-color);
     text-decoration: none;
 }
+
 .pub-fnref a:hover,
 .pub-fnref a:focus-visible {
     color: var(--pub-link-hover-color);
+    text-shadow: var(--pub-glow);
 }
 
-/* Elenco "Notes": numeri automatici, testo più piccolo, freccia di ritorno in fondo a ogni nota. */
-.pub-notes {
-    margin: 0;
-    padding-left: var(--pub-notes-indent);
-    font-size: var(--pub-small-size);
-    line-height: var(--pub-small-line-height);
+/* Il numero è un pulsante: area di tocco un po' più larga del solo apice. */
+.pub-fnref a {
+    padding-inline: 0.2em;
+    margin-inline: -0.2em;
+    /* il margine negativo compensa il padding: il testo attorno non si sposta */
+    cursor: pointer;
+}
+
+.pub-fnref a[aria-expanded="true"] {
+    color: var(--pub-text);
+    text-shadow: var(--pub-glow);
+}
+
+/* Nota: sta dentro il paragrafo, subito dopo il numero che la apre (e dopo la virgola o il punto che lo segue): il testo si interrompe lì,
+   la nota si legge in grigio, poi il paragrafo riprende. Con JavaScript (classe "js" su <html>) è chiusa finché non si clicca il numero;
+   si apre facendo crescere la riga della griglia da 0 a 1 (una piccola animazione, senza misurare l'altezza). Senza JavaScript resta aperta.
+   Sono <span> (stanno dentro il <p>): display li rende blocchi. */
+.pub-note {
+    display: block;
+    font-family: var(--pub-font-heading);
+}
+
+.pub-note-inner {
+    display: block;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.pub-note-text {
+    display: block;
+    padding-block: var(--pub-note-gap);
+    font-size: var(--pub-note-text-size);
+    line-height: var(--pub-note-text-line-height);
+    color: var(--pub-note-text-color);
     text-align: left;
 }
-.pub-notes li {
-    margin-bottom: var(--pub-notes-gap);
+
+.pub-note-number {
+    color: var(--pub-note-color);
 }
-.pub-note-back {
-    color: var(--pub-notes-back-color);
-    text-decoration: none;
+
+.js .pub-note {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--pub-note-duration);
 }
-.pub-note-back:hover,
-.pub-note-back:focus-visible {
-    color: var(--pub-link-hover-color);
+
+.js .pub-note.is-open {
+    grid-template-rows: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js .pub-note {
+        transition: none;
+    }
 }
 
 /* ---------- Citazioni ---------- */
@@ -299,6 +603,7 @@ blockquote {
     border-left: var(--pub-rule-width) solid var(--pub-quote-rule-color);
     font-style: var(--pub-quote-style);
 }
+
 blockquote p:last-child {
     margin-bottom: 0;
 }
@@ -309,19 +614,23 @@ blockquote p:last-child {
     padding-block: var(--pub-block-gap);
     border-block: var(--pub-rule-width) solid var(--pub-rule);
 }
+
 .pub-definition p {
     margin-bottom: 0.5rem;
 }
+
 .pub-definition-term {
     font-family: var(--pub-font-heading);
     font-weight: var(--pub-heading-weight);
     font-size: var(--pub-h3-size);
 }
+
 .pub-definition-reading {
     font-family: var(--pub-font-label);
     letter-spacing: var(--pub-label-letter-spacing);
     color: var(--pub-muted);
 }
+
 .pub-definition-source {
     margin-bottom: 0;
     font-family: var(--pub-font-label);
@@ -331,10 +640,11 @@ blockquote p:last-child {
 }
 
 /* ---------- Figure ---------- */
-.pub-section > .pub-figure {
+.pub-section>.pub-figure {
     max-width: var(--pub-figure-width);
     margin-block: var(--pub-block-gap);
 }
+
 .pub-figure img {
     display: block;
     width: auto;
@@ -343,6 +653,7 @@ blockquote p:last-child {
     max-height: var(--pub-figure-max-height);
     margin-inline: auto;
 }
+
 .pub-figure figcaption {
     max-width: var(--pub-measure);
     margin: 1rem auto 0;
@@ -353,6 +664,7 @@ blockquote p:last-child {
     color: var(--pub-muted);
     text-align: left;
 }
+
 .pub-figure figcaption p {
     margin-bottom: 0.5rem;
 }
@@ -366,11 +678,286 @@ blockquote p:last-child {
     line-height: var(--pub-small-line-height);
     text-align: left;
 }
+
 .works-cited li {
     margin-bottom: var(--pub-works-gap);
     padding-left: var(--pub-works-hanging-indent);
     text-indent: calc(-1 * var(--pub-works-hanging-indent));
 }
+
 .works-cited cite {
     font-style: italic;
+}
+
+/* ---------- Barra in alto e indice a tutto schermo ---------- */
+/* Compaiono solo se JavaScript è partito (classe "js" su <html>): senza, resta l'indice in pagina. Stesso comportamento del menu del sito:
+   l'indice copre tutta la viewport con un velo sfocato, compare e scompare in dissolvenza, e la barra resta sopra (per chiuderlo). */
+.pub-topbar,
+.pub-menu {
+    display: none;
+}
+
+.js .pub-topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 101;
+    /* sopra l'indice (100): il pulsante resta cliccabile */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: var(--pub-topbar-height);
+    padding-inline: var(--pub-gutter);
+    background: var(--pub-topbar-bg);
+    border-bottom: var(--pub-rule-width) solid var(--pub-topbar-rule);
+    font-family: var(--pub-font-heading);
+    font-weight: var(--pub-heading-weight);
+    font-size: var(--pub-topbar-size);
+    text-transform: var(--pub-heading-transform);
+    letter-spacing: var(--pub-heading-letter-spacing);
+    text-align: left;
+    transition: background-color var(--pub-menu-fade), border-color var(--pub-menu-fade);
+}
+
+.pub-menu-open .pub-topbar {
+    background: transparent;
+    /* con l'indice aperto si vede il velo sfocato anche dietro la barra */
+    border-color: transparent;
+}
+
+.pub-topbar-chapter {
+    flex: 1 1 auto;
+    min-width: 0;
+    /* lascia che il testo lungo venga accorciato invece di spingere il pulsante */
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.pub-topbar-author {
+    margin-left: 1em;
+    color: var(--pub-muted);
+}
+
+.pub-topbar-author:empty {
+    display: none;
+}
+
+.pub-topbar-toggle {
+    flex: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+}
+
+.pub-topbar-toggle:hover,
+.pub-topbar-toggle:focus-visible {
+    color: var(--pub-link-hover-color);
+}
+
+.js .pub-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: block;
+    background: rgb(20 20 20 / 0.92);
+    /* senza sfocatura (browser vecchi) uno sfondo scuro quasi opaco, così il testo si legge */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--pub-menu-fade), visibility 0s linear var(--pub-menu-fade);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .js .pub-menu {
+        background: var(--pub-menu-bg);
+        -webkit-backdrop-filter: blur(var(--pub-menu-blur)) saturate(180%);
+        backdrop-filter: blur(var(--pub-menu-blur)) saturate(180%);
+    }
+}
+
+.js .pub-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+/* L'indice scorre in un'area che comincia sotto la barra (il velo sfocato copre invece tutto lo schermo); in alto il testo sfuma. */
+.pub-menu-scroll {
+    position: absolute;
+    inset: var(--pub-topbar-height) 0 0 0;
+    padding-block: var(--pub-gutter);
+    overflow-y: auto;
+    /* un indice più lungo dello schermo scorre da solo */
+    overscroll-behavior: contain;
+    /* la pagina sotto non scorre insieme all'indice */
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 1.5rem);
+    mask-image: linear-gradient(to bottom, transparent, #000 1.5rem);
+}
+
+.pub-menu .pub-contents {
+    padding-bottom: var(--pub-gutter);
+}
+
+.pub-menu a[aria-current] {
+    color: var(--pub-menu-current-color);
+}
+
+.pub-menu-open {
+    overflow: hidden;
+    /* la pagina dietro l'indice non scorre */
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .js .pub-topbar,
+    .js .pub-menu {
+        transition: none;
+    }
+}
+
+/* ---------- Barra laterale dei numeri ---------- */
+/* Solo numeri (capitoli: 1, 2, 3...; sottocapitoli: 3.1, 3.1.1...), in un elenco piatto, senza rientri: l'indice testuale ha i rientri, questa no.
+   Ogni numero è un link alla sezione; al passaggio del mouse compare il nome del titolo (.pub-sidebar-label, creata da publication.js).
+   Sta fissa a sinistra, sotto la barra in alto, e compare solo dai 64rem (1024px) in su: sotto, non c'è posto accanto al testo
+   (lì bastano barra in alto e indice). Compare anche solo dal primo capitolo in poi (non sopra, sulla copertina e sull'indice iniziale):
+   lo decide publication.js con la classe "is-visible", quindi senza JavaScript non compare affatto.
+   L'elenco più lungo dello schermo scorre da solo (publication.js tiene visibile il numero corrente). */
+.pub-sidebar {
+    display: none;
+}
+
+@media (min-width: 64rem) {
+    .pub-sidebar {
+        display: block;
+        position: fixed;
+        z-index: 50;
+        /* sotto la barra in alto (101) e l'indice a tutto schermo (100) */
+        top: var(--pub-topbar-height);
+        bottom: 0;
+        left: var(--pub-gutter);
+        width: var(--pub-sidebar-width);
+        padding-block: var(--pub-gutter);
+        overflow-y: auto;
+        scrollbar-width: none;
+        -webkit-mask-image: linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+        mask-image: linear-gradient(to bottom, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+    }
+
+    .pub-sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .js .pub-sidebar {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--pub-sidebar-fade), visibility 0s linear var(--pub-sidebar-fade);
+    }
+
+    .js .pub-sidebar.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0s;
+    }
+}
+
+@media (min-width: 64rem) and (prefers-reduced-motion: reduce) {
+    .js .pub-sidebar {
+        transition: none;
+    }
+}
+
+/* Nome del titolo, accanto al numero su cui si passa il mouse (o che ha il focus da tastiera). Una sola etichetta, creata e posizionata
+   da publication.js; è fuori dalla barra perché la barra scorre e taglierebbe ciò che esce dai suoi bordi. */
+.pub-sidebar-label {
+    position: fixed;
+    z-index: 60;
+    max-width: var(--pub-sidebar-label-max-width);
+    padding: 0.35rem 0.6rem;
+    background: var(--pub-sidebar-label-bg);
+    border: var(--pub-rule-width) solid var(--pub-sidebar-label-rule);
+    color: var(--pub-sidebar-label-color);
+    font-family: var(--pub-font-heading);
+    font-weight: var(--pub-heading-weight);
+    font-size: var(--pub-sidebar-label-size);
+    line-height: 1.25;
+    letter-spacing: var(--pub-heading-letter-spacing);
+    text-transform: var(--pub-heading-transform);
+    text-align: left;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-50%);
+    transition: opacity 0.15s, visibility 0s linear 0.15s;
+}
+
+/* Stile per livello: data-level è lo stesso del numero su cui si è (1 = capitolo, 2 = sottocapitolo, 3 = sotto-sottocapitolo). Esempio: */
+   .pub-sidebar-label[data-level="1"] { 
+    text-shadow: var(--pub-glow);
+    }
+   .pub-sidebar-label[data-level="2"] {
+    text-transform: capitalize;
+   }
+   .pub-sidebar-label[data-level="3"] {
+    color: var(--pub-muted);
+    text-transform: capitalize;
+
+   }
+.pub-sidebar-label.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.pub-sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--pub-font-heading);
+    font-weight: var(--pub-heading-weight);
+    font-size: var(--pub-sidebar-size);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.pub-sidebar li {
+    margin: 0;
+}
+
+.pub-sidebar a {
+    position: relative;
+    display: block;
+    padding-block: calc(var(--pub-sidebar-gap) / 2);
+    padding-left: var(--pub-sidebar-arrow-width);
+    color: var(--pub-sidebar-color);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Sezione corrente: una freccia a destra prima del numero, nello spazio riservato a sinistra (il colore resta quello del livello). */
+.pub-sidebar a[aria-current]::before {
+    content: var(--pub-sidebar-arrow);
+    position: absolute;
+    left: 0;
+    color: var(--pub-sidebar-arrow-color);
+}
+
+.pub-sidebar a[data-level="1"] {
+    margin-top: var(--pub-sidebar-chapter-gap);
+    color: var(--pub-sidebar-chapter-color);
+}
+
+.pub-sidebar li:first-child a {
+    margin-top: 0;
+}
+
+.pub-sidebar a:hover,
+.pub-sidebar a:focus-visible {
+    /* color: var(--pub-sidebar-current-color); */
 }
