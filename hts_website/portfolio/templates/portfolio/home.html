@@ -7,18 +7,20 @@
 {% block content %}
 {# Il triskele della home: stesso disegno, stessa posizione (centro dello schermo) e stessa dimensione di quello dell'intro, così l'intro #}
 {# si dissolve su di lui senza salti. Ogni tracciato è un link a un progetto a caso di una categoria (project_category): #}
-{# 1 = relationality, 2 = perception, 3 = cognition (sono i valori di Project.CATEGORIES). Stile: custom.css, "Triskele della home". #}
+{# 1 = relationality, 2 = perception, 3 = cognition (sono i valori di Project.CATEGORIES). Il cerchio attorno al triskele è un quarto link: #}
+{# porta alla pubblicazione (PUBLICATION_URL: se non è impostata il cerchio non compare). Stile: custom.css, "Triskele della home". #}
 {% url 'random_project' 'relationality' as relationality_url %}
 {% url 'random_project' 'perception' as perception_url %}
 {% url 'random_project' 'cognition' as cognition_url %}
 <nav class="home-triskele" aria-label="Project categories">
-    {% include "portfolio/_triskele.html" with css_class="home-triskele-svg" link1=relationality_url label1="Relationality" link2=perception_url label2="Perception" link3=cognition_url label3="Cognition" %}
+    {% include "portfolio/_triskele.html" with css_class="home-triskele-svg" link1=relationality_url label1="Relationality" link2=perception_url label2="Perception" link3=cognition_url label3="Cognition" link4=PUBLICATION_URL label4="Publication" %}
     {# Il nome della categoria sotto il triskele: compare con hover o focus del tracciato corrispondente (solo CSS, con :has(): vedi custom.css). #}
     {# aria-hidden: i link hanno già il loro nome (aria-label), non va letto due volte. Se cambi un nome, cambialo anche nell'include qui sopra. #}
     <p class="home-triskele-label" aria-hidden="true">
         <span class="home-triskele-label-1">Relationality</span>
         <span class="home-triskele-label-2">Perception</span>
         <span class="home-triskele-label-3">Cognition</span>
+        {% if PUBLICATION_URL %}<span class="home-triskele-label-4">Publication</span>{% endif %}
     </p>
 </nav>
 {# Costruisce il filtro del bagliore dei tracciati leggendo --hts-glow (vedi il commento in _triskele.html). #}

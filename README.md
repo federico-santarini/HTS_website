@@ -113,7 +113,7 @@ Chi modifica cosa nell'admin (le relazioni many-to-many si modificano da **un so
 | `/projects/<id>/` | `project_detail` | Non ha pagina propria: reindirizza al feed, scrollato su quel progetto |
 | `/projects/random/<categoria>/` | `random_project` | Reindirizza a un progetto a caso di quella categoria (`project_category`); se non ce ne sono, al feed. Categoria inesistente: 404. Mai in cache |
 | `/contributors/`, `/contributors/<id>/` | `contributor_*` | Elenco e dettaglio dei contributor |
-| `/events/` | `event_list` | Eventi futuri e passati in due sezioni |
+| `/agenda/` | `event_list` | Eventi futuri e passati in due sezioni (la pagina "Agenda" del menu; non è l'archivio dei progetti di tipo "event"). Prima era `/events/` |
 | `/references/` | `reference_list` | Referenze, filtro per tipo (`?kind=`) |
 | `/about/` | `about` | Pagina About (testo scritto direttamente nel template `about.html`) |
 | `publication.<dominio>` | `PublicationMiddleware` | La pubblicazione statica (vedi sotto) |
@@ -194,6 +194,9 @@ disegno, stessa posizione (centro dello schermo) e stessa dimensione (`--hts-tri
 quando l'intro si dissolve si vede lo stesso disegno senza salti. Ogni tracciato è un link a `/projects/random/<categoria>/`:
 tracciato 1 (in alto) = **relationality**, 2 (in basso a sinistra) = **perception**, 3 (in basso a destra) = **cognition**.
 La categoria è il campo `project_category` del progetto, che si imposta dall'admin (valori: `relationality`, `perception`, `cognition`).
+Attorno al triskele c'è un **cerchio**, anche lui link (la quarta `triskele-link-4` di `_triskele.html`, con lo stesso bagliore e il nome
+"Publication" sotto): porta alla pubblicazione (`PUBLICATION_URL`; se non è impostata il cerchio non compare). È centrato sul centro di
+simmetria del disegno (250, 277 nel viewBox, non sul centro 250, 250) con raggio 230; il clic lo riceve solo l'anello, non l'interno.
 Con hover o focus compare anche il **nome della categoria** sotto il triskele (solo CSS, con `:has()`; variabili `--home-triskele-label-...`;
 per metterlo in fondo allo schermo basta usare `bottom` al posto di `top` in `.home-triskele-label`).
 Con hover o focus il tracciato resta bianco e dello stesso spessore, ma ha lo stesso **bagliore dei testi**: `--hts-glow` (`custom.css`,
@@ -216,8 +219,14 @@ se l'audio è più corto il resto va avanti in silenzio, se è più lungo il vol
 - **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `triskele.svg` con `pathLength="1"`: si disegna con
   `stroke-dashoffset`, come il trim paths di After Effects), comportamento e **tempi** in `static/js/intro.js` (oggetto
   `TIMELINE` in cima), aspetto in `custom.css` (sezione [13]: colori, spessore, dimensioni, in variabili `--intro-...`).
-  Lo sfondo ha un effetto **TV static**: un'immagine di rumore a strisce orizzontali colorate, stile videoregistratore (`static/img/tv-static.png`, 512x256px)
-  ripetuta su uno strato che salta di posizione a scatti (`.intro::before`); intensità, grana e velocità sono le variabili `--intro-static-opacity`, `--intro-static-grain` e `--intro-static-speed`.
+  Lo sfondo è **liquido**: uno shader WebGL a schermo intero (`<canvas class="intro-liquid">`, `static/js/intro-liquid.js`) con rumore
+  simplex che scorre piano, ispirato al pen "Liquid Rainbow" di Johan Karlsson, ma con colori nero → accento → bianco al posto
+  dell'arcobaleno. Si regola con le variabili `--intro-liquid-...` in `custom.css` (sezione [13]): `-dark`, `-mid` (il viola),
+  `-light`, `-white` (quanto bianco), `-speed`, `-scale`, `-resolution`, `-opacity`. Senza WebGL resta il nero. Le immagini
+  `static/img/tv-static*.png|jpg` della vecchia TV static non sono più usate.
+  **Due versioni dello sfondo** (si cambia in `_intro.html` con la classe `intro-glow` sul `<div class="intro">`): con la classe,
+  sfondo nero e il testo d'ingresso che pulsa con l'alone `--hts-glow` (variabili `--intro-glow-duration` e `--intro-glow-min`
+  in `custom.css`); senza la classe, lo sfondo liquido.
 - **Rete di sicurezza**: senza JavaScript lo strato non compare; se `intro.js` non parte, sparisce da solo dopo 4 secondi.
 - **Audio**: ritagliato da un video YouTube ("The Sound of dial-up Internet", William Termini, licenza YouTube standard):
   **prima di pubblicare il sito va verificato il diritto d'uso**, o sostituito con una registrazione libera (stesso nome

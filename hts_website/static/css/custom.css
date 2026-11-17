@@ -15,7 +15,7 @@
    [10] CONTRIBUTOR                  card dell'elenco e pagina del singolo contributor
    [11] EVENTI E REFERENZE           titoli e testi di /events/ e /references/
    [12] HOME                         triskele cliccabile con bagliore e nome della categoria
-   [13] INTRO ANIMATO                schermata iniziale con TV static, testo d'ingresso e disegno del triskele
+   [13] INTRO ANIMATO                schermata iniziale con sfondo liquido, testo d'ingresso e disegno del triskele
    ========================================================================== */
 
 /*
@@ -849,7 +849,7 @@ a:hover, a:focus {
    home.html, _triskele.html
    Occupa lo schermo intero, centrato come lo strato dell'intro, con la stessa dimensione (--hts-triskele-size) e lo stesso
    spessore e colore: quando l'intro si dissolve si vede lo stesso disegno, nello stesso punto. Il contenitore lascia passare i clic;
-   solo i tracciati (i link ai progetti a caso) li ricevono.
+   solo i tracciati (i link ai progetti a caso) e il cerchio (il link alla pubblicazione) li ricevono.
    Variabili: --home-triskele-... sul selettore .home-triskele.
    ========================================================================== */
 
@@ -920,7 +920,7 @@ a:hover, a:focus {
 }
 
 /* Nome della categoria sotto il triskele: tre testi nello stesso punto, ognuno visibile solo con hover o focus del suo tracciato.
-   Sta sotto il triskele, centrato: la posizione parte dal centro dello schermo (50%) e scende di metà triskele più la distanza.
+   Sta sotto il triskele e il suo cerchio, centrato: la posizione parte dal centro dello schermo (50%) e scende fino al bordo del cerchio (0,54 volte la dimensione) più la distanza.
    Per metterlo in fondo allo schermo basta cambiare "top" con "bottom: 2rem". Usa :has() (Safari 15.4+, Chrome 105+, Firefox 121+):
    nei browser più vecchi il nome non compare, ma il resto funziona. */
 .home-triskele-label {
@@ -928,7 +928,7 @@ a:hover, a:focus {
     left: 0;
     right: 0;
     /* Il più basso tra "sotto il triskele" e "3rem dal fondo dello schermo": con un triskele grande su una finestra bassa il nome resta visibile. */
-    top: min(calc(50% + var(--hts-triskele-size) / 2 + var(--home-triskele-label-gap)), calc(100% - 3rem));
+    top: min(calc(50% + var(--hts-triskele-size) * 0.54 + var(--home-triskele-label-gap)), calc(100% - 3rem));
     text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: se capita sopra le linee bianche si legge lo stesso */
     margin: 0;
     display: grid;
@@ -951,7 +951,8 @@ a:hover, a:focus {
 
 .home-triskele:has(.triskele-link-1:hover, .triskele-link-1:focus-visible) .home-triskele-label-1,
 .home-triskele:has(.triskele-link-2:hover, .triskele-link-2:focus-visible) .home-triskele-label-2,
-.home-triskele:has(.triskele-link-3:hover, .triskele-link-3:focus-visible) .home-triskele-label-3 {
+.home-triskele:has(.triskele-link-3:hover, .triskele-link-3:focus-visible) .home-triskele-label-3,
+.home-triskele:has(.triskele-link-4:hover, .triskele-link-4:focus-visible) .home-triskele-label-4 {
     opacity: 1;
 }
 
@@ -971,49 +972,58 @@ a:hover, a:focus {
     --intro-line-width: 15;                      /* nelle unità del disegno (500 di larghezza): 15 è lo spessore del file originale */
     --intro-triskele-size: var(--hts-triskele-size);   /* larghezza del triskele (vale anche per quello della home) */
     --intro-skip-color: var(--hts-muted);
-    /* Effetto TV static (stile VHS: strisce orizzontali colorate) sullo sfondo. */
-    --intro-static-opacity: 0.8;                 /* intensità: 0 = spento, 0.4 smorzato, 1 = pieno */
-    --intro-static-grain: 1024px;                /* larghezza di un riquadro di rumore: più piccolo = strisce più sottili (il file è 512px, ingrandito 2x) */
-    --intro-static-speed: .8s;                  /* durata di un giro di 10 "salti": più basso = sfarfallio più veloce */
+    /* Sfondo liquido (static/js/intro-liquid.js): rampa nero → colore intermedio → colore chiaro, che scorre piano. */
+    --intro-liquid-dark: #000;                   /* colore delle zone scure */
+    --intro-liquid-mid: rgba(var(--hts-accent-rgb), 1);       /* colore intermedio (il viola) */
+    --intro-liquid-light: rgb(2, 255, 2);                  /* colore delle creste */
+    --intro-liquid-white: 0.75;                  /* quanto bianco: 0 = nessuno (solo nero e accento), 1 = bianco pieno sulle creste (disturba triskele e testo) */
+    --intro-liquid-speed: .5;                     /* 1 = velocità dell'originale; 0.5 = metà; 2 = doppia */
+    --intro-liquid-scale: .1;                     /* 1 = macchie grandi come lo schermo; 2 = metà dimensione */
+    --intro-liquid-resolution: 0.5;              /* 1 = un pixel per pixel dello schermo; 0.5 = metà (più leggero, la sfumatura non cambia) */
+    --intro-liquid-opacity: .3;                   /* intensità: 0 = spento (solo nero), 1 = pieno */
 
     position: fixed;
     inset: 0;
     z-index: 2000; /* sopra la navbar (1020) e i modali (1055) */
     display: grid;
     place-items: center;
-    overflow: hidden; /* lo strato del rumore è più grande dello schermo: il resto va tagliato */
+    overflow: hidden;
     background: var(--intro-bg);
 }
 
-/* TV static: un'immagine di rumore a strisce colorate (static/img/tv-static.png, 512x256px) ripetuta su uno strato grande il doppio dello schermo, che salta
-   di posizione a scatti (steps(1) = nessuna interpolazione tra un salto e l'altro). Si muove con transform, non con
-   background-position, così non ridisegna l'immagine a ogni salto. z-index -1: sta dietro al testo e al triskele, sopra il nero.
-   Si dissolve insieme all'intro, perché l'opacità di .intro la imposta intro.js. */
-.intro::before {
-    content: "";
+/* Sfondo liquido: una tela a tutto schermo disegnata da static/js/intro-liquid.js (shader WebGL). z-index -1: sta dietro al testo e al
+   triskele, sopra il nero. Si dissolve insieme all'intro, perché l'opacità di .intro la imposta intro.js. */
+.intro-liquid {
     position: absolute;
-    inset: -50%;
+    inset: 0;
     z-index: -1;
-    background: url("../img/tv-static_2.jpg") repeat;
-    background-size: var(--intro-static-grain);
-    image-rendering: pixelated; /* il rumore ingrandito resta a quadretti netti, non sfocato */
-    opacity: var(--intro-static-opacity);
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: var(--intro-liquid-opacity);
     pointer-events: none;
-    will-change: transform;
-    animation: intro-static var(--intro-static-speed) steps(1) infinite;
 }
 
-@keyframes intro-static {
-    0%   { transform: translate(0, 0); }
-    10%  { transform: translate(-5%, -10%); }
-    20%  { transform: translate(-15%, 5%); }
-    30%  { transform: translate(7%, -20%); }
-    40%  { transform: translate(-5%, 20%); }
-    50%  { transform: translate(-15%, 10%); }
-    60%  { transform: translate(15%, 0); }
-    70%  { transform: translate(0, 15%); }
-    80%  { transform: translate(3%, 20%); }
-    90%  { transform: translate(-10%, 10%); }
+/* Versione "glow" dello sfondo (classe .intro-glow in _intro.html): sfondo nero, niente liquido (intro-liquid.js non parte con opacità 0),
+   e il testo d'ingresso pulsa con l'alone di --hts-glow: la luce va da poco visibile al glow pieno e torna, in continuo.
+   Le due ombre devono avere lo stesso numero di livelli (qui 4, come --hts-glow), altrimenti il passaggio tra l'una e l'altra non è fluido. */
+.intro-glow {
+    --intro-liquid-opacity: 0;
+    --intro-glow-duration: 1.5s;                 /* durata di un'andata (dal debole al pieno); il ritorno dura uguale */
+    --intro-glow-min:                            /* alone nel punto più debole: stessi raggi di --hts-glow, ma quasi trasparenti */
+        0 0 5px rgba(255, 255, 255, 0.25),
+        0 0 12px rgba(var(--hts-accent-rgb), 0.15),
+        0 0 25px rgba(var(--hts-accent-rgb), 0.08),
+        0 0 40px rgba(var(--hts-accent-rgb), 0);
+}
+
+.intro-glow .intro-enter {
+    animation: intro-glow-pulse var(--intro-glow-duration) ease-in-out infinite alternate;
+}
+
+@keyframes intro-glow-pulse {
+    from { text-shadow: var(--intro-glow-min); }
+    to   { text-shadow: var(--hts-glow); }
 }
 
 /* Testo e triskele stanno nella stessa cella: il secondo prende il posto del primo. */
@@ -1031,7 +1041,7 @@ a:hover, a:focus {
     font-weight: 300;
     font-size: var(--intro-text-size);
     letter-spacing: var(--intro-text-letter-spacing);
-    text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: il testo resta leggibile sopra il rumore colorato */
+    text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: il testo resta leggibile sopra lo sfondo */
     cursor: pointer;
 }
 

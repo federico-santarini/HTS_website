@@ -4,7 +4,11 @@
 {# parte il suono del modem, il testo sparisce, tre linee disegnano il triskele, dissolvenza verso la pagina. #}
 {# Dura TIMELINE.duration secondi dal clic (non dipende dalla lunghezza dell'audio). Tempi: static/js/intro.js (TIMELINE). Aspetto: custom.css (sezione [13]). #}
 {# Le tre linee (il file triskele.svg) stanno in _triskele.html, condiviso con la home: serve per disegnarle con stroke-dashoffset (come il trim paths). #}
-<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Welcome to HTS">
+{# Due versioni dello sfondo, si cambia con la classe "intro-glow" qui sotto: CON la classe = sfondo nero e il testo d'ingresso che pulsa con l'alone #}
+{# (--hts-glow); SENZA la classe = sfondo liquido (shader WebGL, intro-liquid.js). Per tornare al liquido basta togliere "intro-glow". #}
+<div class="intro intro-glow" id="intro" role="dialog" aria-modal="true" aria-label="Welcome to HTS">
+    {# Sfondo liquido (shader WebGL, static/js/intro-liquid.js): nero, colore di accento e bianco. Aspetto e velocità: custom.css [13]. #}
+    <canvas class="intro-liquid" aria-hidden="true"></canvas>
     <button type="button" class="intro-enter">You are entering the digital space of the Holistic Technology Salon.<br>Click here to connect</button>
     {% include "portfolio/_triskele.html" with css_class="intro-triskele" %}
     <button type="button" class="intro-skip">Skip</button>
@@ -15,7 +19,7 @@
 {# Senza JavaScript l'intro non può partire: niente strato nero. #}
 <noscript><style>.intro { display: none; }</style></noscript>
 {# Script in linea (subito, prima del primo disegno della pagina): chi l'ha già visto in questa sessione o ha chiesto meno #}
-{# movimento non vede nemmeno il nero. L'altro script (intro.js) fa partire la sequenza. #}
+{# movimento non vede nemmeno il nero. intro-liquid.js disegna lo sfondo, intro.js fa partire la sequenza. #}
 <script>
     (function () {
         var seen = false;
@@ -25,4 +29,5 @@
         }
     })();
 </script>
+<script src="{% static 'js/intro-liquid.js' %}" defer></script>
 <script src="{% static 'js/intro.js' %}" defer></script>

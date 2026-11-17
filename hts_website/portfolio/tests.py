@@ -178,7 +178,7 @@ class NavbarActiveLinkTests(TestCase):
             ("/projects/feed/", "Archive"),  # il feed fa parte dell'archivio
             ("/contributors/", "Contributors"),
             (f"/contributors/{self.contributor.pk}/", "Contributors"),
-            ("/events/", "Events"),
+            ("/agenda/", "Agenda"),
             ("/references/", "References"),
             ("/about/", "About"),
         ]:
@@ -399,7 +399,7 @@ class SiteSettingsTests(TestCase):
         self.assertNotIn('id="intro"', self.client.get("/").content.decode())
 
     def test_other_pages_never_have_the_intro(self):
-        for path in ["/about/", "/projects/", "/events/", "/contributors/"]:
+        for path in ["/about/", "/projects/", "/agenda/", "/contributors/"]:
             with self.subTest(path=path):
                 self.assertNotIn('id="intro"', self.client.get(path).content.decode())
 
@@ -519,10 +519,28 @@ class RandomProjectTests(TestCase):
         self.assertEqual(re.findall(r'href="/projects/random/(\w+)/"', html), ["relationality", "perception", "cognition"])
         self.assertEqual(re.findall(r'aria-label="(Relationality|Perception|Cognition)"', html), ["Relationality", "Perception", "Cognition"])
 
+    @override_settings(PUBLICATION_URL="")  # senza il cerchio (il .env locale può impostarla)
     def test_home_shows_a_category_name_for_each_path(self):
         html = self.client.get("/").content.decode()
         label = html.split('class="home-triskele-label"')[1].split("</p>")[0]
         self.assertEqual(re.findall(r">(\w+)</span>", label), ["Relationality", "Perception", "Cognition"])
+
+    @override_settings(PUBLICATION_URL="https://publication.example.org")
+    def test_home_circle_links_to_the_publication(self):
+        """Il cerchio attorno al triskele è un quarto link, alla pubblicazione, con il suo nome sotto."""
+        html = self.client.get("/").content.decode()
+        circle = html.split('triskele-link-4"')[1].split("</a>")[0]
+        self.assertIn('href="https://publication.example.org"', circle)
+        self.assertIn('aria-label="Publication"', circle)
+        self.assertIn("<circle", circle)
+        label = html.split('class="home-triskele-label"')[1].split("</p>")[0]
+        self.assertEqual(re.findall(r">(\w+)</span>", label), ["Relationality", "Perception", "Cognition", "Publication"])
+
+    @override_settings(PUBLICATION_URL="")
+    def test_home_has_no_circle_without_a_publication_address(self):
+        html = self.client.get("/").content.decode()
+        self.assertNotIn("triskele-link-4", html)
+        self.assertNotIn("home-triskele-label-4", html)
 
     def test_intro_triskele_stays_decorative_without_links(self):
         SiteSettings.objects.create(intro_enabled=True)

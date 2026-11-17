@@ -1,12 +1,12 @@
 {% extends "portfolio/base.html" %}
 
-{% block title %}Events{% endblock %}
+{% block title %}Agenda{% endblock %}
 
 {% block content %}
 {# upcoming_events e past_events arrivano già divisi e ordinati dalla view event_list. #}
 {# Le due liste hanno lo stesso markup: se cambia il layout di un evento, modificarle entrambe. #}
 {# Stesse righe dell'archivio (.archive-row, .list-label); il titolo ha la stessa resa delle references (.event-title in custom.css). #}
-<h1 class="visually-hidden">Events</h1>
+<h1 class="visually-hidden">Agenda</h1>
 
 <h2 class="section-label mt-5">Upcoming events</h2>
 {% for event in upcoming_events %}

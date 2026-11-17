@@ -12,7 +12,7 @@ urlpatterns = [
     path("projects/random/<slug:category>/", views.random_project, name="random_project"),  # redirect a un progetto a caso
     path("contributors/", views.contributor_list, name="contributor_list"),
     path("contributors/<int:pk>/", views.contributor_detail, name="contributor_detail"),
-    path("events/", views.event_list, name="event_list"),
+    path("agenda/", views.event_list, name="event_list"),
     path("references/", views.reference_list, name="reference_list"),
     path("about/", views.about, name="about"),
 ]
