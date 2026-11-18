@@ -277,7 +277,6 @@
     html {
         scroll-behavior: smooth;
         /* i link dell'indice scorrono invece di saltare */
-        font-variant-numeric: tabular-nums;
     }
 }
 
