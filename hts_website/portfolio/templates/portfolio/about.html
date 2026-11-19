@@ -1,4 +1,75 @@
 {% extends "portfolio/base.html" %}
+
+{% block title %}About{% endblock %}
+
 {% block content %}
-<p>The Holistic Technology Salon is an invitation to co-create alternative futures through multidimensional conversations. In a series of community encounters we will use different types of knowledge – rooted in corporeal and mystical practices – to weave new, holistic ways of being with technology. In a participatory setting we will explore how to integrate eco- and carecentric perspectives into our relationship with contemporary and future technologies through direct experience.</p>
+{# Pagina About: il testo, poi il colophon (elenco schematico di crediti). Stile: custom.css, sezione [14]. #}
+<h1 class="visually-hidden">About</h1>
+
+<div class="row justify-content-center mt-5">
+    <div class="col-lg-8 about-text">
+        {# Il primo paragrafo è il "lead": più grande (.about-lead). #}
+        <p class="about-lead">The Holistic Technology Salon, an artists collective led by Annika Kappner, Ginevra Petrozzi and Sieta van Horck (V2_), is an invitation to co-create alternative futures through multidimensional conversations. Different types of knowledge are used – rooted in corporeal and mystical practices – to weave new, holistic ways of being with technology, exploring how to integrate eco- and carecentric perspectives into our relationship with contemporary and future technologies through direct experience.</p>
+
+        <p>The Holistic Technology Salon is co-produced and supported by V2_ Lab for the Unstable Media, which has provided an institutional home and ongoing support for the collective’s research and development over the past three years. V2_ fellows Annika Kappner and Ginevra Petrozzi pursue their research within the Salon in collaboration with Sieta van Horck, who is both a member of the collective and works at V2_ as project manager and researcher of this research line. This constellation brings together artistic research, collective inquiry and institutional practice, allowing the Salon to evolve through an ongoing exchange between individual explorations and shared experimentation.</p>
+
+        {# Il titolo dell'e-pub è un link alla pubblicazione se PUBLICATION_URL è impostata (context processor). #}
+        <p>Since 2023, HTS has developed through salons, workshops, performances, artistic commissions and interdisciplinary collaborations between artists, designers, researchers, technologists and audiences. Inspired by the historical salon as a space for exchange, HTS has evolved into a dynamic artistic research platform that weaves different ways of producing knowledge. In 2026 HTS received the Digital Culture Grant Scheme from Creative Industries Fund NL, which enabled the making of the first HTS exhibition, the e-pub “{% if PUBLICATION_URL %}<a href="{{ PUBLICATION_URL }}">Trifold Trine Trinity</a>{% else %}Trifold Trine Trinity{% endif %}”, and this website.</p>
+    </div>
+</div>
+
+{# Colophon: un elenco di definizioni (<dl>) con la griglia di Bootstrap, come l'elenco dei contributor: row-cols-N decide quante voci stanno in una riga #}
+{# (1 sul telefono, 2 da sm, 3 da md). Da lg in su le colonne restano 3 ma l'elenco occupa solo una parte della larghezza, centrata (--colophon-width-lg in custom.css), #}
+{# così sono strette come quando erano 5. Ogni voce è un <div class="col"> con etichetta (<dt>) sopra e valore (<dd>) sotto. #}
+{# "Contact" compare solo se CONTACT_EMAIL è impostata nell'ambiente. Fonti: il testo di questa pagina e i ringraziamenti della pubblicazione. #}
+<section class="colophon" aria-label="Colophon">
+    <dl class="colophon-list row row-cols-1 row-cols-sm-2 row-cols-md-3 gy-4 mb-0">
+        <div class="col">
+            <dt>Collective</dt>
+            <dd>Annika Kappner, Ginevra Petrozzi, Sieta van Horck</dd>
+        </div>
+
+        <div class="col">
+            <dt>Supported by</dt>
+            <dd>Creative Industries Fund NL, Digital Culture Grant Scheme (2026)</dd>
+        </div>
+
+        <div class="col">
+            <dt>Co-produced by</dt>
+            <dd>V2_ Lab for the Unstable Media, Rotterdam</dd>
+        </div>
+
+        <div class="col">
+            <dt>E-publication</dt>
+            <dd>{% if PUBLICATION_URL %}<a href="{{ PUBLICATION_URL }}">Trifold Trine Trinity</a>{% else %}Trifold Trine Trinity{% endif %}<br>Proofreading and editing: Lucy Cordes Engelman</dd>
+        </div>
+
+        <div class="col">
+            <dt>Website Design</dt>
+            <dd>Federico Santarini, HTS</dd>
+        </div>
+
+        <div class="col">
+            <dt>Website Development</dt>
+            <dd>Federico Santarini</dd>
+        </div>
+
+        <div class="col">
+            <dt>Typefaces</dt>
+            <dd>PP Neue Machina (Pangram Pangram), Alegreya (Juan Pablo del Peral)</dd>
+        </div>
+
+        {% if CONTACT_EMAIL %}
+        <div class="col">
+            <dt>Contact</dt>
+            <dd><a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a></dd>
+        </div>
+        {% endif %}
+
+        <div class="col">
+            <dt>Copyright</dt>
+            <dd>© {% now "Y" %} Holistic Technology Salon</dd>
+        </div>
+    </dl>
+</section>
 {% endblock %}

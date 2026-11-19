@@ -9,9 +9,9 @@
 <div class="intro intro-glow" id="intro" role="dialog" aria-modal="true" aria-label="Welcome to HTS">
     {# Sfondo liquido (shader WebGL, static/js/intro-liquid.js): nero, colore di accento e bianco. Aspetto e velocità: custom.css [13]. #}
     <canvas class="intro-liquid" aria-hidden="true"></canvas>
-    <button type="button" class="intro-enter">You are entering the digital space of the Holistic Technology Salon.<br>Click here to connect</button>
+    <button type="button" class="intro-enter">CONNECT</button>
     {% include "portfolio/_triskele.html" with css_class="intro-triskele" %}
-    <button type="button" class="intro-skip">Skip</button>
+    <button type="button" class="intro-skip">SKIP INTRO</button>
     {# data-src e non src: intro.js scarica il file e lo dà al player come blob. Safari non riproduce un audio che il server non sa #}
     {# servire a pezzi (HTTP Range), e il server di sviluppo di Django non lo sa fare. #}
     <audio class="intro-audio" data-src="{% static 'audio/intro.mp3' %}" preload="auto"></audio>

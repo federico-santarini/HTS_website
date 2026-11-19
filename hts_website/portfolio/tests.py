@@ -160,6 +160,46 @@ class FeedReferenceFormatTests(TestCase):
         self.assertNotIn('<li><span class="reference-author"></span>', html)
 
 
+class AboutPageTests(TestCase):
+    """La pagina About: il testo e il colophon (elenco di crediti)."""
+
+    def test_has_the_text_and_a_colophon_list(self):
+        html = self.client.get("/about/").content.decode()
+        self.assertIn("<title>About</title>", html)
+        self.assertIn("The Holistic Technology Salon, an artists collective led by", html)
+        self.assertIn('class="about-lead"', html)
+        self.assertEqual(html.count("<dt>"), html.count("<dd>"))  # ogni etichetta ha il suo valore
+        self.assertIn("<dt>Collective</dt>", html)
+
+    @override_settings(CONTACT_EMAIL="info@example.org")
+    def test_contact_email_is_shown_when_set(self):
+        html = self.client.get("/about/").content.decode()
+        self.assertIn('<dt>Contact</dt>', html)
+        self.assertIn('<a href="mailto:info@example.org">info@example.org</a>', html)
+
+    @override_settings(CONTACT_EMAIL="")
+    def test_contact_entry_is_hidden_without_an_email(self):
+        html = self.client.get("/about/").content.decode()
+        self.assertNotIn("<dt>Contact</dt>", html)
+        self.assertNotIn("mailto:", html)
+
+    def test_copyright_line_has_the_current_year(self):
+        from django.utils import timezone
+        html = self.client.get("/about/").content.decode()
+        self.assertIn(f"© {timezone.now().year} Holistic Technology Salon", html)
+
+    @override_settings(PUBLICATION_URL="https://publication.example.org")
+    def test_epub_title_links_to_the_publication(self):
+        html = self.client.get("/about/").content.decode()
+        self.assertEqual(html.count('<a href="https://publication.example.org">Trifold Trine Trinity</a>'), 2)  # nel testo e nel colophon
+
+    @override_settings(PUBLICATION_URL="")
+    def test_epub_title_is_plain_text_without_a_publication_address(self):
+        html = self.client.get("/about/").content.decode()
+        self.assertIn("Trifold Trine Trinity", html)
+        self.assertNotIn('">Trifold Trine Trinity</a>', html)
+
+
 class NavbarActiveLinkTests(TestCase):
     """La voce della navbar che corrisponde alla pagina corrente (e solo quella) è evidenziata."""
 

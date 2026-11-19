@@ -16,6 +16,7 @@
    [11] EVENTI E REFERENZE           titoli e testi di /events/ e /references/
    [12] HOME                         triskele cliccabile con bagliore e nome della categoria
    [13] INTRO ANIMATO                schermata iniziale con sfondo liquido, testo d'ingresso e disegno del triskele
+   [14] ABOUT                        testo e colophon (/about/)
    ========================================================================== */
 
 /*
@@ -1036,6 +1037,7 @@ a:hover, a:focus {
     padding: 1rem 2rem;
     background: none;
     border: 0;
+    outline: none; /* intro.js dà il focus al bottone appena parte (basta Invio da tastiera) e il browser vi disegnerebbe attorno l'anello di focus */
     color: var(--intro-text-color);
     font-family: var(--hts-font-display);
     font-weight: 300;
@@ -1074,7 +1076,7 @@ a:hover, a:focus {
 }
 
 .intro-skip {
-    position: absolute;
+    /* position: absolute; */
     right: max(1.5rem, env(safe-area-inset-right));
     bottom: max(1.5rem, env(safe-area-inset-bottom));
     padding: 0.5rem;
@@ -1083,7 +1085,7 @@ a:hover, a:focus {
     color: var(--intro-skip-color);
     font-family: var(--hts-font-display);
     font-weight: 300;
-    font-size: 0.75rem;
+    font-size: 1rem;
     letter-spacing: 0.1rem;
     text-transform: uppercase;
     cursor: pointer;
@@ -1091,7 +1093,8 @@ a:hover, a:focus {
 
 .intro-skip:hover,
 .intro-skip:focus-visible {
-    color: var(--hts-accent);
+    color: white;
+    text-shadow: var(--hts-glow);
 }
 
 /* Mentre l'intro è attivo la pagina sotto non scorre. */
@@ -1106,4 +1109,89 @@ html:not(.intro-ready) .intro {
 
 @keyframes intro-failsafe {
     to { opacity: 0; visibility: hidden; }
+}
+
+/* ==========================================================================
+   [14] ABOUT
+   about.html
+   Testo in colonna centrale: il primo paragrafo (.about-lead) è più grande, gli altri hanno il corpo dei testi dei progetti.
+   Il colophon è un elenco di definizioni (<dl>) nella griglia di Bootstrap (row-cols-*): voci in colonne, etichetta sopra e valore sotto, con un filetto sfumato sopra (come l'archivio).
+   ========================================================================== */
+
+.about-text p {
+    font-family: var(--hts-font-serif);
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+}
+
+.about-text .about-lead {
+    font-family: var(--hts-font-display);
+    font-size: clamp(1.5rem, 2.6vw, 1.875rem);
+    line-height: 1.25;
+    margin-bottom: 2.5rem;
+}
+
+.about-text a,
+.colophon a {
+    text-decoration: underline;
+    text-decoration-thickness: 0.05rem;
+    text-underline-offset: 0.3rem;
+}
+
+/* Colophon: discreto e largo. Tutto grigio (--hts-muted), solo nel carattere grottesco, piccolo; occupa tutta la larghezza. Le colonne le fa la griglia
+   di Bootstrap (row-cols-* in about.html: quante voci per riga a ogni larghezza), con etichetta sopra e valore sotto. Variabili sul selettore .colophon. */
+.colophon {
+    --colophon-width-lg: 60%;                    /* larghezza dell'elenco da lg in su: 60% = 3 colonne spesse come quando erano 5 (3/5); 100% = tutta la larghezza */
+    --colophon-size: 0.75rem;                    /* corpo del testo (etichette e valori) */
+    --colophon-color: var(--hts-muted);
+
+    margin-top: 6rem;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+    border-top: 1px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        var(--hts-accent-muted) 20%,
+        var(--hts-accent-muted) 80%,
+        rgba(255, 255, 255, 0) 100%
+    ) 1;
+    font-family: var(--hts-font-display);
+    font-size: var(--colophon-size);
+    line-height: 1.4;
+    color: var(--colophon-color);
+}
+
+/* Etichetta: maiuscolo spaziato, come le altre etichette del sito. */
+.colophon-list dt {
+    margin-bottom: 0.25rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+}
+
+.colophon-list dd {
+    margin: 0;
+    font-weight: 400;
+    overflow-wrap: anywhere; /* un indirizzo e-mail lungo va a capo invece di finire sotto la colonna accanto */
+}
+
+/* Da lg in su le colonne sono sempre 3 (row-cols-* in about.html) ma l'elenco occupa solo una parte della larghezza, quindi ogni colonna resta stretta
+   (20% con il valore predefinito) e l'elenco sta al centro (margin auto: sostituisce i margini negativi di .row), con spazio vuoto ai due lati. */
+@media (min-width: 992px) {
+    .colophon-list {
+        width: var(--colophon-width-lg);
+        margin-inline: auto;
+    }
+}
+
+.colophon a {
+    color: inherit;
+}
+
+.colophon a:hover,
+.colophon a:focus-visible {
+    color: #fff;
 }

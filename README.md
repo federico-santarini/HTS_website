@@ -73,6 +73,7 @@ Vengono lette da `hts_website/.env` (in produzione dall'ambiente). Il modello è
 | `SECRET_KEY` | sì | Chiave segreta di Django. Senza, il sito non parte. |
 | `DEBUG` | no | `True` solo in sviluppo. Se manca vale `False`. |
 | `PUBLICATION_URL` | no | Indirizzo della pubblicazione per il link in navbar. Vuoto = link nascosto. |
+| `CONTACT_EMAIL` | no | Indirizzo e-mail di contatto, mostrato nel colophon di About (`mailto:`). Vuoto = la voce "Contact" non compare. |
 | `PGDATABASE`, `PGUSER`, `PGPASSWORD`, `PGHOST`, `PGPORT` | sì | Connessione a Postgres. |
 
 ## Dati: come sono collegati
@@ -115,7 +116,7 @@ Chi modifica cosa nell'admin (le relazioni many-to-many si modificano da **un so
 | `/contributors/`, `/contributors/<id>/` | `contributor_*` | Elenco e dettaglio dei contributor |
 | `/agenda/` | `event_list` | Eventi futuri e passati in due sezioni (la pagina "Agenda" del menu; non è l'archivio dei progetti di tipo "event"). Prima era `/events/` |
 | `/references/` | `reference_list` | Referenze, filtro per tipo (`?kind=`) |
-| `/about/` | `about` | Pagina About (testo scritto direttamente nel template `about.html`) |
+| `/about/` | `about` | Pagina About: testo e colophon (elenco `<dl>` di crediti, a colonne, discreto: grigio e piccolo), scritti direttamente nel template `about.html`; stile in `custom.css`, sezione [14]. La voce "Contact" usa `CONTACT_EMAIL` |
 | `publication.<dominio>` | `PublicationMiddleware` | La pubblicazione statica (vedi sotto) |
 
 ## Frontend (Bootstrap)

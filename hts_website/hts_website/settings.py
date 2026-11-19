@@ -38,6 +38,8 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 # - PUBLICATION_DIR: cartella con i file della pubblicazione
 # - PUBLICATION_SUBDOMAIN: primo pezzo dell'host che attiva la pubblicazione
 PUBLICATION_URL = os.environ.get("PUBLICATION_URL", "")
+# Indirizzo e-mail di contatto, mostrato nel colophon della pagina About (vuoto = la voce "Contact" non compare).
+CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "")
 PUBLICATION_DIR = BASE_DIR / "publication"
 PUBLICATION_SUBDOMAIN = "publication"
 
