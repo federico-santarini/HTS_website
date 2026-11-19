@@ -1076,7 +1076,7 @@ a:hover, a:focus {
 }
 
 .intro-skip {
-    /* position: absolute; */
+    position: absolute;
     right: max(1.5rem, env(safe-area-inset-right));
     bottom: max(1.5rem, env(safe-area-inset-bottom));
     padding: 0.5rem;
