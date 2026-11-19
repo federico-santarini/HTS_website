@@ -112,6 +112,8 @@
 
     --pub-figure-max-height: 85svh;
     /* le figure alte non superano questa altezza */
+    --pub-image-fade: 1.5rem;
+    /* bordo sfumato delle immagini: quanto è largo (0 = nessuna sfumatura), come nelle foto del sito principale */
 
     /* ---------- Spazi verticali ---------- */
     --pub-cover-min-height: 80svh;
@@ -152,6 +154,12 @@
     /* spazio in più sopra ogni capitolo */
     --pub-toc-line-gap: 0.25rem;
     /* spazio tra una voce e la successiva */
+    --pub-toc-hover-lighten: 50%;
+    /* di quanto si schiariscono le voci di un capitolo quando ci si passa sopra: quota di bianco mescolata al loro colore (0% = nessun cambio, 100% = bianco) */
+    --pub-toc-hover-color: color-mix(in srgb, var(--pub-muted), white var(--pub-toc-hover-lighten));
+    /* colore delle voci con il mouse sul capitolo (parte dal grigio --pub-muted) */
+    --pub-toc-hover-fade: 0.2s;
+    /* durata della transizione */
 
     /* ---------- Citazioni ---------- */
     --pub-quote-indent: 1.5rem;
@@ -184,10 +192,8 @@
     /* dimensione del testo della barra */
     --pub-topbar-rule: var(--pub-rule);
     /* filetto sotto la barra (transparent = nessuno) */
-    --pub-menu-bg: rgb(0 0 0 / 0.25);
-    /* velo dell'indice a tutto schermo, sopra la pagina sfocata */
-    --pub-menu-blur: 8px;
-    /* sfocatura della pagina dietro l'indice (0px = nessuna) */
+    --pub-menu-bg: #000;
+    /* sfondo dell'indice a tutto schermo: nero pieno (per riavere un velo traslucido: es. rgb(0 0 0 / 0.85)) */
     --pub-menu-fade: 0.3s;
     /* durata di comparsa e scomparsa dell'indice */
     --pub-menu-current-color: var(--pub-accent);
@@ -226,6 +232,8 @@
     /* filetto attorno al nome (transparent = nessuno) */
     --pub-sidebar-label-max-width: 22rem;
     /* larghezza massima del nome (poi va a capo) */
+    --pub-sidebar-label-gap: -1.5rem;
+    /* distanza tra il bordo destro della barra e il nome: i numeri sono allineati a sinistra, quindi la distanza dal numero è questa più lo spazio libero a destra del numero (--pub-sidebar-width) */
     --pub-num-color: var(--pub-muted);
     /* numeri davanti alle voci dell'indice testuale */
 
@@ -382,6 +390,7 @@ h4 {
     font-size: var(--pub-byline-size);
     letter-spacing: var(--pub-label-letter-spacing);
     color: var(--pub-muted);
+    text-transform: lowercase;
 }
 
 /* ---------- Indice ---------- */
@@ -436,7 +445,7 @@ h4 {
 /* Tavola dei contenuti iniziale, "a tabulazioni" (come in InDesign): il numero sta a sinistra, il titolo comincia a una tabulazione
    (--pub-toc-tab-1 per i capitoli, --pub-toc-tab-2 per sottotitoli e sotto-sottotitoli) e le righe a capo si allineano all'inizio del
    titolo. È un elenco piatto: ogni voce è una griglia a due colonne (numero | titolo) e data-level dice il livello.
-   Solo i titoli dei testi sono link. L'indice a tutto schermo (.pub-menu) usa invece l'elenco con i rientri (.pub-contents). */
+   Solo i titoli dei testi sono link. Anche l'indice a tutto schermo (.pub-menu, su schermi stretti) usa questa stessa tavola. */
 .pub-toc {
     max-width: var(--pub-toc-width);
     margin-inline: auto;
@@ -471,15 +480,36 @@ h4 {
     margin-top: 0;
 }
 
+/* Ogni capitolo con le sue voci è un gruppo (li.pub-toc-group > ol): il capitolo è la prima riga e le altre sono sue sorelle. Lo spazio tra
+   un capitolo e il successivo sta sul gruppo (la riga del capitolo, prima nel gruppo, non ha margine sopra). */
+.pub-toc li.pub-toc-group {
+    display: block;
+    margin-top: var(--pub-toc-chapter-gap);
+}
+
+.pub-toc li.pub-toc-group:first-child {
+    margin-top: 0;
+}
+
 .pub-toc .pub-num {
     margin-right: 0;
 }
 
-.pub-toc li[data-level="1"] a {
+.pub-toc li[data-level="1"] {
+    border-top: var(--pub-rule-width) solid white;
+    padding-top: 1rem;
     /* text-shadow: var(--pub-glow); */
 }
 
-.pub-toc li[data-level="2"],
+.pub-toc li[data-level="1"] span {
+    color: white;
+}
+
+.pub-toc li[data-level="2"] {
+    text-transform: uppercase;
+    color: var(--pub-muted);
+}
+
 .pub-toc li[data-level="3"] {
     text-transform: capitalize;
 }
@@ -491,6 +521,20 @@ h4 {
 
 .pub-toc a {
     text-decoration: none;
+}
+
+/* Con il mouse sul capitolo, le sue voci (sottocapitoli e sotto-sottocapitoli, numeri compresi) diventano più chiare: il colore di prima
+   mescolato con il bianco, di --pub-toc-hover-lighten. Valgono solo le voci dello stesso gruppo (le sorelle che seguono il capitolo). */
+.pub-toc li,
+.pub-toc .pub-num,
+.pub-toc .pub-toc-item {
+    transition: color var(--pub-toc-hover-fade);
+}
+
+.pub-toc li[data-level="1"]:hover~li,
+.pub-toc li[data-level="1"]:hover~li .pub-num,
+.pub-toc li[data-level="1"]:hover~li .pub-toc-item {
+    color: var(--pub-toc-hover-color);
 }
 
 /* ---------- Sezioni e testo ---------- */
@@ -579,14 +623,24 @@ p {
     color: var(--pub-note-color);
 }
 
+/* Chiusa, la nota è display: none: un blocco anche alto 0 interromperebbe la riga e il testo dopo il numero (e la virgola che lo segue) andrebbe
+   a capo. Per animare comunque apertura e chiusura: "display" in transizione (allow-discrete: resta visibile finché la chiusura non è finita) e
+   @starting-style per partire da altezza 0 all'apertura. Nei browser che non li conoscono la nota si apre e si chiude di colpo, senza animazione. */
 .js .pub-note {
-    display: grid;
+    display: none;
     grid-template-rows: 0fr;
-    transition: grid-template-rows var(--pub-note-duration);
+    transition: grid-template-rows var(--pub-note-duration), display var(--pub-note-duration) allow-discrete;
 }
 
 .js .pub-note.is-open {
+    display: grid;
     grid-template-rows: 1fr;
+}
+
+@starting-style {
+    .js .pub-note.is-open {
+        grid-template-rows: 0fr;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -644,13 +698,26 @@ blockquote p:last-child {
     margin-block: var(--pub-block-gap);
 }
 
+/* La misura è calcolata, non "auto": un'immagine non ancora caricata (loading="lazy") avrebbe altezza 0 e, caricandosi, spingerebbe giù tutto il
+   testo sotto di lei, e le ancore (barra laterale, indice) finirebbero nel posto sbagliato. --pub-img-w e --pub-img-h (pixel naturali) li scrive
+   index.html in style; la larghezza è la stessa che l'immagine avrebbe da caricata: la sua, ma non più larga della colonna né più alta di
+   --pub-figure-max-height. Senza quei due valori (immagine aggiunta a mano) vale "auto", come prima. */
 .pub-figure img {
     display: block;
-    width: auto;
+    width: min(calc(var(--pub-img-w) * 1px), 100%, calc(var(--pub-figure-max-height) * var(--pub-img-w) / var(--pub-img-h)));
     max-width: 100%;
     height: auto;
+    aspect-ratio: var(--pub-img-w) / var(--pub-img-h);
     max-height: var(--pub-figure-max-height);
     margin-inline: auto;
+    /* Bordo sfumato (lo stesso delle foto del sito principale): due sfumature, una orizzontale e una verticale, intersecate; i lati
+       diventano trasparenti per --pub-image-fade verso l'esterno. */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--pub-image-fade), #000 calc(100% - var(--pub-image-fade)), transparent),
+        linear-gradient(to bottom, transparent, #000 var(--pub-image-fade), #000 calc(100% - var(--pub-image-fade)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--pub-image-fade), #000 calc(100% - var(--pub-image-fade)), transparent),
+        linear-gradient(to bottom, transparent, #000 var(--pub-image-fade), #000 calc(100% - var(--pub-image-fade)), transparent);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
 }
 
 .pub-figure figcaption {
@@ -662,6 +729,7 @@ blockquote p:last-child {
     letter-spacing: var(--pub-label-letter-spacing);
     color: var(--pub-muted);
     text-align: left;
+    text-transform: lowercase;
 }
 
 .pub-figure figcaption p {
@@ -701,9 +769,11 @@ blockquote p:last-child {
     inset: 0 0 auto 0;
     z-index: 101;
     /* sopra l'indice (100): il pulsante resta cliccabile */
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    /* marchio a sinistra | titolo e autore del testo, al centro | "Contents" a destra. Su schermo stretto le colonne laterali sono quanto serve e il titolo
+       prende tutto lo spazio che resta (altrimenti sul telefono verrebbe accorciato troppo); su schermo largo vedi la regola più sotto */
     align-items: center;
-    justify-content: space-between;
     gap: 1.5rem;
     height: var(--pub-topbar-height);
     padding-inline: var(--pub-gutter);
@@ -724,14 +794,29 @@ blockquote p:last-child {
     border-color: transparent;
 }
 
+/* Il marchio, come nella navbar del sito principale: bianco, con l'alone, che sparisce al passaggio del mouse. Porta al sito principale
+   (l'indirizzo lo imposta publication.js, perché dipende dal dominio). */
+.pub-topbar-brand {
+    justify-self: start;
+    color: var(--pub-text);
+    text-decoration: none;
+    text-shadow: var(--pub-glow);
+}
+
+.pub-topbar-brand:hover,
+.pub-topbar-brand:focus-visible {
+    color: var(--pub-text);
+    text-shadow: none;
+}
+
 .pub-topbar-chapter {
-    flex: 1 1 auto;
     min-width: 0;
-    /* lascia che il testo lungo venga accorciato invece di spingere il pulsante */
+    /* lascia che il testo lungo venga accorciato invece di spingere il resto */
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    text-align: center;
 }
 
 .pub-topbar-author {
@@ -744,7 +829,7 @@ blockquote p:last-child {
 }
 
 .pub-topbar-toggle {
-    flex: none;
+    justify-self: end;
     padding: 0;
     border: 0;
     background: none;
@@ -760,24 +845,28 @@ blockquote p:last-child {
     color: var(--pub-link-hover-color);
 }
 
+/* Da 64rem in su (schermo largo) per navigare nel dettaglio c'è la barra laterale dei numeri: "Contents" non serve nella barra in alto.
+   La colonna di destra resta (vuota), così il titolo del testo rimane al centro. Sotto, "Contents" apre l'indice a tutto schermo. */
+@media (min-width: 64rem) {
+    .js .pub-topbar {
+        grid-template-columns: 1fr minmax(0, 2fr) 1fr;
+        /* colonne laterali uguali: il titolo è davvero al centro dello schermo */
+    }
+
+    .pub-topbar-toggle {
+        display: none;
+    }
+}
+
 .js .pub-menu {
     position: fixed;
     inset: 0;
     z-index: 100;
     display: block;
-    background: rgb(20 20 20 / 0.92);
-    /* senza sfocatura (browser vecchi) uno sfondo scuro quasi opaco, così il testo si legge */
+    background: var(--pub-menu-bg);
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--pub-menu-fade), visibility 0s linear var(--pub-menu-fade);
-}
-
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-    .js .pub-menu {
-        background: var(--pub-menu-bg);
-        -webkit-backdrop-filter: blur(var(--pub-menu-blur)) saturate(180%);
-        backdrop-filter: blur(var(--pub-menu-blur)) saturate(180%);
-    }
 }
 
 .js .pub-menu.is-open {
@@ -786,7 +875,7 @@ blockquote p:last-child {
     transition-delay: 0s;
 }
 
-/* L'indice scorre in un'area che comincia sotto la barra (il velo sfocato copre invece tutto lo schermo); in alto il testo sfuma. */
+/* L'indice scorre in un'area che comincia sotto la barra (lo sfondo copre invece tutto lo schermo); in alto il testo sfuma. */
 .pub-menu-scroll {
     position: absolute;
     inset: var(--pub-topbar-height) 0 0 0;
@@ -799,7 +888,7 @@ blockquote p:last-child {
     mask-image: linear-gradient(to bottom, transparent, #000 1.5rem);
 }
 
-.pub-menu .pub-contents {
+.pub-menu .pub-toc {
     padding-bottom: var(--pub-gutter);
 }
 
@@ -877,6 +966,7 @@ blockquote p:last-child {
     position: fixed;
     z-index: 60;
     max-width: var(--pub-sidebar-label-max-width);
+    margin-left: var(--pub-sidebar-label-gap);
     padding: 0.35rem 0.6rem;
     background: var(--pub-sidebar-label-bg);
     border: var(--pub-rule-width) solid var(--pub-sidebar-label-rule);
@@ -896,22 +986,24 @@ blockquote p:last-child {
 }
 
 /* Stile per livello: data-level è lo stesso del numero su cui si è (1 = capitolo, 2 = sottocapitolo, 3 = sotto-sottocapitolo). Esempio: */
-   .pub-sidebar-label[data-level="1"] { 
-    text-shadow: var(--pub-glow);
-    }
-   .pub-sidebar-label[data-level="2"] {
-    text-transform: capitalize;
-   }
-   .pub-sidebar-label[data-level="3"] {
+.pub-sidebar-label[data-level="1"] {}
+
+.pub-sidebar-label[data-level="2"] {
+    text-transform: uppercase;
+    color: var(--pub-muted);
+}
+
+.pub-sidebar-label[data-level="3"] {
     color: var(--pub-muted);
     text-transform: capitalize;
+}
 
-   }
 .pub-sidebar-label.is-visible {
     opacity: 1;
     visibility: visible;
     transition-delay: 0s;
 }
+
 
 .pub-sidebar ul {
     margin: 0;

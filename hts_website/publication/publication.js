@@ -54,6 +54,11 @@
     const menu = document.getElementById('pub-menu');
     if (!topbar || !menu) return;
 
+    // Il marchio porta al sito principale: stesso indirizzo senza il primo pezzo "publication." (publication.dominio.it -> dominio.it,
+    // in locale publication.localhost:8000 -> localhost:8000). Non si può scrivere a mano nel file perché dipende dal dominio.
+    const brand = topbar.querySelector('.pub-topbar-brand');
+    if (brand) brand.href = `${location.protocol}//${location.host.replace(/^publication\./, '')}/`;
+
     const toggle = topbar.querySelector('.pub-topbar-toggle');
     const titleEl = topbar.querySelector('.pub-topbar-title');
     const authorEl = topbar.querySelector('.pub-topbar-author');
@@ -82,7 +87,7 @@
         const rect = link.getBoundingClientRect();
         label.textContent = link.dataset.title;
         label.dataset.level = link.dataset.level;   // 1 = capitolo, 2 = sottocapitolo, 3 = sotto-sottocapitolo: serve al CSS (.pub-sidebar-label[data-level="2"])
-        label.style.left = `${sidebar.getBoundingClientRect().right + 8}px`;
+        label.style.left = `${sidebar.getBoundingClientRect().right}px`;   // il margine a sinistra (--pub-sidebar-label-gap) lo mette il CSS
         label.style.top = `${rect.top + rect.height / 2}px`;
         label.classList.add('is-visible');
     }
@@ -102,12 +107,26 @@
         sidebar.addEventListener('focusout', hideLabel);
         sidebar.addEventListener('scroll', hideLabel, { passive: true });
         sidebar.addEventListener('click', hideLabel);
+
+        // Un clic su un numero fa scorrere la PAGINA fino a quella sezione: la barra, che di solito si ricentra sul numero corrente, in quel
+        // momento resta ferma (si muoverebbe sotto il mouse mentre la pagina scorre). Il blocco finisce quando la pagina smette di scorrere.
+        sidebar.addEventListener('click', (event) => {
+            if (!event.target.closest('a')) return;
+            sideLocked = true;
+            releaseSideLock(600);   // se la pagina non scorre (già lì) lo sblocco avviene comunque
+        });
     }
 
     // --- testo corrente: l'ultimo articolo il cui inizio è già passato sotto la barra
     // --- sezione corrente: l'ultimo capitolo o sottocapitolo il cui titolo è già passato sotto la barra
     let current = null;
     let currentSide = -1;
+    let sideLocked = false;   // vero mentre la pagina scorre per un clic sulla barra: la barra non si ricentra (vedi sopra)
+    let sideLockTimer = 0;
+    function releaseSideLock(delay) {
+        clearTimeout(sideLockTimer);
+        sideLockTimer = setTimeout(() => { sideLocked = false; }, delay);
+    }
     function updateCurrent() {
         const probe = topbar.getBoundingClientRect().height + 1;
         let active = null;
@@ -138,7 +157,7 @@
             const link = sideLinks[side];
             if (link) {
                 link.setAttribute('aria-current', 'true');
-                if (sidebar.offsetParent !== null || getComputedStyle(sidebar).display !== 'none') {
+                if (!sideLocked && (sidebar.offsetParent !== null || getComputedStyle(sidebar).display !== 'none')) {
                     // tiene visibile il numero corrente dentro la barra (che scorre da sola), senza muovere la pagina
                     const top = link.offsetTop - (sidebar.clientHeight - link.offsetHeight) / 2;
                     sidebar.scrollTo({ top, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
@@ -151,6 +170,7 @@
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => { ticking = false; updateCurrent(); });
+        if (sideLocked) releaseSideLock(180);   // la pagina sta ancora scorrendo: si sblocca 180 ms dopo l'ultimo movimento
     }, { passive: true });
     window.addEventListener('resize', updateCurrent);
 

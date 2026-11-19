@@ -247,24 +247,27 @@ finale (`FINAL_epub.md`, non nel repository): da ora `index.html` si modifica a 
 che sta dentro il paragrafo subito dopo il numero (e dopo la virgola o il punto che lo segue) ed è in grigio; il comportamento è in `publication/publication.js`
 (`aria-expanded`, e un indirizzo `#fn-AUTORE-N` apre la nota), l'aspetto nei valori `--pub-note-*` di `publication.css`.
 Senza JavaScript le note restano sempre visibili.
-**Barra in alto e indice**: con JavaScript compaiono una barra fissa (`.pub-topbar`) con il nome del testo in cui si è e il suo
-autore, e il pulsante "Contents" che apre l'indice a tutto schermo (`.pub-menu`, con velo sfocato e dissolvenza come il menu
+**Barra in alto e indice**: con JavaScript compare una barra fissa (`.pub-topbar`): a sinistra il marchio HTS (porta al sito principale:
+`publication.js` ne ricava l'indirizzo togliendo "publication." dall'host), al centro il nome del testo in cui si è e il suo
+autore, a destra il pulsante "Contents" che apre l'indice a tutto schermo (solo sotto i 1024px: da lì in su c'è la barra laterale) (`.pub-menu`, con sfondo nero pieno e dissolvenza come il menu
 del sito; si chiude con lo stesso pulsante, con Esc o scegliendo una voce). Nome e autore vengono da `data-title` e
 `data-author` di ogni `<article>` in `index.html`: per correggerli basta cambiare quegli attributi; i valori
 `--pub-topbar-*` e `--pub-menu-*` in `publication.css` regolano l'aspetto. Senza JavaScript resta l'indice in pagina.
+Nella tavola iniziale, passando con il mouse sul titolo di un capitolo le sue voci (sottocapitoli, sotto-sottocapitoli e numeri) si schiariscono del
+`--pub-toc-hover-lighten` (50%: il loro grigio mescolato al bianco); le voci sono raggruppate per capitolo (`li.pub-toc-group`).
 **Indice e barra dei numeri**: la tavola dei contenuti iniziale (`<nav class="pub-toc">`) è "a tabulazioni", come in InDesign: elenco
 piatto con il numero a sinistra e il titolo che comincia alla prima tabulazione (capitoli) o alla seconda (sottotitoli e
 sotto-sottotitoli), con le righe a capo allineate al titolo; le tabulazioni e gli spazi sono i valori `--pub-toc-*` in
-`publication.css`. L'indice a tutto schermo, invece, è l'elenco con i rientri (`.pub-contents`). In entrambi sono link solo i
+`publication.css`. L'indice a tutto schermo (sotto i 1024px) usa la stessa tavola a tabulazioni, con la voce del testo corrente in viola (`.pub-contents`, l'elenco con i rientri, non è più usato). In entrambi sono link solo i
 titoli dei testi (h2); i sottotitoli sono testo semplice. Ogni voce ha un numero (1, 1.1, 1.1.1), calcolato da `index.html` nell'ordine dei titoli. Per
 saltare a un sottocapitolo c'è la barra laterale (`<nav class="pub-sidebar">`): un elenco piatto, senza rientri, con solo i
 numeri (ognuno è un link), fissa a sinistra dai 1024px in su. Compare solo dal primo capitolo in poi (non sulla copertina né
 sull'indice iniziale), con una freccia → davanti al numero della sezione corrente (`--pub-sidebar-arrow`), e al passaggio del mouse mostra il nome del titolo
-(`data-title`): tutto questo lo fa `publication.js`, quindi senza JavaScript la barra non compare. Se cambi, aggiungi o togli un titolo, vanno rinumerati a mano la voce dell'indice e quella
+(`data-title`): tutto questo lo fa `publication.js`, quindi senza JavaScript la barra non compare. La barra scorre da sola per tenere in vista il numero corrente, ma non mentre la pagina scorre per un clic su un suo numero (si ricentra solo dopo). Se cambi, aggiungi o togli un titolo, vanno rinumerati a mano la voce dell'indice e quella
 della barra (i valori `--pub-sidebar-*` e `--pub-num-color` in `publication.css` ne regolano l'aspetto).
 Le bibliografie sono `<ul class="works-cited">`. Il titolo "Introduction"
 del primo articolo non c'è nel markdown: serve all'indice. Le immagini stanno in `publication/images/` (20 file,
-`image1` … `image20`, con le didascalie in `<figcaption>`; `alt` è vuoto dove il markdown non aveva didascalia).
+`image1` … `image20`, con le didascalie in `<figcaption>`; `alt` è vuoto dove il markdown non aveva didascalia). Hanno il **bordo sfumato** delle foto del sito principale (maschera con due sfumature intersecate); la larghezza è `--pub-image-fade` in `publication.css` (0 = nessuna). Ogni immagine porta in `style` i suoi pixel naturali (`--pub-img-w`, `--pub-img-h`): il CSS riserva così lo spazio giusto prima che si carichi (`loading="lazy"`), altrimenti il testo sotto si sposterebbe e le ancore della barra laterale finirebbero nel posto sbagliato. Chi aggiunge un'immagine a mano deve metterli anche lì.
 
 **Immagini caricate.** Finiscono in `hts_website/media/`, cartella ignorata da git: chi clona il repository non le
 riceve, e se servono vanno salvate a parte. In sviluppo le serve Django. In produzione non funzionerà così:

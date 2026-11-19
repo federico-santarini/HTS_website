@@ -19,7 +19,7 @@
   Pubblicazione statica, servita da portfolio/middleware.py sul sottodominio "publication".
   Pagina unica: titolo, indice e un <article id="..."> per ogni testo; l'indice punta a ogni testo e sottosezione con href="#...".
   Le immagini stanno in /images/ (percorsi assoluti dalla radice del sottodominio). Lo stile sta in /publication.css.
-  Convertita da FINAL_epub.md (versione finale). Il primo blocco (titolo + testo di apertura) è l'articolo "Introduction":
+  Convertita da FINAL_epub.md (versione finale). Le immagini portano --pub-img-w e --pub-img-h (pixel naturali) in style: il CSS li usa per riservare lo spazio giusto prima che si carichino. Il primo blocco (titolo + testo di apertura) è l'articolo "Introduction":
   il titolo "Introduction" non c'è nel markdown, serve all'indice.
   Note: il numero in apice nel testo (class "pub-fnref") apre e chiude la nota, che sta dentro il paragrafo subito dopo il numero
   (e dopo l'eventuale virgola o punto che lo segue): <span class="pub-note" id="fn-AUTORE-N">. Il comportamento è in /publication.js, l'aspetto in /publication.css.
@@ -27,100 +27,90 @@
   Barra in alto e indice a tutto schermo (<div class="pub-topbar"> e <div class="pub-menu">) compaiono solo con JavaScript: leggono data-title e data-author di ogni
   <article>. Senza JavaScript le note restano sempre visibili. Bibliografie: <ul class="works-cited">. Didascalie: <figcaption>.
 -->
-<!-- Barra in alto (con JavaScript): nome del testo in cui si è e autore, e il pulsante che apre l'indice a tutto schermo. -->
+<!-- Barra in alto (con JavaScript): il marchio HTS (porta al sito principale: l'indirizzo lo imposta publication.js), al centro il nome del testo in cui si è e il suo autore, a destra il pulsante che apre l'indice a tutto schermo (solo su schermi stretti: da 64rem in su c'è la barra laterale). -->
 <div class="pub-topbar">
+    <a class="pub-topbar-brand" href="/">HTS</a>
     <p class="pub-topbar-chapter"><span class="pub-topbar-title">The Holistic Technology Salon</span><span class="pub-topbar-author"></span></p>
     <button type="button" class="pub-topbar-toggle" aria-expanded="false" aria-controls="pub-menu">Contents</button>
 </div>
 <div class="pub-menu" id="pub-menu">
 <div class="pub-menu-scroll">
-<nav class="pub-contents" aria-label="Table of contents">
+<nav class="pub-toc" aria-label="Table of contents">
     <p class="pub-label">Contents</p>
     <ol>
-        <li><span class="pub-num">1</span> <a href="#introduction">Introduction</a>
-            <ol>
-                <li><span class="pub-num">1.1</span> <span class="pub-contents-item">The Methodology</span></li>
-            </ol>
-        </li>
-        <li><span class="pub-num">2</span> <a href="#how-to-read">How to Read</a>
-        </li>
-        <li><span class="pub-num">3</span> <a href="#in-search-of-holistic-methods">In Search of Holistic Methods</a>
-            <ol>
-                <li><span class="pub-num">3.1</span> <span class="pub-contents-item">The Holistic as a Conduit for the Decolonial</span>
-                    <ol>
-                        <li><span class="pub-num">3.1.1</span> <span class="pub-contents-item">Zooming into the esoteric and the artistic</span></li>
-                        <li><span class="pub-num">3.1.2</span> <span class="pub-contents-item">Technology of the spirit</span></li>
-                    </ol>
-                </li>
-                <li><span class="pub-num">3.2</span> <span class="pub-contents-item">Living the Holistic Method</span>
-                    <ol>
-                        <li><span class="pub-num">3.2.1</span> <span class="pub-contents-item">An auto-ethnographic research interlude</span></li>
-                    </ol>
-                </li>
-                <li><span class="pub-num">3.3</span> <span class="pub-contents-item">Towards a Holistic Method</span></li>
-                <li><span class="pub-num">3.4</span> <span class="pub-contents-item">Works Cited</span></li>
-            </ol>
-        </li>
-        <li><span class="pub-num">4</span> <a href="#deep-planetary-sensing">Deep Planetary Sensing</a>
-            <ol>
-                <li><span class="pub-num">4.1</span> <span class="pub-contents-item">A Toolkit for Deep Planetary Sensing</span>
-                    <ol>
-                        <li><span class="pub-num">4.1.1</span> <span class="pub-contents-item">Beyond the five senses</span></li>
-                        <li><span class="pub-num">4.1.2</span> <span class="pub-contents-item">The sixth sense</span></li>
-                    </ol>
-                </li>
-                <li><span class="pub-num">4.2</span> <span class="pub-contents-item">Deep Planetary Sensing as Artistic Practice</span></li>
-                <li><span class="pub-num">4.3</span> <span class="pub-contents-item">References</span></li>
-            </ol>
-        </li>
-        <li><span class="pub-num">5</span> <a href="#the-future-is-useful-only-when-not-tormented">The future is useful only when not tormented</a>
-        </li>
-        <li><span class="pub-num">6</span> <a href="#what-does-it-mean-to-be-in-right-relationship">What does it mean to be in &#x27;right relationship&#x27;?</a>
-            <ol>
-                <li><span class="pub-num">6.1</span> <span class="pub-contents-item">The wisdom of burn-out</span></li>
-                <li><span class="pub-num">6.2</span> <span class="pub-contents-item">Right Relationship</span></li>
-                <li><span class="pub-num">6.3</span> <span class="pub-contents-item">Rethinking, remembering, repairing</span></li>
-                <li><span class="pub-num">6.4</span> <span class="pub-contents-item">Making kin is a practice</span></li>
-                <li><span class="pub-num">6.5</span> <span class="pub-contents-item">References</span></li>
-            </ol>
-        </li>
-        <li><span class="pub-num">7</span> <a href="#ancestral-healing-in-the-age-of-ai">Ancestral Healing in the Age of AI</a>
-            <ol>
-                <li><span class="pub-num">7.1</span> <span class="pub-contents-item">Synthetic Ancestors</span></li>
-                <li><span class="pub-num">7.2</span> <span class="pub-contents-item">Our valuable and vulnerable desire for wisdom</span></li>
-                <li><span class="pub-num">7.3</span> <span class="pub-contents-item">Conclusion</span></li>
-                <li><span class="pub-num">7.4</span> <span class="pub-contents-item">References</span></li>
-            </ol>
-        </li>
-        <li><span class="pub-num">8</span> <a href="#the-or-cle-telemagic">The Or@cle - TELEMAGIC</a>
-        </li>
-        <li><span class="pub-num">9</span> <a href="#echosystem-marlot-meyer">Echo–system - Marlot Meyer</a>
-            <ol>
-                <li><span class="pub-num">9.1</span> <span class="pub-contents-item">The Mother Tree</span></li>
-                <li><span class="pub-num">9.2</span> <span class="pub-contents-item">Sensitive System</span></li>
-            </ol>
-        </li>
-        <li><span class="pub-num">10</span> <a href="#planetary-acupuncture-ko-jihae">Planetary Acupuncture – Ko Jihae</a>
-            <ol>
-                <li><span class="pub-num">10.1</span> <span class="pub-contents-item">The Origin of the Project: From the Personal to the Planetary</span>
-                    <ol>
-                        <li><span class="pub-num">10.1.1</span> <span class="pub-contents-item">1. The Body as Living Technology</span></li>
-                        <li><span class="pub-num">10.1.2</span> <span class="pub-contents-item">2. Art and Healing as One Language</span></li>
-                        <li><span class="pub-num">10.1.3</span> <span class="pub-contents-item">3. Memory: The Origin of Dance</span></li>
-                    </ol>
-                </li>
-            </ol>
-        </li>
-        <li><span class="pub-num">11</span> <a href="#screen-guardian-ginevra-petrozzi">Screen Guardian – Ginevra Petrozzi</a>
-        </li>
-        <li><span class="pub-num">12</span> <a href="#moonblood-annika-kappner-lucy-cordes-engelman">Moonblood – Annika Kappner, Lucy Cordes Engelman</a>
-        </li>
-        <li><span class="pub-num">13</span> <a href="#super-memory-3333-annika-kappner">Super Memory 3333 – Annika Kappner</a>
-        </li>
-        <li><span class="pub-num">14</span> <a href="#tech-yoga-sieta-van-horck-setup">Tech Yoga – Sieta van Horck, SETUP</a>
-        </li>
-        <li><span class="pub-num">15</span> <a href="#acknowledgements">Acknowledgements</a>
-        </li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">1</span><a href="#introduction">Introduction</a></li>
+            <li data-level="2"><span class="pub-num">1.1</span><span class="pub-toc-item">The Methodology</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">2</span><a href="#how-to-read">How to Read</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">3</span><a href="#in-search-of-holistic-methods">In Search of Holistic Methods</a></li>
+            <li data-level="2"><span class="pub-num">3.1</span><span class="pub-toc-item">The Holistic as a Conduit for the Decolonial</span></li>
+            <li data-level="3"><span class="pub-num">3.1.1</span><span class="pub-toc-item">Zooming into the esoteric and the artistic</span></li>
+            <li data-level="3"><span class="pub-num">3.1.2</span><span class="pub-toc-item">Technology of the spirit</span></li>
+            <li data-level="2"><span class="pub-num">3.2</span><span class="pub-toc-item">Living the Holistic Method</span></li>
+            <li data-level="3"><span class="pub-num">3.2.1</span><span class="pub-toc-item">An auto-ethnographic research interlude</span></li>
+            <li data-level="2"><span class="pub-num">3.3</span><span class="pub-toc-item">Towards a Holistic Method</span></li>
+            <li data-level="2"><span class="pub-num">3.4</span><span class="pub-toc-item">Works Cited</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">4</span><a href="#deep-planetary-sensing">Deep Planetary Sensing</a></li>
+            <li data-level="2"><span class="pub-num">4.1</span><span class="pub-toc-item">A Toolkit for Deep Planetary Sensing</span></li>
+            <li data-level="3"><span class="pub-num">4.1.1</span><span class="pub-toc-item">Beyond the five senses</span></li>
+            <li data-level="3"><span class="pub-num">4.1.2</span><span class="pub-toc-item">The sixth sense</span></li>
+            <li data-level="2"><span class="pub-num">4.2</span><span class="pub-toc-item">Deep Planetary Sensing as Artistic Practice</span></li>
+            <li data-level="2"><span class="pub-num">4.3</span><span class="pub-toc-item">References</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">5</span><a href="#the-future-is-useful-only-when-not-tormented">The future is useful only when not tormented</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">6</span><a href="#what-does-it-mean-to-be-in-right-relationship">What does it mean to be in &#x27;right relationship&#x27;?</a></li>
+            <li data-level="2"><span class="pub-num">6.1</span><span class="pub-toc-item">The wisdom of burn-out</span></li>
+            <li data-level="2"><span class="pub-num">6.2</span><span class="pub-toc-item">Right Relationship</span></li>
+            <li data-level="2"><span class="pub-num">6.3</span><span class="pub-toc-item">Rethinking, remembering, repairing</span></li>
+            <li data-level="2"><span class="pub-num">6.4</span><span class="pub-toc-item">Making kin is a practice</span></li>
+            <li data-level="2"><span class="pub-num">6.5</span><span class="pub-toc-item">References</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">7</span><a href="#ancestral-healing-in-the-age-of-ai">Ancestral Healing in the Age of AI</a></li>
+            <li data-level="2"><span class="pub-num">7.1</span><span class="pub-toc-item">Synthetic Ancestors</span></li>
+            <li data-level="2"><span class="pub-num">7.2</span><span class="pub-toc-item">Our valuable and vulnerable desire for wisdom</span></li>
+            <li data-level="2"><span class="pub-num">7.3</span><span class="pub-toc-item">Conclusion</span></li>
+            <li data-level="2"><span class="pub-num">7.4</span><span class="pub-toc-item">References</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">8</span><a href="#the-or-cle-telemagic">The Or@cle - TELEMAGIC</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">9</span><a href="#echosystem-marlot-meyer">Echo–system - Marlot Meyer</a></li>
+            <li data-level="2"><span class="pub-num">9.1</span><span class="pub-toc-item">The Mother Tree</span></li>
+            <li data-level="2"><span class="pub-num">9.2</span><span class="pub-toc-item">Sensitive System</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">10</span><a href="#planetary-acupuncture-ko-jihae">Planetary Acupuncture – Ko Jihae</a></li>
+            <li data-level="2"><span class="pub-num">10.1</span><span class="pub-toc-item">The Origin of the Project: From the Personal to the Planetary</span></li>
+            <li data-level="3"><span class="pub-num">10.1.1</span><span class="pub-toc-item">1. The Body as Living Technology</span></li>
+            <li data-level="3"><span class="pub-num">10.1.2</span><span class="pub-toc-item">2. Art and Healing as One Language</span></li>
+            <li data-level="3"><span class="pub-num">10.1.3</span><span class="pub-toc-item">3. Memory: The Origin of Dance</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">11</span><a href="#screen-guardian-ginevra-petrozzi">Screen Guardian – Ginevra Petrozzi</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">12</span><a href="#moonblood-annika-kappner-lucy-cordes-engelman">Moonblood – Annika Kappner, Lucy Cordes Engelman</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">13</span><a href="#super-memory-3333-annika-kappner">Super Memory 3333 – Annika Kappner</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">14</span><a href="#tech-yoga-sieta-van-horck-setup">Tech Yoga – Sieta van Horck, SETUP</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">15</span><a href="#acknowledgements">Acknowledgements</a></li>
+        </ol></li>
     </ol>
 </nav>
 </div>
@@ -182,49 +172,79 @@
 <nav class="pub-toc" aria-label="Contents">
     <p class="pub-label">Contents</p>
     <ol>
-        <li data-level="1"><span class="pub-num">1</span><a href="#introduction">Introduction</a></li>
-        <li data-level="2"><span class="pub-num">1.1</span><span class="pub-toc-item">The Methodology</span></li>
-        <li data-level="1"><span class="pub-num">2</span><a href="#how-to-read">How to Read</a></li>
-        <li data-level="1"><span class="pub-num">3</span><a href="#in-search-of-holistic-methods">In Search of Holistic Methods</a></li>
-        <li data-level="2"><span class="pub-num">3.1</span><span class="pub-toc-item">The Holistic as a Conduit for the Decolonial</span></li>
-        <li data-level="3"><span class="pub-num">3.1.1</span><span class="pub-toc-item">Zooming into the esoteric and the artistic</span></li>
-        <li data-level="3"><span class="pub-num">3.1.2</span><span class="pub-toc-item">Technology of the spirit</span></li>
-        <li data-level="2"><span class="pub-num">3.2</span><span class="pub-toc-item">Living the Holistic Method</span></li>
-        <li data-level="3"><span class="pub-num">3.2.1</span><span class="pub-toc-item">An auto-ethnographic research interlude</span></li>
-        <li data-level="2"><span class="pub-num">3.3</span><span class="pub-toc-item">Towards a Holistic Method</span></li>
-        <li data-level="2"><span class="pub-num">3.4</span><span class="pub-toc-item">Works Cited</span></li>
-        <li data-level="1"><span class="pub-num">4</span><a href="#deep-planetary-sensing">Deep Planetary Sensing</a></li>
-        <li data-level="2"><span class="pub-num">4.1</span><span class="pub-toc-item">A Toolkit for Deep Planetary Sensing</span></li>
-        <li data-level="3"><span class="pub-num">4.1.1</span><span class="pub-toc-item">Beyond the five senses</span></li>
-        <li data-level="3"><span class="pub-num">4.1.2</span><span class="pub-toc-item">The sixth sense</span></li>
-        <li data-level="2"><span class="pub-num">4.2</span><span class="pub-toc-item">Deep Planetary Sensing as Artistic Practice</span></li>
-        <li data-level="2"><span class="pub-num">4.3</span><span class="pub-toc-item">References</span></li>
-        <li data-level="1"><span class="pub-num">5</span><a href="#the-future-is-useful-only-when-not-tormented">The future is useful only when not tormented</a></li>
-        <li data-level="1"><span class="pub-num">6</span><a href="#what-does-it-mean-to-be-in-right-relationship">What does it mean to be in &#x27;right relationship&#x27;?</a></li>
-        <li data-level="2"><span class="pub-num">6.1</span><span class="pub-toc-item">The wisdom of burn-out</span></li>
-        <li data-level="2"><span class="pub-num">6.2</span><span class="pub-toc-item">Right Relationship</span></li>
-        <li data-level="2"><span class="pub-num">6.3</span><span class="pub-toc-item">Rethinking, remembering, repairing</span></li>
-        <li data-level="2"><span class="pub-num">6.4</span><span class="pub-toc-item">Making kin is a practice</span></li>
-        <li data-level="2"><span class="pub-num">6.5</span><span class="pub-toc-item">References</span></li>
-        <li data-level="1"><span class="pub-num">7</span><a href="#ancestral-healing-in-the-age-of-ai">Ancestral Healing in the Age of AI</a></li>
-        <li data-level="2"><span class="pub-num">7.1</span><span class="pub-toc-item">Synthetic Ancestors</span></li>
-        <li data-level="2"><span class="pub-num">7.2</span><span class="pub-toc-item">Our valuable and vulnerable desire for wisdom</span></li>
-        <li data-level="2"><span class="pub-num">7.3</span><span class="pub-toc-item">Conclusion</span></li>
-        <li data-level="2"><span class="pub-num">7.4</span><span class="pub-toc-item">References</span></li>
-        <li data-level="1"><span class="pub-num">8</span><a href="#the-or-cle-telemagic">The Or@cle - TELEMAGIC</a></li>
-        <li data-level="1"><span class="pub-num">9</span><a href="#echosystem-marlot-meyer">Echo–system - Marlot Meyer</a></li>
-        <li data-level="2"><span class="pub-num">9.1</span><span class="pub-toc-item">The Mother Tree</span></li>
-        <li data-level="2"><span class="pub-num">9.2</span><span class="pub-toc-item">Sensitive System</span></li>
-        <li data-level="1"><span class="pub-num">10</span><a href="#planetary-acupuncture-ko-jihae">Planetary Acupuncture – Ko Jihae</a></li>
-        <li data-level="2"><span class="pub-num">10.1</span><span class="pub-toc-item">The Origin of the Project: From the Personal to the Planetary</span></li>
-        <li data-level="3"><span class="pub-num">10.1.1</span><span class="pub-toc-item">1. The Body as Living Technology</span></li>
-        <li data-level="3"><span class="pub-num">10.1.2</span><span class="pub-toc-item">2. Art and Healing as One Language</span></li>
-        <li data-level="3"><span class="pub-num">10.1.3</span><span class="pub-toc-item">3. Memory: The Origin of Dance</span></li>
-        <li data-level="1"><span class="pub-num">11</span><a href="#screen-guardian-ginevra-petrozzi">Screen Guardian – Ginevra Petrozzi</a></li>
-        <li data-level="1"><span class="pub-num">12</span><a href="#moonblood-annika-kappner-lucy-cordes-engelman">Moonblood – Annika Kappner, Lucy Cordes Engelman</a></li>
-        <li data-level="1"><span class="pub-num">13</span><a href="#super-memory-3333-annika-kappner">Super Memory 3333 – Annika Kappner</a></li>
-        <li data-level="1"><span class="pub-num">14</span><a href="#tech-yoga-sieta-van-horck-setup">Tech Yoga – Sieta van Horck, SETUP</a></li>
-        <li data-level="1"><span class="pub-num">15</span><a href="#acknowledgements">Acknowledgements</a></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">1</span><a href="#introduction">Introduction</a></li>
+            <li data-level="2"><span class="pub-num">1.1</span><span class="pub-toc-item">The Methodology</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">2</span><a href="#how-to-read">How to Read</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">3</span><a href="#in-search-of-holistic-methods">In Search of Holistic Methods</a></li>
+            <li data-level="2"><span class="pub-num">3.1</span><span class="pub-toc-item">The Holistic as a Conduit for the Decolonial</span></li>
+            <li data-level="3"><span class="pub-num">3.1.1</span><span class="pub-toc-item">Zooming into the esoteric and the artistic</span></li>
+            <li data-level="3"><span class="pub-num">3.1.2</span><span class="pub-toc-item">Technology of the spirit</span></li>
+            <li data-level="2"><span class="pub-num">3.2</span><span class="pub-toc-item">Living the Holistic Method</span></li>
+            <li data-level="3"><span class="pub-num">3.2.1</span><span class="pub-toc-item">An auto-ethnographic research interlude</span></li>
+            <li data-level="2"><span class="pub-num">3.3</span><span class="pub-toc-item">Towards a Holistic Method</span></li>
+            <li data-level="2"><span class="pub-num">3.4</span><span class="pub-toc-item">Works Cited</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">4</span><a href="#deep-planetary-sensing">Deep Planetary Sensing</a></li>
+            <li data-level="2"><span class="pub-num">4.1</span><span class="pub-toc-item">A Toolkit for Deep Planetary Sensing</span></li>
+            <li data-level="3"><span class="pub-num">4.1.1</span><span class="pub-toc-item">Beyond the five senses</span></li>
+            <li data-level="3"><span class="pub-num">4.1.2</span><span class="pub-toc-item">The sixth sense</span></li>
+            <li data-level="2"><span class="pub-num">4.2</span><span class="pub-toc-item">Deep Planetary Sensing as Artistic Practice</span></li>
+            <li data-level="2"><span class="pub-num">4.3</span><span class="pub-toc-item">References</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">5</span><a href="#the-future-is-useful-only-when-not-tormented">The future is useful only when not tormented</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">6</span><a href="#what-does-it-mean-to-be-in-right-relationship">What does it mean to be in &#x27;right relationship&#x27;?</a></li>
+            <li data-level="2"><span class="pub-num">6.1</span><span class="pub-toc-item">The wisdom of burn-out</span></li>
+            <li data-level="2"><span class="pub-num">6.2</span><span class="pub-toc-item">Right Relationship</span></li>
+            <li data-level="2"><span class="pub-num">6.3</span><span class="pub-toc-item">Rethinking, remembering, repairing</span></li>
+            <li data-level="2"><span class="pub-num">6.4</span><span class="pub-toc-item">Making kin is a practice</span></li>
+            <li data-level="2"><span class="pub-num">6.5</span><span class="pub-toc-item">References</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">7</span><a href="#ancestral-healing-in-the-age-of-ai">Ancestral Healing in the Age of AI</a></li>
+            <li data-level="2"><span class="pub-num">7.1</span><span class="pub-toc-item">Synthetic Ancestors</span></li>
+            <li data-level="2"><span class="pub-num">7.2</span><span class="pub-toc-item">Our valuable and vulnerable desire for wisdom</span></li>
+            <li data-level="2"><span class="pub-num">7.3</span><span class="pub-toc-item">Conclusion</span></li>
+            <li data-level="2"><span class="pub-num">7.4</span><span class="pub-toc-item">References</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">8</span><a href="#the-or-cle-telemagic">The Or@cle - TELEMAGIC</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">9</span><a href="#echosystem-marlot-meyer">Echo–system - Marlot Meyer</a></li>
+            <li data-level="2"><span class="pub-num">9.1</span><span class="pub-toc-item">The Mother Tree</span></li>
+            <li data-level="2"><span class="pub-num">9.2</span><span class="pub-toc-item">Sensitive System</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">10</span><a href="#planetary-acupuncture-ko-jihae">Planetary Acupuncture – Ko Jihae</a></li>
+            <li data-level="2"><span class="pub-num">10.1</span><span class="pub-toc-item">The Origin of the Project: From the Personal to the Planetary</span></li>
+            <li data-level="3"><span class="pub-num">10.1.1</span><span class="pub-toc-item">1. The Body as Living Technology</span></li>
+            <li data-level="3"><span class="pub-num">10.1.2</span><span class="pub-toc-item">2. Art and Healing as One Language</span></li>
+            <li data-level="3"><span class="pub-num">10.1.3</span><span class="pub-toc-item">3. Memory: The Origin of Dance</span></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">11</span><a href="#screen-guardian-ginevra-petrozzi">Screen Guardian – Ginevra Petrozzi</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">12</span><a href="#moonblood-annika-kappner-lucy-cordes-engelman">Moonblood – Annika Kappner, Lucy Cordes Engelman</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">13</span><a href="#super-memory-3333-annika-kappner">Super Memory 3333 – Annika Kappner</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">14</span><a href="#tech-yoga-sieta-van-horck-setup">Tech Yoga – Sieta van Horck, SETUP</a></li>
+        </ol></li>
+        <li class="pub-toc-group"><ol>
+            <li data-level="1"><span class="pub-num">15</span><a href="#acknowledgements">Acknowledgements</a></li>
+        </ol></li>
     </ol>
 </nav>
 
@@ -307,7 +327,7 @@
 <p>This field experience was both magical and mundane. The atmosphere in the hall was calm, reverent, and quiet. In hushed breath I listened to every word uttered by the medium, arriving from a place beyond the visible and the sensible. I was struck by the time-bending nature of such a dialogue, and took home various published records the group assembled over the years, to continue studying wise words from the Teacher.</p>
 <p>In the evening after the spirit-writing session, I was sitting in a restaurant for dinner when my right arm began trembling uncontrollably. I felt the innate urge to pick up a pen, as if I had to write something down. But I had chopsticks in hand, and dumplings were waiting, and I wasn’t sure if I wanted to find out what the trembling was all about. A few days later, the trembling began again as I read a book-length analysis on spirit-writing for research. Deep in my body, I intuitively knew what this meant, and yet I wanted to resist the meaning and all that it would entail. In time, I steadied myself and let my fear of the unknown dissipate. I answered the call with an incense offering, and readied myself with pen and paper, cautious but curious. I did not know the spirit entity I was connecting with, but I felt a bright white halo around me, tranquil and peaceful. As I allowed the pen to drift aimlessly across the paper, I entered a mild state of trance, and specific phrases floated into my head. I dictated them as they came through, transcribing 4-character phrases in structured Chinese poetic form. I retained my full thinking capacity, and I was half-channeling and half-observing what was going on simultaneously. To my surprise, the entity on the other end reached out to teach me mediumship.</p>
 <figure class="pub-figure">
-    <img src="/images/image2.jpg" alt="Records of spirit-writing in trance mediumship by the author (From R to L: April 17, April 18, 2025)" width="1139" height="853" loading="lazy" decoding="async">
+    <img src="/images/image2.jpg" alt="Records of spirit-writing in trance mediumship by the author (From R to L: April 17, April 18, 2025)" width="1139" height="853" style="--pub-img-w: 1139; --pub-img-h: 853" loading="lazy" decoding="async">
     <figcaption>
         <p>Records of spirit-writing in trance mediumship by the author (From R to L: April 17, April 18, 2025)</p>
     </figcaption>
@@ -367,7 +387,7 @@
 <article class="pub-section" id="deep-planetary-sensing" data-title="Deep Planetary Sensing" data-author="Annika Kappner">
 <h2>Deep Planetary Sensing</h2>
 <figure class="pub-figure">
-    <img src="/images/image14.jpg" alt="" width="1125" height="1115" loading="lazy" decoding="async">
+    <img src="/images/image14.jpg" alt="" width="1125" height="1115" style="--pub-img-w: 1125; --pub-img-h: 1115" loading="lazy" decoding="async">
 </figure>
 <blockquote>
 <p><em>“Our curse is alienation, the separation of yang from yin—and the moralization of yang as good and yin as bad. Instead of a search for balance and integration, there is a struggle for dominance. Divisions are insisted upon, interdependence is denied. The dualism of value that destroys us, the dualism of superior/inferior, ruler/ ruled, owner/owned, user/used might give way to what seems to me, from here, a much healthier, sounder, more promising modality of integration and integrity.”</em><sup class="pub-fnref"><a id="fnref-kappner-1" href="#fn-kappner-1">1</a></sup><span class="pub-note" id="fn-kappner-1" role="note"><span class="pub-note-inner"><span class="pub-note-text"><span class="pub-note-number">1</span> Le Guin, Ursula K. ‘Is Gender Necessary? Redux’. The Language of the Night: Essays on Writing, Science Fiction, and Fantasy, Scribner, 2024, p. 179.</span></span></span></p>
@@ -381,23 +401,23 @@
 <p>What I am about to share emerges from a deeply personal experience: a journey of learning to relinquish the control that was once essential to my survival, allowing me to relate to the world around me through the multiple channels that compose my being. This becomes gradually possible as we enter a state of presence with the very moment and all that it contains—a state that requires openness and, with it, vulnerability. Such vulnerability can emerge when we have experienced that, whatever we may face, we can remain present, or, in the face of death, surrender to the inevitable cycles of life. This in turn is facilitated by the value systems and cosmologies we share. Control or relationality, love or fear. Or maybe something else—AND/AND states where conscious order can serve relationality and fear can be witnessed with love: a paradox that can only be held with the entirety of our being, not through the mind alone…</p>
 <p>We live in a moment of collective overwhelm — flooded by information, crushed by global crises, pressured to optimize every aspect of life, and disconnected from the deeper layers of meaning that once held our communities together. This collective exhaustion is the result of external circumstances, as much as a reflection of a deeper imbalance in how we relate to ourselves and the world. For decades, Western culture has privileged rationality—and with it measurability, quantification and separateness — above all else, sidelining sensing, emotion, intuition, and our capacity for embodied knowing. Yet it is increasingly clear that the very tools of hyper-rational thinking that helped create today’s crises cannot be the ones that resolve them. My research begins from this premise: that addressing our ecological, psychological, and existential challenges requires a rebalancing of ways of knowing, and a reintegration of the relational, the embodied and the ultrasensorial. Only by expanding our modes of perception and developing adequate multidimensional vocabularies for them can we perceive and imagine new stories — and with them new possibilities — for our future.</p>
 <figure class="pub-figure">
-    <img src="/images/image15.jpg" alt="" width="1206" height="1436" loading="lazy" decoding="async">
+    <img src="/images/image15.jpg" alt="" width="1206" height="1436" style="--pub-img-w: 1206; --pub-img-h: 1436" loading="lazy" decoding="async">
 </figure>
 <p><em>Deep Planetary Sensing</em> is an ongoing research project that investigates how humans can cultivate embodied multidimensional experiences of connectivity with the Earth as a complex, living system; a relationship previously molded by politics and religion and now increasingly mediated, and often distorted, by contemporary technologies. At its core, the project seeks to restore more holistic relations between technology, science, and human experience by reintroducing sensory perception, intuition, and embodied presence into environments shaped by systems that favour control through efficiency and disembodied knowledge production. Within the framework of <em>Deep Planetary Sensing</em> technology is not an external, alien tool, but part of a reciprocal ecology: a field of relations between the individual body, the collective body, and the planetary body. It encourages alternative epistemologies that treat the multidimensional reality of the sensorial and ultrasensorial as active pathways of ecological and personal transformation.</p>
 <p>At its foundation, <em>Deep Planetary Sensing</em> responds to the cultural imbalance embedded within modern knowledge systems: the prioritization of speed, productivity, and quantification. These systems extract from the Earth with the same logic used to extract from the body. The result is a pervasive disconnection—of humans from themselves, from each other, and from the environments they inhabit. By foregrounding sensory experience and embodied knowing, the project seeks to repair this fragmentation and expand the relations between perception, technology, and ecological responsibility.</p>
 <p>Beyond its artistic dimension and specific exploration of our relationship with contemporary cosmology—reflected through technology, science and modern mythologies—<em>Deep Planetary Sensing</em> is an investigation into what it means to be human and how to relate to the world. It began as a personal quest in 2019. Being hypersensitive and carrying a series of complex traumas (of which I was only partially aware at the time ) made me wonder how to navigate a constant state of overwhelm in an increasingly complex and noisy world, and how to make sense of it all.</p>
 <p>I initially studied economics to understand the current forces shaping our planet, having little faith in artists and philosophers. As a young adult choosing my university path, I felt they had done a terrible job so far, given the state of planetary affairs (I have now somewhat revised my young rebel self’s opinion). After working in investment banking for a couple of years, I realised this was not where I could contribute to changing things as I had hoped—and that if I stayed I would probably die of misery in neon-lit, grey-carpeted, sterile rooms populated by suits.</p>
 <figure class="pub-figure">
-    <img src="/images/image19.png" alt="" width="1142" height="1454" loading="lazy" decoding="async">
+    <img src="/images/image19.png" alt="" width="1142" height="1454" style="--pub-img-w: 1142; --pub-img-h: 1454" loading="lazy" decoding="async">
 </figure>
 <p>Through a series of synchronous events, I ventured into the art world, naively believing it to be an almost utopian space for free thinking. Thank God I didn't know better, or I might never have entered this fascinating world, which can be even more corrupt than banking, yet also contains oases of genuine creative exploration, free thinking and being. Without further digressing, I journeyed from a world of control—or rather, the illusion of it, since financial systems rely on predictions and collective agreements about potential future values—into a realm where cognition is complemented by intuition, the sensorial, and the ultrasensorial.</p>
 <p>Having inhabited an industry that is the very heart of the capitalist egregor for several years and having witnessed a wide array of human behaviour in this context I couldn’t think of all bankers as exclusively evil, greedy, grey suited beings. They were nuanced, like all humans—only archetypal fiction characters are ever 100% good or bad. I became obsessed with understanding what had gone ‘wrong’ and when and what was perpetuating ‘the system’. To this day my answers are mostly speculation (if you know it please dm on any platform.) What I came to realize through my own experience, is that the edge of a system coincides with the edge of human imagination. Ursula K. Le Guin puts it most beautifully, “We live in capitalism, its power seems inescapable—but then, so did the divine right of kings. Any human power can be resisted and changed by human beings. Resistance and change often begin in art.”<sup class="pub-fnref"><a id="fnref-kappner-4" href="#fn-kappner-4">4</a></sup><span class="pub-note" id="fn-kappner-4" role="note"><span class="pub-note-inner"><span class="pub-note-text"><span class="pub-note-number">4</span> Le Guin, Ursula K. “A Left-Handed Commencement Address.” <em>Dancing at the Edge of the World: Thoughts on Words, Women, Places</em>, Grove Press, 1989, pp. 115–17.</span></span></span> And imagination is not determined by cognition alone, surely we need to know something to imagine it, but the myriad and unfathomable ways our inner landscape conjures images are largely influenced by information stored in our unconscious as we can witness nightly in our dreams.</p>
 <p>Informed by my experience in corporate banking and the realisation that collective behaviour—our shared conscious and unconscious belief systems—co-creates our reality, my work began to explore the visible and invisible architectures of familial, social, economic, political, and aesthetic norms and constraints that, in turn, shape how we breathe, think, feel, move; in short, how we behave in different physical and metaphorical spaces. My work hence investigates the co-evolution of consciousness, science, and technology, and how this interplay continuously reshapes our perception of the self, the other, and the world. Individual and direct experience to me are emergent from the dynamic oscillation between consciousness - perception - action and reaction.</p>
 <figure class="pub-figure">
-    <img src="/images/image13.jpg" alt="" width="2048" height="862" loading="lazy" decoding="async">
+    <img src="/images/image13.jpg" alt="" width="2048" height="862" style="--pub-img-w: 2048; --pub-img-h: 862" loading="lazy" decoding="async">
 </figure>
 <figure class="pub-figure">
-    <img src="/images/image10.jpg" alt="Artist render, 2014" width="641" height="739" loading="lazy" decoding="async">
+    <img src="/images/image10.jpg" alt="Artist render, 2014" width="641" height="739" style="--pub-img-w: 641; --pub-img-h: 739" loading="lazy" decoding="async">
     <figcaption>
         <p>Artist render, 2014</p>
     </figcaption>
@@ -405,21 +425,21 @@
 <p>Through my own journey of opening up to the invisible, studying applied alchemy and Vedic traditions, and seeking to heal from severe intergenerational trauma, I began integrating what lies beyond the material realm into my understanding of our current condition. In 2026, the world appears increasingly shaped by forces seeking to control life itself, transcend the flesh, the body, and the Earth, and live eternally in the aether—potentially destroying the very planet that sustains us. Ironically, this closes the circle of heavenly transcendence: enlightenment thinking that once dismissed spirituality and life beyond the material now seems to worship transcendence itself, enabled by yet another invisible construct - the cloud. I have come to see this condition as one of collective trauma: a severing from life through events beyond our control, giving rise to the need for self-protection at all costs, an inability to trust life, which turns to greed, the accumulation of resources, and the exploitation of others and the Earth. Surely this is not the only viable lens to look at human behaviour in the 21st century, yet I find it a useful one to provide a complementary perspective to a plethora of philosophical, cultural and sociological attempts at understanding the human condition.</p>
 <p>Somewhere along the way, Western civilization in its mad rush for expansion has forgotten that, unlike other mammals, humans have no natural predators that regulate their place within the ecosystem. This places a particular responsibility on us to balance our existence with Mother Earth through respect and intelligence rather than savagery. As bell hooks writes, “When greedy consumption is the order of the day, dehumanization becomes acceptable. Then, treating people like objects is not only acceptable but is required behavior”<sup class="pub-fnref"><a id="fnref-kappner-5" href="#fn-kappner-5">5</a></sup>.<span class="pub-note" id="fn-kappner-5" role="note"><span class="pub-note-inner"><span class="pub-note-text"><span class="pub-note-number">5</span> hooks, bell. All About Love: New Visions. HarperCollins Publishers, 2026. P. 115</span></span></span> By savagery, I refer to the global military-industrial complexes and the colonial and religious systems that preceded them, which see land, plants, animals, and human bodies exclusively as resources—quantities and pawns to be traded or sacrificed on the geopolitical chessboard. Many ancestral knowledge systems were and are aware of the continuous necessity of restoring balance, a multidimensional understanding that doesn’t come from random pre-colonial ideas of wellness as it sometimes might seem in the watered downed social media mirror cabinets—but is the fruit of a distillation process of multi-generational wisdom. In these ancient knowledge systems different modalities of knowing are complementary to each other building a holistic system to support human existence and its relation with the world at large. The I Ching, the Vedas, and diverse Indigenous, shamanic, and pagan traditions across the world—from Native American and Mesoamerican cultures to the Maya, Inca, and pre-Christian European traditions—share, in their different ways, an interest in balancing the elements within the human body, the community, and the wider web of relations connecting humans, nature, and the cosmos. These knowledge systems often help us to understand well-being not as an isolated individual state, but as an expression of harmony and reciprocity between inner and outer worlds, human and more-than-human life, and the visible and invisible dimensions of existence.</p>
 <figure class="pub-figure">
-    <img src="/images/image4.jpg" alt="" width="1206" height="944" loading="lazy" decoding="async">
+    <img src="/images/image4.jpg" alt="" width="1206" height="944" style="--pub-img-w: 1206; --pub-img-h: 944" loading="lazy" decoding="async">
 </figure>
 <p>The reintegration of the full spectrum of sensorial and ultrasensorial knowledge alongside cognition is essential in providing a reference framework from which we can begin to experience a balanced relationship with our surroundings. As David Howes remarks, “In the West the dominant group […] has conventionally been associated with the supposedly ‘higher’ senses of sight and hearing, while subordinate groups […] have been associated with the so-called lower senses of smell, taste and touch.”’<sup class="pub-fnref"><a id="fnref-kappner-6" href="#fn-kappner-6">6</a></sup><span class="pub-note" id="fn-kappner-6" role="note"><span class="pub-note-inner"><span class="pub-note-text"><span class="pub-note-number">6</span> Howes, David. “Introduction: Empires of the Senses.” <em>Empire of the Senses: The Sensual Culture Reader</em>, edited by David Howes, Berg, 2005, pp. 1–17.</span></span></span> This hierarchy has long intersected with the marginalisation of the feminine, Indigenous peoples, and all that is commonly considered closer to matter and the Earth, casting them as primitive while elevating the disembodied and heavenly as aspirational—a distinction violently enforced by the European Inquisition and later spread globally through colonialism and enslavement. Proust’s madeleine is maybe the most famous example of the power of the sense to touch and activate our innermost being. We are animals pretending to be entirely rational whilst the larger part of our decisions are made instinctively, regulated by our nervous system which dominates our behaviour unless we develop a conscious relationship with it. This requires witnessing and understanding our perceptual patterns. Beyond the unconscious cultural frameworks that constrain our perception and capacity to relate fully to the world, Bessel van der Kolk’s explanation of the relationship between trauma, behavioural change, and physical awareness offers a useful lens through which to understand—and begin to heal—capitalism as collective trauma: “In order to change, people need to become aware of their sensations and the way that their bodies interact with the world around them. […] Physical self-awareness is the first step in releasing the tyranny of the past.”<sup class="pub-fnref"><a id="fnref-kappner-7" href="#fn-kappner-7">7</a></sup><span class="pub-note" id="fn-kappner-7" role="note"><span class="pub-note-inner"><span class="pub-note-text"><span class="pub-note-number">7</span> Van der Kolk, Bessel A. The Body Keeps the Score: Brain, Mind, and Body in the Healing of Trauma. Viking, 2014. P. 103</span></span></span> This tyranny of the past, beautifully (dis)embodied by Darth Vader, all mind, control and trauma as an archetypal mirror, are the behavioural patterns passed on from generation to generation, next to the new conditioning each generation experiences as part of their specific techno-, ecological and sociocultural environment. As van der Kolk describes it and as we most likely all know, cognitive understanding alone is not sufficient to actually change behaviour.</p>
 <figure class="pub-figure">
-    <img src="/images/image1.jpg" alt="" width="1206" height="1169" loading="lazy" decoding="async">
+    <img src="/images/image1.jpg" alt="" width="1206" height="1169" style="--pub-img-w: 1206; --pub-img-h: 1169" loading="lazy" decoding="async">
 </figure>
 <p>Fire. Many of us remember being told to not touch fire as young humans. Yet until we once got awfully close and actually <em>felt</em> the heat in combination with witnessing matter being transformed in it, we probably didn’t fully grasp why and hence didn’t integrate this information into the automatic behavioural vocabulary. Avoiding touching the flame was not a natural response until we had a direct experience. Similarly today a probably significant enough number of the human population is rationally aware that we are interconnected and interdependent, that the way we are operating is not sustainable. Yet our ability to change overdue behaviour seems to be directly inverse to the strength of the (in)visible architectures facilitating this very behaviour in the first place.</p>
 <p>By composing multiple layers of cognitive, sensory, and ultrasensorial information pertaining to a subject, my intention is to facilitate more complete ways of relating through direct experience. Ultimately, I seek to support our ability to integrate information into our felt sense and natural vocabulary of responses through conscious, direct experience—questioning otherwise automatic patterns and opening new neural pathways and connections within our inner landscapes. This can help us make sense of our own position, actions, and relations with the world more fully, rather than relying solely on cognition or being driven by entirely unconscious motives.</p>
 <figure class="pub-figure">
-    <img src="/images/image6.jpg" alt="" width="1206" height="1174" loading="lazy" decoding="async">
+    <img src="/images/image6.jpg" alt="" width="1206" height="1174" style="--pub-img-w: 1206; --pub-img-h: 1174" loading="lazy" decoding="async">
 </figure>
 <p>My work understands the transmission of information as akin to entering into communication with the auric field of a space, a person, or a topic—or, in simpler terms, a ‘vibe’ composed of a myriad of signals deriving from different data points and timelines, perceived through our individual and collective biological, cultural, and ancestral make-up. It would take an infinite amount of time to decode the exact components that make up the ‘vibe’ or atmosphere of a specific room, for example. Yet, through cultural codes and shared implicit understanding, we can transmit large quantities of information without having to quantify and analyse every detail. In a similar manner, a vibe can communicate complex layers of information in an instant through direct experience. This is a personal understanding of information and its processing, grounded in observation and my own experience, which complements contemporary perspectives in biology, cognitive sciences, psychology, and philosophy, fields that are still far from fully grasping the complexity of human perception and information processing.</p>
 <p>By juxtaposing and blending sensory layers related to specific concepts—scientific, cultural, natural, or artificial—my work aims to reveal and ultimately transform unconscious emotions and mental representations associated with dominant dualistic ways of thinking. In this way, the works seek to shift our perception, develop our capacity for AND/AND situations instead of OR/OR, and allow the non-binary and the more-than-human to enter our vocabulary of experiential imagination—and, with it, the spectrum of behaviours and possible solutions.</p>
 <figure class="pub-figure">
-    <img src="/images/image11.jpg" alt="" width="1206" height="1284" loading="lazy" decoding="async">
+    <img src="/images/image11.jpg" alt="" width="1206" height="1284" style="--pub-img-w: 1206; --pub-img-h: 1284" loading="lazy" decoding="async">
 </figure>
 <p>I am particularly interested in how technologies often externalise internal abilities, and how they influence each other: Wi-Fi and telepathy, maps and our sense of orientation, machine learning and knowledge organisation or writing, for example. This is not to say that one is better than the other. A knife can famously save and take lives, depending on the hand that holds it. At the beginning of the AI revolution, I believe that developing our higher intuition—the ability to perceive complex, multimodal, and multidimensional information—will be essential to collaborating with machine and ecological intelligence in balance.</p>
 <p>In the following section, I will introduce some key ingredients of my practice for you to try at home, hopefully offering you inspiration for exploring what an expanded field of sensing might look like for yourself.</p>
@@ -511,7 +531,7 @@
 <p>The future is now open, predictions are based on real data, and the world is understood numerically. Yet, uncertainty persists, and the human condition seems to have barely shifted: “In ancient times the future appeared to be unknowable to humans, but not to divinity, not to God. As for today, the future appears to be unknowable to humans but not to algorithms”<sup class="pub-fnref"><a id="fnref-petrozzi-8" href="#fn-petrozzi-8">8</a></sup>,<span class="pub-note" id="fn-petrozzi-8" role="note"><span class="pub-note-inner"><span class="pub-note-text"><span class="pub-note-number">8</span> Esposito, Elena. “The Structures of Uncertainty: Performativity and Unpredictability in Economic Operations.” <em>Economy and Society</em> 42, no. 1 (2013): 102–29. <a href="https://doi.org/10.1080/03085147.2012.687908">https://doi.org/10.1080/03085147.2012.687908</a>.</span></span></span> as Esposito argues.</p>
 <p>In February 2025 I was invited to do a residency called “Silicon Plateau” taking place in Bangalore, India and where I focused my artistic research on the overlapping borders between technology and magical thinking, folklore, superstition, and religion in the city of Bangalore. I came to Bangalore without preconceptions. I had no expectations, apart from dragging a chariot of bad luck behind me, mostly symbolized by the disappearance of my passport just the night before catching my plane to India. That (luckily) resolved itself. Just that day of said disappearance, I had my first session with a Vedic Astrologer online. I had always wanted to consult one, and I thought that doing so before my trip would be quite apt.. In India, Vedic astrology is considered an “astral science” rather than a religious practice, although it is mostly performed within Hinduist religious belief circles. Vedic astrology is incredibly precise and based on scientific mathematical calculations of the position of planets and stars at specific times and places. With geolocation and precise time, it is possible to calculate the astral chart, also called Kundali, of virtually anything. The birth of someone, the launch of a rocket, the start of a company.</p>
 <figure class="pub-figure">
-    <img src="/images/image12.jpg" alt="A visit to one of the Vedic Astrologers in Bangalore, India, cross-checking my birth-chart and palms" width="1200" height="1600" loading="lazy" decoding="async">
+    <img src="/images/image12.jpg" alt="A visit to one of the Vedic Astrologers in Bangalore, India, cross-checking my birth-chart and palms" width="1200" height="1600" style="--pub-img-w: 1200; --pub-img-h: 1600" loading="lazy" decoding="async">
     <figcaption>
         <p>A visit to one of the Vedic Astrologers in Bangalore, India, cross-checking my birth-chart and palms</p>
     </figcaption>
@@ -520,7 +540,7 @@
 <p>I consulted a different astrologer. Next to my residency space there was a local Jyotisha and after passing by in front of his shop a few times, I made up my mind and went in. The consultation was careful and shorter than the first one, but more importantly –<em>different.</em> Some aspects were similar to the first one, but major aspects were almost the opposite. According to him I should have gotten married before June 2025! I spent three weeks in Bangalore and I consulted another astrologer, then a palm reader, then a face reader. Both palm reading and face reading use the time and place of birth of the querent to interpret their future. So, even though on paper they are different branches of Vedic astrology with different nuances, they are still informed by the same astral chart.</p>
 <p>All the consultations were different; some gave very precise dates when an event would happen, while some were more generic and open ended. All of them touched upon what one might define as “matters of life”., Love, health, professional career, death and many more. From all the consultations I now had many options of how things would go for me. Dates and times, nuances, threats and blessings. None of them mattered anymore, or felt as heavy as the sentence Oedipus received. They suddenly became possible futures. All of them potentially true and plausible. I may get married, or not. I may have children when it is too late, or perhaps at the perfect time. I may have success in my career abroad, or perhaps I may decide to settle in one place and stay until the end of my days. As for Oedipus, it is not about what predictions we might receive, but how we are going to act on them.</p>
 <figure class="pub-figure">
-    <img src="/images/image16.png" alt="My personal birth chart, open for interpretation" width="1032" height="970" loading="lazy" decoding="async">
+    <img src="/images/image16.png" alt="My personal birth chart, open for interpretation" width="1032" height="970" style="--pub-img-w: 1032; --pub-img-h: 970" loading="lazy" decoding="async">
     <figcaption>
         <p>My personal birth chart, open for interpretation</p>
     </figcaption>
@@ -528,7 +548,7 @@
 <p>I think of the need to predict the future as very human, almost endearing. We seek certainty to make sure that we will make the right decisions. Or, that regardless of how dark reality looks in the present, something better will come. Somehow, after these five consultations, new possible paths opened in front of me. Many Lives I could live. In Vedic tradition it is not possible to change one’s future entirely. But it is possible to get the best possible outcome, within the fixed terms arranged by the stars. In a joking way, I asked one of the astrologers, specialized in face reading, if I might be able to change my future by changing a facial feature, like undergoing a nose-job or re-arranging my teeth into straighter positions. He laughed and said that no, of course that wasn't possible. I laughed with him, thinking of a project of mine I had developed some years ago called “Bite Off More Than You Can Chew”.</p>
 <p>Face reading is a widespread divination practice, one that reads facial features to know specific aspects of one’s temperament, personality, but also future. During the time in which I was wearing braces, and entirely changing my teeth placement and disposition, I asked myself if I might be able to change my future too. I underwent a very complex process, together with creative programmer Matus Solcany, to calculate my future based on the movement of my teeth. My dentists provided me with specific measurements for movement in my mouth through the two years period of wearing the braces, and I researched the meaning each tooth had in an interpolation of Holistic medicine, Indian face reading and Chinese teeth-medicine.</p>
 <figure class="pub-figure">
-    <img src="/images/image9.jpg" alt="An anatomic model of teeth, from the installation &quot;Bite Off More Than You Can Chew&quot; for Re:Humanism Prize 2023, Rome (IT); Photo credits: Giorgio Benni" width="1365" height="2048" loading="lazy" decoding="async">
+    <img src="/images/image9.jpg" alt="An anatomic model of teeth, from the installation &quot;Bite Off More Than You Can Chew&quot; for Re:Humanism Prize 2023, Rome (IT); Photo credits: Giorgio Benni" width="1365" height="2048" style="--pub-img-w: 1365; --pub-img-h: 2048" loading="lazy" decoding="async">
     <figcaption>
         <p>An anatomic model of teeth, from the installation "Bite Off More Than You Can Chew" for Re:Humanism Prize 2023, Rome (IT); Photo credits: Giorgio Benni</p>
     </figcaption>
@@ -539,7 +559,7 @@
 <p>After having evaluated on a scale from 1 to 10 the 23 weeks of life, week per week (that’s how often my teeth would take different turns), the numerical values were correlated to the movement of the teeth my dentists had provided me. Based on the future teeth movement, we then were able to generate new numerical values, or a ‘grading’ of the future weeks. With a bit of imagination and help from a very primordial GPT-3, those grades became sentences that would inform me of what would go well, great or terribly in my upcoming future.</p>
 <p>I won’t go into detail here on what my teeth told me. Partly, because it’s no one's business, and no one would find it useful except me. Partly, I asked Matus to keep the file himself and not show it to me until the end of the 21 weeks. The end of my future. Why did I do all this if I refused to then read what my future (allegedly) held?I find that through these projects, both my teeth and my stars were suggesting that I not torment myself about the future. There is no definite solution to the uncertainty that we carry, imprinted in our DNA as human beings, only narrations we might like more or less.I hold all these contradictions close to my heart, to my guts. What I enjoy the most is trying out every possible and available method to take a peek into any version of the future available. Not because I wish it to be true, or because I want to believe in something, but because in those versions of the future,I live more lives than I ever could without knowing And who knows, if I ever get old, I might even have the chance to say: <em>I knew it all along.</em></p>
 <figure class="pub-figure">
-    <img src="/images/image8.jpg" alt="Silicon copies of the 42 steps of my orthodontic plan, showing the progression of the teeth moving, from the installation &quot;Bite Off More Than You Can Chew&quot; for Re:Humanism Prize 2023, Rome (IT); Photo credits: Giorgio Benni" width="1169" height="2048" loading="lazy" decoding="async">
+    <img src="/images/image8.jpg" alt="Silicon copies of the 42 steps of my orthodontic plan, showing the progression of the teeth moving, from the installation &quot;Bite Off More Than You Can Chew&quot; for Re:Humanism Prize 2023, Rome (IT); Photo credits: Giorgio Benni" width="1169" height="2048" style="--pub-img-w: 1169; --pub-img-h: 2048" loading="lazy" decoding="async">
     <figcaption>
         <p>Silicon copies of the 42 steps of my orthodontic plan, showing the progression of the teeth moving, from the installation "Bite Off More Than You Can Chew" for Re:Humanism Prize 2023, Rome (IT); Photo credits: Giorgio Benni</p>
     </figcaption>
@@ -565,7 +585,7 @@ D o w n…</p>
 <p>What is the climate crisis? Is it also a nervous system crisis? What if we are not only extracting resources from the Earth, but from every living being — including ourselves? If the Earth is dysregulated, how can we expect our bodies to remain well? Ecological grief, climate anxiety and burnout can be understood as responses to the same rupture: our growing disconnection from balance, belonging and the living world. Ecological grief, in particular, has been described as a legitimate emotional response to ecological and climate-related loss (Cunsolo &amp; Ellis, 2018).</p>
 <p>How can we make space for these emotional responses, rather than suppressing or individualising them? Together with Rens Spanjaard and Extinction Rebellion, I co-founded Green Rebels, a collective exploring grief, regeneration and ecological connection as forms of social and political practice. Our work is inspired by Joanna Macy’s <em>Work That Reconnects</em>, and particularly its Spiral: a cyclical process moving through the stages of Coming from Gratitude, Honoring Our Pain for the World, Seeing with New/Ancient Eyes, and Going Forth (Macy &amp; Brown, 2014). Rather than seeing grief, anger or despair as emotions that need to be overcome, the Work That Reconnects creates space to acknowledge and honour these responses to the state of the world and to transform them into connection, renewed perspective and action. Through Green Rebels, we bring this process into public space through collective rituals. These regenerative transformation rituals create moments to acknowledge ecological loss, move through grief together, and open up new ways of relating to the world around us. They invite a shift in perspective: from seeing nature as something outside of us, to understanding the living world as a teacher, a relative, and a model for how we might live.</p>
 <figure class="pub-figure">
-    <img src="/images/image20.png" alt="Performance for Extinction Rebellion NL (Sieta van Horck &amp; Rens Spanjaard, 2020)" width="1140" height="694" loading="lazy" decoding="async">
+    <img src="/images/image20.png" alt="Performance for Extinction Rebellion NL (Sieta van Horck &amp; Rens Spanjaard, 2020)" width="1140" height="694" style="--pub-img-w: 1140; --pub-img-h: 694" loading="lazy" decoding="async">
     <figcaption>
         <p>Performance for Extinction Rebellion NL (Sieta van Horck &amp; Rens Spanjaard, 2020)</p>
     </figcaption>
@@ -577,7 +597,7 @@ D o w n…</p>
 <p>Our black mirror not only reflects our own distorted images back to us; it also captures and harvests our attention. With our minds in a constant state of arousal and distraction, it can become difficult to be still enough for a deeper kind of knowing to emerge. The contemporary attention economy treats attention as a resource to be captured and extracted, while Jenny Odell invites us to reconsider attention as a practice of reconnecting with ourselves, our surroundings and the more-than-human world (Odell, 2019).</p>
 <p>I wanted to explore this relationship with our digital devices in a more direct and embodied way. Together with SETUP, I created Techyoga: a yoga class in which the asanas are designed specifically for you and your phone. By bringing the device into the practice rather than asking participants to simply put it away, the workshop invites us to pause and contemplate our relationship with the technology that has become so intimately entangled with our everyday lives. Alongside the workshop, we created a small book featuring eleven yoga asanas that can be practised independently, offering playful ways to reflect on (and perhaps reconsider) our relationship with our devices.</p>
 <figure class="pub-figure">
-    <img src="/images/image17.png" alt="Techyoga classes at various exhibitions &amp; book (2022-ongoing)" width="1292" height="466" loading="lazy" decoding="async">
+    <img src="/images/image17.png" alt="Techyoga classes at various exhibitions &amp; book (2022-ongoing)" width="1292" height="466" style="--pub-img-w: 1292; --pub-img-h: 466" loading="lazy" decoding="async">
     <figcaption>
         <p>Techyoga classes at various exhibitions &amp; book (2022-ongoing)</p>
     </figcaption>
@@ -591,7 +611,7 @@ D o w n…</p>
 <p>These questions formed the starting point for Feral Species and Ecosomatic Manifesto, a public space intervention and manifesto created during a residency at Krater in Ljubljana. The work explores the relationships of interbeing between multispecies bodies and local lands, bridging art, ecology and embodiment by interweaving Krater’s feral presence with the urban landscape of Ljubljana. Through carefully placed small reminders of interbeing throughout the cityscape, the work invites us to notice the relationships that are already there, but that dominant ways of living and seeing have taught us to overlook. The work emerged from the recognition that many of the crises of our time are rooted in a breakdown of the relationship between humans and the Earth, particularly within dominant Western cultures, where respect and reciprocity have increasingly been replaced by exploitation and extraction, and community by consumerism.</p>
 <p>Rather than offering a solution to this rupture, Feral Species and Ecosomatic Manifesto asks us to practice noticing. It asks what might happen if we were to pay attention to the more-than-human worlds that surround us, to the plants growing through cracks in the pavement, to the soil beneath our feet, to the histories held within landscapes, and to the bodies through which we experience these places. In doing so, the work becomes an invitation to reconsider belonging not as something we possess, but as something we participate in, a living relationship that is continuously being made, unmade and remade.</p>
 <figure class="pub-figure">
-    <img src="/images/image18.png" alt="Exhibition @Krater Collective, Ljubljana (2022)" width="1592" height="766" loading="lazy" decoding="async">
+    <img src="/images/image18.png" alt="Exhibition @Krater Collective, Ljubljana (2022)" width="1592" height="766" style="--pub-img-w: 1592; --pub-img-h: 766" loading="lazy" decoding="async">
     <figcaption>
         <p>Exhibition @Krater Collective, Ljubljana (2022)</p>
     </figcaption>
@@ -698,7 +718,7 @@ D o w n…</p>
 <p><em>Telemagic will show a reimagining of one of their starting works in the series</em> <em>*Oracles*.</em></p>
 <p><em>The Or@cle</em> is a prophetic machine with an endlessly changing unknown output; much like a stream. The visitor inserts a token, triggering a prophecy that forms meaning through chance-based procedures and scraping mechanisms. Rather than revealing a truth, it stages the moment when noise begins to feel all-knowing.</p>
 <figure class="pub-figure">
-    <img src="/images/image3.jpg" alt="photo: asmallproductioncompany, TeleState @ de School, 2017" width="1500" height="1002" loading="lazy" decoding="async">
+    <img src="/images/image3.jpg" alt="photo: asmallproductioncompany, TeleState @ de School, 2017" width="1500" height="1002" style="--pub-img-w: 1500; --pub-img-h: 1002" loading="lazy" decoding="async">
     <figcaption>
         <p>photo: asmallproductioncompany, TeleState @ de School, 2017</p>
     </figcaption>
@@ -710,7 +730,7 @@ D o w n…</p>
 <p>118 full moons have passed since we started (one street removed from V2_ in the black hole of WORM) with organising the world's first ever paranormal tech fair, and a cycle brings us back. We still think the general statement is correct: utilitarian thinking was leaving many weaknesses in the mystical realm. But we couldn’t have imagined this length and deepening of power and agency transfer. It has fuelled us with a new sense of urgency and new methods to explore the underlying doom and gloom. We found that by hacking the mechanics hidden behind and within the (computer) technology, we could redirect and transpose this to places of exposing, informing and reimagining what other (maybe better) things these underlying powers could be doing.</p>
 <p><em>When you stare into the abyss, the abyss stares back and changes you.</em></p>
 <figure class="pub-figure">
-    <img src="/images/image5.png" alt="Photo: Sander van Wettum, The Oracle @ Shelter, 2017" width="826" height="546" loading="lazy" decoding="async">
+    <img src="/images/image5.png" alt="Photo: Sander van Wettum, The Oracle @ Shelter, 2017" width="826" height="546" style="--pub-img-w: 826; --pub-img-h: 546" loading="lazy" decoding="async">
     <figcaption>
         <p>Photo: Sander van Wettum, The Oracle @ Shelter, 2017</p>
     </figcaption>
@@ -747,7 +767,7 @@ D o w n…</p>
 <p>The acupuncture needle symbolises the power of minimal intervention. Unlike a sword or spear that uses force, a needle makes a tiny, precise change that can create profound impact.</p>
 <p>Planetary Acupuncture extends this principle beyond the individual: each person becomes an energetic centre—a living needle connecting with the Earth as a larger, interconnected system.</p>
 <figure class="pub-figure">
-    <img src="/images/image7.jpg" alt="" width="1366" height="2048" loading="lazy" decoding="async">
+    <img src="/images/image7.jpg" alt="" width="1366" height="2048" style="--pub-img-w: 1366; --pub-img-h: 2048" loading="lazy" decoding="async">
 </figure>
 <h3 id="the-origin-of-the-project-from-the-personal-to-the-planetary">The Origin of the Project: From the Personal to the Planetary</h3>
 <p>I would like to offer some context for how I came to the project <em>Planetary Acupuncture</em>.</p>
