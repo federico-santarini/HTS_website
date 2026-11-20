@@ -30,20 +30,13 @@ const TIMELINE = {
     // gira attorno al centro e torna fuori lungo l'altro bordo. Invece di disegnarlo da un capo all'altro (la spirale si "avvolgerebbe" prima verso
     // il centro e poi fuori), lo si fa crescere DAL CENTRO verso entrambe le estremità, con i due bordi insieme: come prima, quando ogni spirale
     // era una linea sola che si svolgeva dal centro. Il punto del giro al centro è data-center sul tracciato (frazione della lunghezza, 0-1):
-    // è misurato sul disegno (_triskele.html). Un tracciato senza data-center si disegna da un capo all'altro, come una linea semplice.
+    // è misurato sul disegno (_triskele.html). Le due metà hanno lunghezze diverse (il bordo esterno è più lungo di quello interno) ma si
+    // completano INSIEME: ognuna cresce in proporzione alla propria lunghezza (la più lunga va un po' più veloce). Un tracciato senza data-center
+    // si disegna da un capo all'altro, come una linea semplice.
     const centers = paths.map((path) => {
         const value = parseFloat(path.dataset.center);
         return Number.isFinite(value) ? value : null;
     });
-    // Quanto è lunga (frazione 0-1 della lunghezza) la parte visibile quando il disegno è al progresso "progress" (0-1): cresce dal centro
-    // alla stessa velocità da entrambe le parti, e un lato si ferma quando raggiunge la sua estremità.
-    const reach = centers.map((c) => (c === null ? 1 : Math.max(c, 1 - c)));
-    function visibleFraction(i, progress) {
-        const c = centers[i];
-        if (c === null) return progress;
-        const a = progress * reach[i];
-        return Math.min(a, c) + Math.min(a, 1 - c);
-    }
     // Progresso (0-1) a cui ogni linea è lunga minLength volte il proprio spessore, e istante (t) in cui è comparsa.
     // Spessore e lunghezza sono nelle stesse unità del disegno (viewBox), quindi il rapporto non dipende dalla dimensione a schermo.
     const strokeWidth = parseFloat(getComputedStyle(paths[0]).strokeWidth) || 0;
@@ -87,7 +80,7 @@ const TIMELINE = {
 
         paths.forEach((path, i) => {
             const progress = easeInOut(clamp01((t - TIMELINE.drawStart - i * TIMELINE.stagger) / TIMELINE.drawDuration));
-            const shown = visibleFraction(i, progress); // frazione visibile della lunghezza
+            const shown = progress; // frazione visibile della lunghezza: partendo dal centro è proprio il progresso (vedi sotto)
             // Le estremità sono tonde: una linea cortissima si vede come un puntino largo quanto lo spessore. Finché non è
             // lunga almeno minLength volte lo spessore resta nascosta; poi compare con una breve dissolvenza.
             if (shown * lengths[i] < strokeWidth * TIMELINE.minLength) {
@@ -103,10 +96,12 @@ const TIMELINE = {
                 path.style.strokeDasharray = 'none';                // disegnata tutta: niente trattini
                 path.style.strokeDashoffset = '0';
             } else {
-                // Un solo trattino lungo "shown", che parte da (centro - parte a monte) e ha il vuoto più lungo del tracciato: non si ripete.
-                const before = Math.min(progress * reach[i], centers[i]);
-                path.style.strokeDasharray = `${shown} 2`;
-                path.style.strokeDashoffset = String(-(centers[i] - before));
+                // Un solo trattino lungo "progress" (frazione della lunghezza) che cresce dal centro c: la parte prima del centro ne occupa
+                // c * progress e quella dopo (1 - c) * progress, quindi il trattino comincia a c * (1 - progress) e a progress = 1 copre tutto
+                // il tracciato (da 0 a 1), con le due metà che arrivano alle loro estremità nello stesso istante. Il vuoto (2) è più lungo
+                // del tracciato: il trattino non si ripete.
+                path.style.strokeDasharray = `${progress} 2`;
+                path.style.strokeDashoffset = String(-centers[i] * (1 - progress));
             }
         });
 

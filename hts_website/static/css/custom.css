@@ -921,9 +921,9 @@ a:hover, a:focus {
     pointer-events: stroke;
 }
 
-/* Spirali (link 1-3): ognuna è un NASTRO disegnato come contorno (due linee sottilissime: difficilissime da colpire da sole). Il tracciato è un unico
-   contorno chiuso dal browser con un segmento tra i due capi, quindi il suo riempimento è il nastro, lo spazio tra i due bordi: è quello a ricevere il clic
-   (fill trasparente + pointer-events: all). Lo spazio vuoto tra un giro e l'altro del nastro non è cliccabile. */
+/* Spirali (link 1-3): l'area che riceve mouse e clic è un DISCO pieno (un <circle> in _triskele.html, fill trasparente + pointer-events: all) che copre tutta
+   la spirale, anche gli spazi tra un giro e l'altro. Le linee sono sottilissime e il nastro tra i due bordi lascia spazi vuoti: passandoci sopra il mouse
+   uscirebbe e rientrerebbe di continuo e l'hover (bagliore e nome) sfarfallerebbe. */
 .home-triskele-svg .triskele-link-1 .triskele-hit,
 .home-triskele-svg .triskele-link-2 .triskele-hit,
 .home-triskele-svg .triskele-link-3 .triskele-hit {

@@ -199,14 +199,15 @@ Attorno alle spirali c'è un **perimetro** (un tracciato chiuso dello stesso dis
 `_triskele.html`, con lo stesso bagliore e il nome "Publication" sotto): porta alla pubblicazione (`PUBLICATION_URL`; se non è impostata il
 perimetro non compare). Il clic lo riceve solo lungo la linea (`--home-triskele-hit-width`), non dentro. **Il disegno** è `Asset 1.svg` (viewBox
 453 x 429,96, linee sottili di 3 unità: `--home-triskele-width`, `--intro-line-width`): ogni spirale è un **nastro disegnato come contorno**, cioè
-un solo tracciato a doppia linea (parte da una giunzione, scende al centro lungo un bordo e torna fuori dall'altro). Per questo il clic sulle
-spirali lo riceve il nastro (lo spazio tra i due bordi, `fill` trasparente), non le linee, troppo sottili. Se si cambia il disegno vanno
+un solo tracciato a doppia linea (parte da una giunzione, scende al centro lungo un bordo e torna fuori dall'altro). Per questo mouse e clic sulle
+spirali li riceve un **disco pieno** (un `<circle>` trasparente per spirale, in `_triskele.html`: centro `cx, cy` e raggio 100) che le copre tutte, spazi tra
+un giro e l'altro compresi: con le sole linee, o con il solo nastro, il mouse uscirebbe e rientrerebbe di continuo e l'hover sfarfallerebbe. Se si cambia il disegno vanno
 rimisurati i `data-center` (vedi sotto) e `0,4746` (altezza/larghezza del viewBox, in `.home-triskele-label` di `custom.css`).
 - **Una volta per sessione del browser** (`sessionStorage`, chiave `htsIntroSeen`), e **mai** con "riduci movimento" attivo.
   Il tasto **Skip** (o Esc) lo chiude subito e ferma l'audio. Mentre dura, il resto della pagina non è cliccabile (`inert`).
 - **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `_triskele.html` con `pathLength="1"`: si disegna con
   `stroke-dasharray`/`stroke-dashoffset`, come il trim paths di After Effects; nell'intro ci sono solo le tre spirali, senza il perimetro. Ogni spirale
-  è un nastro a doppia linea e **cresce dal centro verso entrambe le estremità**, con i due bordi insieme: il punto del giro al centro è `data-center`
+  è un nastro a doppia linea e **cresce dal centro verso entrambe le estremità**, con i due bordi insieme (le due metà, di lunghezza diversa, si completano nello stesso istante): il punto del giro al centro è `data-center`
   sul tracciato, la frazione della sua lunghezza misurata sul disegno (punto di massima curvatura); l'ordine resta in alto, in basso a sinistra,
   in basso a destra), comportamento e **tempi** in `static/js/intro.js` (oggetto
   `TIMELINE` in cima), aspetto in `custom.css` (sezione [13]: colori, spessore, dimensioni, in variabili `--intro-...`).
