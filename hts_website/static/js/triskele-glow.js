@@ -30,10 +30,10 @@
         return el;
     };
 
-    // Le misure di un'ombra CSS sono in pixel, quelle di un filtro SVG nelle unità del disegno (largo 500): le converto in base alla
+    // Le misure di un'ombra CSS sono in pixel, quelle di un filtro SVG nelle unità del disegno (largo quanto il suo viewBox, oggi 453): le converto in base alla
     // dimensione a schermo, e le ricalcolo se cambia. Una sfocatura CSS di B pixel è una gaussiana con deviazione standard B/2.
     function build() {
-        const pxPerUnit = svg.getBoundingClientRect().width / 500;
+        const pxPerUnit = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
         if (!pxPerUnit) return;
         filter.replaceChildren();
         layers.forEach((layer, i) => {

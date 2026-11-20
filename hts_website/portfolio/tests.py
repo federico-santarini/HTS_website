@@ -566,18 +566,18 @@ class RandomProjectTests(TestCase):
         self.assertEqual(re.findall(r">(\w+)</span>", label), ["Relationality", "Perception", "Cognition"])
 
     @override_settings(PUBLICATION_URL="https://publication.example.org")
-    def test_home_circle_links_to_the_publication(self):
-        """Il cerchio attorno al triskele è un quarto link, alla pubblicazione, con il suo nome sotto."""
+    def test_home_perimeter_links_to_the_publication(self):
+        """Il perimetro attorno al triskele è un quarto link, alla pubblicazione, con il suo nome sotto."""
         html = self.client.get("/").content.decode()
-        circle = html.split('triskele-link-4"')[1].split("</a>")[0]
-        self.assertIn('href="https://publication.example.org"', circle)
-        self.assertIn('aria-label="Publication"', circle)
-        self.assertIn("<circle", circle)
+        perimeter = html.split('triskele-link-4"')[1].split("</a>")[0]
+        self.assertIn('href="https://publication.example.org"', perimeter)
+        self.assertIn('aria-label="Publication"', perimeter)
+        self.assertEqual(perimeter.count("<path"), 3)  # glow, area cliccabile, linea
         label = html.split('class="home-triskele-label"')[1].split("</p>")[0]
         self.assertEqual(re.findall(r">(\w+)</span>", label), ["Relationality", "Perception", "Cognition", "Publication"])
 
     @override_settings(PUBLICATION_URL="")
-    def test_home_has_no_circle_without_a_publication_address(self):
+    def test_home_has_no_perimeter_without_a_publication_address(self):
         html = self.client.get("/").content.decode()
         self.assertNotIn("triskele-link-4", html)
         self.assertNotIn("home-triskele-label-4", html)
@@ -588,3 +588,4 @@ class RandomProjectTests(TestCase):
         intro_svg = html.split('class="intro-triskele"')[1].split("</svg>")[0]
         self.assertNotIn("<a ", intro_svg)
         self.assertEqual(intro_svg.count("<path"), 3)
+        self.assertEqual(intro_svg.count("data-center="), 3)  # punto del giro al centro di ogni spirale (intro.js)

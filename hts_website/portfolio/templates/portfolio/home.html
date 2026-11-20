@@ -7,8 +7,8 @@
 {% block content %}
 {# Il triskele della home: stesso disegno, stessa posizione (centro dello schermo) e stessa dimensione di quello dell'intro, così l'intro #}
 {# si dissolve su di lui senza salti. Ogni tracciato è un link a un progetto a caso di una categoria (project_category): #}
-{# 1 = relationality, 2 = perception, 3 = cognition (sono i valori di Project.CATEGORIES). Il cerchio attorno al triskele è un quarto link: #}
-{# porta alla pubblicazione (PUBLICATION_URL: se non è impostata il cerchio non compare). Stile: custom.css, "Triskele della home". #}
+{# 1 = relationality, 2 = perception, 3 = cognition (sono i valori di Project.CATEGORIES). Il perimetro attorno al triskele è un quarto link: #}
+{# porta alla pubblicazione (PUBLICATION_URL: se non è impostata il perimetro non compare). Stile: custom.css, "Triskele della home". #}
 {% url 'random_project' 'relationality' as relationality_url %}
 {% url 'random_project' 'perception' as perception_url %}
 {% url 'random_project' 'cognition' as cognition_url %}

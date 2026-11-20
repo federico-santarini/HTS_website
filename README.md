@@ -195,30 +195,20 @@ disegno, stessa posizione (centro dello schermo) e stessa dimensione (`--hts-tri
 quando l'intro si dissolve si vede lo stesso disegno senza salti. Ogni tracciato è un link a `/projects/random/<categoria>/`:
 tracciato 1 (in alto) = **relationality**, 2 (in basso a sinistra) = **perception**, 3 (in basso a destra) = **cognition**.
 La categoria è il campo `project_category` del progetto, che si imposta dall'admin (valori: `relationality`, `perception`, `cognition`).
-Attorno al triskele c'è un **cerchio**, anche lui link (la quarta `triskele-link-4` di `_triskele.html`, con lo stesso bagliore e il nome
-"Publication" sotto): porta alla pubblicazione (`PUBLICATION_URL`; se non è impostata il cerchio non compare). È centrato sul centro di
-simmetria del disegno (250, 277 nel viewBox, non sul centro 250, 250) con raggio 230; il clic lo riceve solo l'anello, non l'interno.
-Con hover o focus compare anche il **nome della categoria** sotto il triskele (solo CSS, con `:has()`; variabili `--home-triskele-label-...`;
-per metterlo in fondo allo schermo basta usare `bottom` al posto di `top` in `.home-triskele-label`).
-Con hover o focus il tracciato resta bianco e dello stesso spessore, ma ha lo stesso **bagliore dei testi**: `--hts-glow` (`custom.css`,
-sezione [02]). Un'ombra CSS non si applica a un tracciato SVG, quindi `static/js/triskele-glow.js` legge `--hts-glow` e lo traduce in un filtro
-SVG (`#triskele-glow-filter` in `_triskele.html`): cambiando `--hts-glow` cambia anche il triskele. Le misure restano in pixel, come nei testi
-(il filtro si ricalcola se la finestra cambia). Senza JavaScript resta un alone viola sfocato. Intensità e durata del bagliore, e l'area
-cliccabile (più larga della linea), sono variabili `--home-triskele-...` in `custom.css`, sezione [12]. È un filtro SVG e non `filter: drop-shadow()`
-perché Safari non applica i filtri CSS agli elementi dentro un SVG.
-
-**Intro animato della homepage.** Sulla homepage (solo lì) appare uno strato nero a tutto schermo: "welcome to HTS", un
-clic fa partire il suono di un modem 56k (`static/audio/intro.mp3`, 15 secondi), il testo sparisce, tre linee disegnano il
-triskele e una dissolvenza porta alla pagina. Dura `TIMELINE.duration` secondi dal clic (in `intro.js`, oggi 15), qualunque sia la lunghezza dell'audio:
-se l'audio è più corto il resto va avanti in silenzio, se è più lungo il volume sfuma con la dissolvenza finale e si ferma.
-- **Si accende e si spegne** dall'admin: **Site settings** (un solo record, `SiteSettings` in `models.py`; spento di default).
-- **Audio come blob**: `intro.js` scarica il file e lo dà al player come blob, perché Safari non riproduce un audio che il server non sa servire a pezzi (HTTP Range) e il server di sviluppo di Django non lo sa fare.
-- **Perché serve il clic**: i browser non fanno partire l'audio senza un gesto della persona (su iPhone mai). Il clic sul testo
-  sblocca l'audio. Se l'audio non parte comunque, la sequenza va avanti senza suono.
+Attorno alle spirali c'è un **perimetro** (un tracciato chiuso dello stesso disegno), anche lui link (il quarto, `triskele-link-4` di
+`_triskele.html`, con lo stesso bagliore e il nome "Publication" sotto): porta alla pubblicazione (`PUBLICATION_URL`; se non è impostata il
+perimetro non compare). Il clic lo riceve solo lungo la linea (`--home-triskele-hit-width`), non dentro. **Il disegno** è `Asset 1.svg` (viewBox
+453 x 429,96, linee sottili di 3 unità: `--home-triskele-width`, `--intro-line-width`): ogni spirale è un **nastro disegnato come contorno**, cioè
+un solo tracciato a doppia linea (parte da una giunzione, scende al centro lungo un bordo e torna fuori dall'altro). Per questo il clic sulle
+spirali lo riceve il nastro (lo spazio tra i due bordi, `fill` trasparente), non le linee, troppo sottili. Se si cambia il disegno vanno
+rimisurati i `data-center` (vedi sotto) e `0,4746` (altezza/larghezza del viewBox, in `.home-triskele-label` di `custom.css`).
 - **Una volta per sessione del browser** (`sessionStorage`, chiave `htsIntroSeen`), e **mai** con "riduci movimento" attivo.
   Il tasto **Skip** (o Esc) lo chiude subito e ferma l'audio. Mentre dura, il resto della pagina non è cliccabile (`inert`).
-- **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `triskele.svg` con `pathLength="1"`: si disegna con
-  `stroke-dashoffset`, come il trim paths di After Effects), comportamento e **tempi** in `static/js/intro.js` (oggetto
+- **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `_triskele.html` con `pathLength="1"`: si disegna con
+  `stroke-dasharray`/`stroke-dashoffset`, come il trim paths di After Effects; nell'intro ci sono solo le tre spirali, senza il perimetro. Ogni spirale
+  è un nastro a doppia linea e **cresce dal centro verso entrambe le estremità**, con i due bordi insieme: il punto del giro al centro è `data-center`
+  sul tracciato, la frazione della sua lunghezza misurata sul disegno (punto di massima curvatura); l'ordine resta in alto, in basso a sinistra,
+  in basso a destra), comportamento e **tempi** in `static/js/intro.js` (oggetto
   `TIMELINE` in cima), aspetto in `custom.css` (sezione [13]: colori, spessore, dimensioni, in variabili `--intro-...`).
   Lo sfondo è **liquido**: uno shader WebGL a schermo intero (`<canvas class="intro-liquid">`, `static/js/intro-liquid.js`) con rumore
   simplex che scorre piano, ispirato al pen "Liquid Rainbow" di Johan Karlsson, ma con colori nero → accento → bianco al posto

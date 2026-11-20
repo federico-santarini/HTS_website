@@ -850,20 +850,20 @@ a:hover, a:focus {
    home.html, _triskele.html
    Occupa lo schermo intero, centrato come lo strato dell'intro, con la stessa dimensione (--hts-triskele-size) e lo stesso
    spessore e colore: quando l'intro si dissolve si vede lo stesso disegno, nello stesso punto. Il contenitore lascia passare i clic;
-   solo i tracciati (i link ai progetti a caso) e il cerchio (il link alla pubblicazione) li ricevono.
+   solo le spirali (i link ai progetti a caso) e il perimetro (il link alla pubblicazione) li ricevono.
    Variabili: --home-triskele-... sul selettore .home-triskele.
    ========================================================================== */
 
 .home-triskele {
     --home-triskele-color: #fff;
-    --home-triskele-width: 12;                   /* nelle unità del disegno (500 di larghezza): come nell'intro */
+    --home-triskele-width: 3;                    /* nelle unità del disegno (453 di larghezza): 3 è lo spessore del file originale; come nell'intro */
     /* Il bagliore al passaggio del mouse o con il focus è --hts-glow (sezione [02]), lo stesso dei testi: la linea resta bianca e dello stesso spessore. */
     --home-triskele-glow-opacity: 1;                 /* intensità del bagliore: da 0 a 1 */
     --home-triskele-glow-fade: 0.3s;                 /* durata della comparsa e della scomparsa */
     --home-triskele-label-size: 1.25rem;         /* testo della categoria sotto il triskele */
     --home-triskele-label-color: #fff;
     --home-triskele-label-gap: 2rem;             /* distanza tra il triskele e il nome */
-    --home-triskele-hit-width: 30;               /* area cliccabile (invisibile): più larga della linea, per colpirla più facilmente */
+    --home-triskele-hit-width: 16;               /* area cliccabile del perimetro (invisibile): più larga della linea, per colpirla più facilmente */
 
     position: fixed;
     inset: 0;
@@ -912,16 +912,28 @@ a:hover, a:focus {
     opacity: var(--home-triskele-glow-opacity);
 }
 
+/* Perimetro (link 4): riceve il clic solo lungo la linea (e il suo margine, --home-triskele-hit-width), non dentro, dove stanno le spirali. */
 .home-triskele-svg .triskele-hit {
     fill: none;
     stroke: transparent;
     stroke-width: var(--home-triskele-hit-width);
     stroke-linecap: round;
-    pointer-events: stroke; /* riceve il clic solo lungo la linea (e il suo margine), non nello spazio dentro la spirale */
+    pointer-events: stroke;
+}
+
+/* Spirali (link 1-3): ognuna è un NASTRO disegnato come contorno (due linee sottilissime: difficilissime da colpire da sole). Il tracciato è un unico
+   contorno chiuso dal browser con un segmento tra i due capi, quindi il suo riempimento è il nastro, lo spazio tra i due bordi: è quello a ricevere il clic
+   (fill trasparente + pointer-events: all). Lo spazio vuoto tra un giro e l'altro del nastro non è cliccabile. */
+.home-triskele-svg .triskele-link-1 .triskele-hit,
+.home-triskele-svg .triskele-link-2 .triskele-hit,
+.home-triskele-svg .triskele-link-3 .triskele-hit {
+    fill: transparent;
+    stroke-width: 0;
+    pointer-events: all;
 }
 
 /* Nome della categoria sotto il triskele: tre testi nello stesso punto, ognuno visibile solo con hover o focus del suo tracciato.
-   Sta sotto il triskele e il suo cerchio, centrato: la posizione parte dal centro dello schermo (50%) e scende fino al bordo del cerchio (0,54 volte la dimensione) più la distanza.
+   Sta sotto il triskele e il suo perimetro, centrato: la posizione parte dal centro dello schermo (50%) e scende fino al bordo inferiore del perimetro (0,4746 volte la dimensione: il disegno è alto 429,96 su 453 di larghezza) più la distanza.
    Per metterlo in fondo allo schermo basta cambiare "top" con "bottom: 2rem". Usa :has() (Safari 15.4+, Chrome 105+, Firefox 121+):
    nei browser più vecchi il nome non compare, ma il resto funziona. */
 .home-triskele-label {
@@ -929,7 +941,7 @@ a:hover, a:focus {
     left: 0;
     right: 0;
     /* Il più basso tra "sotto il triskele" e "3rem dal fondo dello schermo": con un triskele grande su una finestra bassa il nome resta visibile. */
-    top: min(calc(50% + var(--hts-triskele-size) * 0.54 + var(--home-triskele-label-gap)), calc(100% - 3rem));
+    top: min(calc(50% + var(--hts-triskele-size) * 0.4746 + var(--home-triskele-label-gap)), calc(100% - 3rem));
     text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: se capita sopra le linee bianche si legge lo stesso */
     margin: 0;
     display: grid;
@@ -970,7 +982,7 @@ a:hover, a:focus {
     --intro-text-size: clamp(1.5rem, 4vw, 2.5rem);
     --intro-text-letter-spacing: 0.05em;
     --intro-line-color: #fff;
-    --intro-line-width: 15;                      /* nelle unità del disegno (500 di larghezza): 15 è lo spessore del file originale */
+    --intro-line-width: 3;                       /* nelle unità del disegno (453 di larghezza): 3 è lo spessore del file originale */
     --intro-triskele-size: var(--hts-triskele-size);   /* larghezza del triskele (vale anche per quello della home) */
     --intro-skip-color: var(--hts-muted);
     /* Sfondo liquido (static/js/intro-liquid.js): rampa nero → colore intermedio → colore chiaro, che scorre piano. */

@@ -26,10 +26,28 @@ const TIMELINE = {
     const skip = intro.querySelector('.intro-skip');
     const audio = intro.querySelector('.intro-audio');
     const paths = [...intro.querySelectorAll('.intro-triskele path')];
+    // Ogni spirale è un nastro disegnato come contorno: UN tracciato a doppia linea che parte da una giunzione, scende verso il centro lungo un bordo,
+    // gira attorno al centro e torna fuori lungo l'altro bordo. Invece di disegnarlo da un capo all'altro (la spirale si "avvolgerebbe" prima verso
+    // il centro e poi fuori), lo si fa crescere DAL CENTRO verso entrambe le estremità, con i due bordi insieme: come prima, quando ogni spirale
+    // era una linea sola che si svolgeva dal centro. Il punto del giro al centro è data-center sul tracciato (frazione della lunghezza, 0-1):
+    // è misurato sul disegno (_triskele.html). Un tracciato senza data-center si disegna da un capo all'altro, come una linea semplice.
+    const centers = paths.map((path) => {
+        const value = parseFloat(path.dataset.center);
+        return Number.isFinite(value) ? value : null;
+    });
+    // Quanto è lunga (frazione 0-1 della lunghezza) la parte visibile quando il disegno è al progresso "progress" (0-1): cresce dal centro
+    // alla stessa velocità da entrambe le parti, e un lato si ferma quando raggiunge la sua estremità.
+    const reach = centers.map((c) => (c === null ? 1 : Math.max(c, 1 - c)));
+    function visibleFraction(i, progress) {
+        const c = centers[i];
+        if (c === null) return progress;
+        const a = progress * reach[i];
+        return Math.min(a, c) + Math.min(a, 1 - c);
+    }
     // Progresso (0-1) a cui ogni linea è lunga minLength volte il proprio spessore, e istante (t) in cui è comparsa.
     // Spessore e lunghezza sono nelle stesse unità del disegno (viewBox), quindi il rapporto non dipende dalla dimensione a schermo.
     const strokeWidth = parseFloat(getComputedStyle(paths[0]).strokeWidth) || 0;
-    const minProgress = paths.map((path) => (strokeWidth * TIMELINE.minLength) / (path.getTotalLength() || 1));
+    const lengths = paths.map((path) => path.getTotalLength() || 1);
     const appearedAt = paths.map(() => null);
     // Il resto della pagina non è cliccabile né raggiungibile con Tab finché dura l'intro.
     const page = [...document.body.children].filter((el) => el !== intro && el.tagName !== 'SCRIPT');
@@ -69,16 +87,27 @@ const TIMELINE = {
 
         paths.forEach((path, i) => {
             const progress = easeInOut(clamp01((t - TIMELINE.drawStart - i * TIMELINE.stagger) / TIMELINE.drawDuration));
+            const shown = visibleFraction(i, progress); // frazione visibile della lunghezza
             // Le estremità sono tonde: una linea cortissima si vede come un puntino largo quanto lo spessore. Finché non è
             // lunga almeno minLength volte lo spessore resta nascosta; poi compare con una breve dissolvenza.
-            if (progress < minProgress[i]) {
+            if (shown * lengths[i] < strokeWidth * TIMELINE.minLength) {
                 path.style.visibility = 'hidden';
                 return;
             }
             if (appearedAt[i] === null) appearedAt[i] = t;
             path.style.visibility = 'visible';
             path.style.opacity = String(clamp01((t - appearedAt[i]) / TIMELINE.lineFadeIn));
-            path.style.strokeDashoffset = String(1 - progress); // 1 = linea nascosta, 0 = tutta disegnata
+            if (centers[i] === null) {
+                path.style.strokeDashoffset = String(1 - progress); // 1 = linea nascosta, 0 = tutta disegnata
+            } else if (progress >= 1) {
+                path.style.strokeDasharray = 'none';                // disegnata tutta: niente trattini
+                path.style.strokeDashoffset = '0';
+            } else {
+                // Un solo trattino lungo "shown", che parte da (centro - parte a monte) e ha il vuoto più lungo del tracciato: non si ripete.
+                const before = Math.min(progress * reach[i], centers[i]);
+                path.style.strokeDasharray = `${shown} 2`;
+                path.style.strokeDashoffset = String(-(centers[i] - before));
+            }
         });
 
         const fade = clamp01((t - (duration - TIMELINE.fadeOutDuration)) / TIMELINE.fadeOutDuration);
