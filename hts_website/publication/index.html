@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>The Holistic Technology Salon</title>
+    <title>Trifold Trine Trinity</title>
     <!-- Alegreya (testo) e Alegreya SC (etichette), con corsivo e grassetto veri: questa pagina è tutta testo. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,8 +19,8 @@
   Pubblicazione statica, servita da portfolio/middleware.py sul sottodominio "publication".
   Pagina unica: titolo, indice e un <article id="..."> per ogni testo; l'indice punta a ogni testo e sottosezione con href="#...".
   Le immagini stanno in /images/ (percorsi assoluti dalla radice del sottodominio). Lo stile sta in /publication.css.
-  Convertita da FINAL_epub.md (versione finale). Le immagini portano --pub-img-w e --pub-img-h (pixel naturali) in style: il CSS li usa per riservare lo spazio giusto prima che si carichino. Il primo blocco (titolo + testo di apertura) è l'articolo "Introduction":
-  il titolo "Introduction" non c'è nel markdown, serve all'indice.
+  Convertita da FINAL_epub.md (versione finale). Le immagini portano --pub-img-w e --pub-img-h (pixel naturali) in style: il CSS li usa per riservare lo spazio giusto prima che si carichino. Il titolo del libro ("Trifold Trine Trinity") sta nella copertina; il primo articolo ha il titolo "The Holistic Technology Salon".
+  Tipo di testo ("Essay" o "Artwork"): <p class="pub-kind"> sopra il titolo; autore: <p class="pub-byline"> sotto il titolo.
   Note: il numero in apice nel testo (class "pub-fnref") apre e chiude la nota, che sta dentro il paragrafo subito dopo il numero
   (e dopo l'eventuale virgola o punto che lo segue): <span class="pub-note" id="fn-AUTORE-N">. Il comportamento è in /publication.js, l'aspetto in /publication.css.
   Nell'indice solo i titoli dei testi sono link; per saltare a una sottosezione c'è la barra laterale dei numeri (<nav class="pub-sidebar">).
@@ -30,7 +30,7 @@
 <!-- Barra in alto (con JavaScript): il marchio HTS (porta al sito principale: l'indirizzo lo imposta publication.js), al centro il nome del testo in cui si è e il suo autore, a destra il pulsante che apre l'indice a tutto schermo (solo su schermi stretti: da 64rem in su c'è la barra laterale). -->
 <div class="pub-topbar">
     <a class="pub-topbar-brand" href="/">HTS</a>
-    <p class="pub-topbar-chapter"><span class="pub-topbar-title">The Holistic Technology Salon</span><span class="pub-topbar-author"></span></p>
+    <p class="pub-topbar-chapter"><span class="pub-topbar-text"><span class="pub-topbar-title">Trifold Trine Trinity</span><span class="pub-topbar-author"></span></span></p>
     <button type="button" class="pub-topbar-toggle" aria-expanded="false" aria-controls="pub-menu">Contents</button>
 </div>
 <div class="pub-menu" id="pub-menu">
@@ -39,74 +39,74 @@
     <p class="pub-label">Contents</p>
     <ol>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">1</span><a href="#introduction">Introduction</a></li>
-            <li data-level="2"><span class="pub-num">1.1</span><span class="pub-toc-item">The Methodology</span></li>
+            <li data-level="1"><span class="pub-num">1</span><a href="#the-holistic-technology-salon">The Holistic Technology Salon</a></li>
+            <li data-level="2"><span class="pub-num">1.1</span><a class="pub-toc-item" href="#the-methodology">The Methodology</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">2</span><a href="#how-to-read">How to Read</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">3</span><a href="#in-search-of-holistic-methods">In Search of Holistic Methods</a></li>
-            <li data-level="2"><span class="pub-num">3.1</span><span class="pub-toc-item">The Holistic as a Conduit for the Decolonial</span></li>
-            <li data-level="3"><span class="pub-num">3.1.1</span><span class="pub-toc-item">Zooming into the esoteric and the artistic</span></li>
-            <li data-level="3"><span class="pub-num">3.1.2</span><span class="pub-toc-item">Technology of the spirit</span></li>
-            <li data-level="2"><span class="pub-num">3.2</span><span class="pub-toc-item">Living the Holistic Method</span></li>
-            <li data-level="3"><span class="pub-num">3.2.1</span><span class="pub-toc-item">An auto-ethnographic research interlude</span></li>
-            <li data-level="2"><span class="pub-num">3.3</span><span class="pub-toc-item">Towards a Holistic Method</span></li>
-            <li data-level="2"><span class="pub-num">3.4</span><span class="pub-toc-item">Works Cited</span></li>
+            <li data-level="2"><span class="pub-num">3.1</span><a class="pub-toc-item" href="#the-holistic-as-a-conduit-for-the-decolonial">The Holistic as a Conduit for the Decolonial</a></li>
+            <li data-level="3"><span class="pub-num">3.1.1</span><a class="pub-toc-item" href="#zooming-into-the-esoteric-and-the-artistic">Zooming into the esoteric and the artistic</a></li>
+            <li data-level="3"><span class="pub-num">3.1.2</span><a class="pub-toc-item" href="#technology-of-the-spirit">Technology of the spirit</a></li>
+            <li data-level="2"><span class="pub-num">3.2</span><a class="pub-toc-item" href="#living-the-holistic-method">Living the Holistic Method</a></li>
+            <li data-level="3"><span class="pub-num">3.2.1</span><a class="pub-toc-item" href="#an-auto-ethnographic-research-interlude">An auto-ethnographic research interlude</a></li>
+            <li data-level="2"><span class="pub-num">3.3</span><a class="pub-toc-item" href="#towards-a-holistic-method">Towards a Holistic Method</a></li>
+            <li data-level="2"><span class="pub-num">3.4</span><a class="pub-toc-item" href="#in-search-of-holistic-methods-references">References</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">4</span><a href="#deep-planetary-sensing">Deep Planetary Sensing</a></li>
-            <li data-level="2"><span class="pub-num">4.1</span><span class="pub-toc-item">A Toolkit for Deep Planetary Sensing</span></li>
-            <li data-level="3"><span class="pub-num">4.1.1</span><span class="pub-toc-item">Beyond the five senses</span></li>
-            <li data-level="3"><span class="pub-num">4.1.2</span><span class="pub-toc-item">The sixth sense</span></li>
-            <li data-level="2"><span class="pub-num">4.2</span><span class="pub-toc-item">Deep Planetary Sensing as Artistic Practice</span></li>
-            <li data-level="2"><span class="pub-num">4.3</span><span class="pub-toc-item">References</span></li>
+            <li data-level="2"><span class="pub-num">4.1</span><a class="pub-toc-item" href="#a-toolkit-for-deep-planetary-sensing">A Toolkit for Deep Planetary Sensing</a></li>
+            <li data-level="3"><span class="pub-num">4.1.1</span><a class="pub-toc-item" href="#beyond-the-five-senses">Beyond the five senses</a></li>
+            <li data-level="3"><span class="pub-num">4.1.2</span><a class="pub-toc-item" href="#the-sixth-sense">The sixth sense</a></li>
+            <li data-level="2"><span class="pub-num">4.2</span><a class="pub-toc-item" href="#deep-planetary-sensing-as-artistic-practice">Deep Planetary Sensing as Artistic Practice</a></li>
+            <li data-level="2"><span class="pub-num">4.3</span><a class="pub-toc-item" href="#deep-planetary-sensing-references">References</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">5</span><a href="#the-future-is-useful-only-when-not-tormented">The future is useful only when not tormented</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">6</span><a href="#what-does-it-mean-to-be-in-right-relationship">What does it mean to be in &#x27;right relationship&#x27;?</a></li>
-            <li data-level="2"><span class="pub-num">6.1</span><span class="pub-toc-item">The wisdom of burn-out</span></li>
-            <li data-level="2"><span class="pub-num">6.2</span><span class="pub-toc-item">Right Relationship</span></li>
-            <li data-level="2"><span class="pub-num">6.3</span><span class="pub-toc-item">Rethinking, remembering, repairing</span></li>
-            <li data-level="2"><span class="pub-num">6.4</span><span class="pub-toc-item">Making kin is a practice</span></li>
-            <li data-level="2"><span class="pub-num">6.5</span><span class="pub-toc-item">References</span></li>
+            <li data-level="2"><span class="pub-num">6.1</span><a class="pub-toc-item" href="#the-wisdom-of-burn-out">The wisdom of burn-out</a></li>
+            <li data-level="2"><span class="pub-num">6.2</span><a class="pub-toc-item" href="#right-relationship">Right Relationship</a></li>
+            <li data-level="2"><span class="pub-num">6.3</span><a class="pub-toc-item" href="#rethinking-remembering-repairing">Rethinking, remembering, repairing</a></li>
+            <li data-level="2"><span class="pub-num">6.4</span><a class="pub-toc-item" href="#making-kin-is-a-practice">Making kin is a practice</a></li>
+            <li data-level="2"><span class="pub-num">6.5</span><a class="pub-toc-item" href="#what-does-it-mean-to-be-in-right-relationship-references">References</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">7</span><a href="#ancestral-healing-in-the-age-of-ai">Ancestral Healing in the Age of AI</a></li>
-            <li data-level="2"><span class="pub-num">7.1</span><span class="pub-toc-item">Synthetic Ancestors</span></li>
-            <li data-level="2"><span class="pub-num">7.2</span><span class="pub-toc-item">Our valuable and vulnerable desire for wisdom</span></li>
-            <li data-level="2"><span class="pub-num">7.3</span><span class="pub-toc-item">Conclusion</span></li>
-            <li data-level="2"><span class="pub-num">7.4</span><span class="pub-toc-item">References</span></li>
+            <li data-level="2"><span class="pub-num">7.1</span><a class="pub-toc-item" href="#synthetic-ancestors">Synthetic Ancestors</a></li>
+            <li data-level="2"><span class="pub-num">7.2</span><a class="pub-toc-item" href="#our-valuable-and-vulnerable-desire-for-wisdom">Our valuable and vulnerable desire for wisdom</a></li>
+            <li data-level="2"><span class="pub-num">7.3</span><a class="pub-toc-item" href="#conclusion">Conclusion</a></li>
+            <li data-level="2"><span class="pub-num">7.4</span><a class="pub-toc-item" href="#ancestral-healing-in-the-age-of-ai-references">References</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">8</span><a href="#the-or-cle-telemagic">The Or@cle - TELEMAGIC</a></li>
+            <li data-level="1"><span class="pub-num">8</span><a href="#the-or-cle">The Or@cle</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">9</span><a href="#echosystem-marlot-meyer">Echo–system - Marlot Meyer</a></li>
-            <li data-level="2"><span class="pub-num">9.1</span><span class="pub-toc-item">The Mother Tree</span></li>
-            <li data-level="2"><span class="pub-num">9.2</span><span class="pub-toc-item">Sensitive System</span></li>
+            <li data-level="1"><span class="pub-num">9</span><a href="#echosystem">Echo–system</a></li>
+            <li data-level="2"><span class="pub-num">9.1</span><a class="pub-toc-item" href="#the-mother-tree">The Mother Tree</a></li>
+            <li data-level="2"><span class="pub-num">9.2</span><a class="pub-toc-item" href="#sensitive-system">Sensitive System</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">10</span><a href="#planetary-acupuncture-ko-jihae">Planetary Acupuncture – Ko Jihae</a></li>
-            <li data-level="2"><span class="pub-num">10.1</span><span class="pub-toc-item">The Origin of the Project: From the Personal to the Planetary</span></li>
-            <li data-level="3"><span class="pub-num">10.1.1</span><span class="pub-toc-item">1. The Body as Living Technology</span></li>
-            <li data-level="3"><span class="pub-num">10.1.2</span><span class="pub-toc-item">2. Art and Healing as One Language</span></li>
-            <li data-level="3"><span class="pub-num">10.1.3</span><span class="pub-toc-item">3. Memory: The Origin of Dance</span></li>
+            <li data-level="1"><span class="pub-num">10</span><a href="#planetary-acupuncture">Planetary Acupuncture</a></li>
+            <li data-level="2"><span class="pub-num">10.1</span><a class="pub-toc-item" href="#the-origin-of-the-project-from-the-personal-to-the-planetary">The Origin of the Project: From the Personal to the Planetary</a></li>
+            <li data-level="3"><span class="pub-num">10.1.1</span><a class="pub-toc-item" href="#1-the-body-as-living-technology">1. The Body as Living Technology</a></li>
+            <li data-level="3"><span class="pub-num">10.1.2</span><a class="pub-toc-item" href="#2-art-and-healing-as-one-language">2. Art and Healing as One Language</a></li>
+            <li data-level="3"><span class="pub-num">10.1.3</span><a class="pub-toc-item" href="#3-memory-the-origin-of-dance">3. Memory: The Origin of Dance</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">11</span><a href="#screen-guardian-ginevra-petrozzi">Screen Guardian – Ginevra Petrozzi</a></li>
+            <li data-level="1"><span class="pub-num">11</span><a href="#screen-guardian">Screen Guardian</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">12</span><a href="#moonblood-annika-kappner-lucy-cordes-engelman">Moonblood – Annika Kappner, Lucy Cordes Engelman</a></li>
+            <li data-level="1"><span class="pub-num">12</span><a href="#moonblood">Moonblood</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">13</span><a href="#super-memory-3333-annika-kappner">Super Memory 3333 – Annika Kappner</a></li>
+            <li data-level="1"><span class="pub-num">13</span><a href="#super-memory-3333">Super Memory 3333</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">14</span><a href="#tech-yoga-sieta-van-horck-setup">Tech Yoga – Sieta van Horck, SETUP</a></li>
+            <li data-level="1"><span class="pub-num">14</span><a href="#tech-yoga">Tech Yoga</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">15</span><a href="#acknowledgements">Acknowledgements</a></li>
@@ -119,7 +119,7 @@
 <!-- Barra laterale con i numeri di capitoli e sottocapitoli (elenco piatto, senza rientri; solo su schermi larghi). Compare dal primo capitolo in poi (JavaScript); il nome compare al passaggio del mouse (data-title). -->
 <nav class="pub-sidebar" aria-label="Chapter numbers">
     <ul>
-        <li><a href="#introduction" data-level="1" data-title="Introduction" aria-label="1 Introduction">1</a></li>
+        <li><a href="#the-holistic-technology-salon" data-level="1" data-title="The Holistic Technology Salon" aria-label="1 The Holistic Technology Salon">1</a></li>
         <li><a href="#the-methodology" data-level="2" data-title="The Methodology" aria-label="1.1 The Methodology">1.1</a></li>
         <li><a href="#how-to-read" data-level="1" data-title="How to Read" aria-label="2 How to Read">2</a></li>
         <li><a href="#in-search-of-holistic-methods" data-level="1" data-title="In Search of Holistic Methods" aria-label="3 In Search of Holistic Methods">3</a></li>
@@ -129,7 +129,7 @@
         <li><a href="#living-the-holistic-method" data-level="2" data-title="Living the Holistic Method" aria-label="3.2 Living the Holistic Method">3.2</a></li>
         <li><a href="#an-auto-ethnographic-research-interlude" data-level="3" data-title="An auto-ethnographic research interlude" aria-label="3.2.1 An auto-ethnographic research interlude">3.2.1</a></li>
         <li><a href="#towards-a-holistic-method" data-level="2" data-title="Towards a Holistic Method" aria-label="3.3 Towards a Holistic Method">3.3</a></li>
-        <li><a href="#in-search-of-holistic-methods-works-cited" data-level="2" data-title="Works Cited" aria-label="3.4 Works Cited">3.4</a></li>
+        <li><a href="#in-search-of-holistic-methods-references" data-level="2" data-title="References" aria-label="3.4 References">3.4</a></li>
         <li><a href="#deep-planetary-sensing" data-level="1" data-title="Deep Planetary Sensing" aria-label="4 Deep Planetary Sensing">4</a></li>
         <li><a href="#a-toolkit-for-deep-planetary-sensing" data-level="2" data-title="A Toolkit for Deep Planetary Sensing" aria-label="4.1 A Toolkit for Deep Planetary Sensing">4.1</a></li>
         <li><a href="#beyond-the-five-senses" data-level="3" data-title="Beyond the five senses" aria-label="4.1.1 Beyond the five senses">4.1.1</a></li>
@@ -148,32 +148,32 @@
         <li><a href="#our-valuable-and-vulnerable-desire-for-wisdom" data-level="2" data-title="Our valuable and vulnerable desire for wisdom" aria-label="7.2 Our valuable and vulnerable desire for wisdom">7.2</a></li>
         <li><a href="#conclusion" data-level="2" data-title="Conclusion" aria-label="7.3 Conclusion">7.3</a></li>
         <li><a href="#ancestral-healing-in-the-age-of-ai-references" data-level="2" data-title="References" aria-label="7.4 References">7.4</a></li>
-        <li><a href="#the-or-cle-telemagic" data-level="1" data-title="The Or@cle - TELEMAGIC" aria-label="8 The Or@cle - TELEMAGIC">8</a></li>
-        <li><a href="#echosystem-marlot-meyer" data-level="1" data-title="Echo–system - Marlot Meyer" aria-label="9 Echo–system - Marlot Meyer">9</a></li>
+        <li><a href="#the-or-cle" data-level="1" data-title="The Or@cle" aria-label="8 The Or@cle">8</a></li>
+        <li><a href="#echosystem" data-level="1" data-title="Echo–system" aria-label="9 Echo–system">9</a></li>
         <li><a href="#the-mother-tree" data-level="2" data-title="The Mother Tree" aria-label="9.1 The Mother Tree">9.1</a></li>
         <li><a href="#sensitive-system" data-level="2" data-title="Sensitive System" aria-label="9.2 Sensitive System">9.2</a></li>
-        <li><a href="#planetary-acupuncture-ko-jihae" data-level="1" data-title="Planetary Acupuncture – Ko Jihae" aria-label="10 Planetary Acupuncture – Ko Jihae">10</a></li>
+        <li><a href="#planetary-acupuncture" data-level="1" data-title="Planetary Acupuncture" aria-label="10 Planetary Acupuncture">10</a></li>
         <li><a href="#the-origin-of-the-project-from-the-personal-to-the-planetary" data-level="2" data-title="The Origin of the Project: From the Personal to the Planetary" aria-label="10.1 The Origin of the Project: From the Personal to the Planetary">10.1</a></li>
         <li><a href="#1-the-body-as-living-technology" data-level="3" data-title="1. The Body as Living Technology" aria-label="10.1.1 1. The Body as Living Technology">10.1.1</a></li>
         <li><a href="#2-art-and-healing-as-one-language" data-level="3" data-title="2. Art and Healing as One Language" aria-label="10.1.2 2. Art and Healing as One Language">10.1.2</a></li>
         <li><a href="#3-memory-the-origin-of-dance" data-level="3" data-title="3. Memory: The Origin of Dance" aria-label="10.1.3 3. Memory: The Origin of Dance">10.1.3</a></li>
-        <li><a href="#screen-guardian-ginevra-petrozzi" data-level="1" data-title="Screen Guardian – Ginevra Petrozzi" aria-label="11 Screen Guardian – Ginevra Petrozzi">11</a></li>
-        <li><a href="#moonblood-annika-kappner-lucy-cordes-engelman" data-level="1" data-title="Moonblood – Annika Kappner, Lucy Cordes Engelman" aria-label="12 Moonblood – Annika Kappner, Lucy Cordes Engelman">12</a></li>
-        <li><a href="#super-memory-3333-annika-kappner" data-level="1" data-title="Super Memory 3333 – Annika Kappner" aria-label="13 Super Memory 3333 – Annika Kappner">13</a></li>
-        <li><a href="#tech-yoga-sieta-van-horck-setup" data-level="1" data-title="Tech Yoga – Sieta van Horck, SETUP" aria-label="14 Tech Yoga – Sieta van Horck, SETUP">14</a></li>
+        <li><a href="#screen-guardian" data-level="1" data-title="Screen Guardian" aria-label="11 Screen Guardian">11</a></li>
+        <li><a href="#moonblood" data-level="1" data-title="Moonblood" aria-label="12 Moonblood">12</a></li>
+        <li><a href="#super-memory-3333" data-level="1" data-title="Super Memory 3333" aria-label="13 Super Memory 3333">13</a></li>
+        <li><a href="#tech-yoga" data-level="1" data-title="Tech Yoga" aria-label="14 Tech Yoga">14</a></li>
         <li><a href="#acknowledgements" data-level="1" data-title="Acknowledgements" aria-label="15 Acknowledgements">15</a></li>
     </ul>
 </nav>
 
 <header class="pub-cover">
-    <h1>The Holistic Technology Salon</h1>
+    <h1>Trifold Trine Trinity</h1>
 </header>
 
 <nav class="pub-toc" aria-label="Contents">
     <p class="pub-label">Contents</p>
     <ol>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">1</span><a href="#introduction">Introduction</a></li>
+            <li data-level="1"><span class="pub-num">1</span><a href="#the-holistic-technology-salon">The Holistic Technology Salon</a></li>
             <li data-level="2"><span class="pub-num">1.1</span><span class="pub-toc-item">The Methodology</span></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
@@ -187,7 +187,7 @@
             <li data-level="2"><span class="pub-num">3.2</span><span class="pub-toc-item">Living the Holistic Method</span></li>
             <li data-level="3"><span class="pub-num">3.2.1</span><span class="pub-toc-item">An auto-ethnographic research interlude</span></li>
             <li data-level="2"><span class="pub-num">3.3</span><span class="pub-toc-item">Towards a Holistic Method</span></li>
-            <li data-level="2"><span class="pub-num">3.4</span><span class="pub-toc-item">Works Cited</span></li>
+            <li data-level="2"><span class="pub-num">3.4</span><span class="pub-toc-item">References</span></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">4</span><a href="#deep-planetary-sensing">Deep Planetary Sensing</a></li>
@@ -216,31 +216,31 @@
             <li data-level="2"><span class="pub-num">7.4</span><span class="pub-toc-item">References</span></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">8</span><a href="#the-or-cle-telemagic">The Or@cle - TELEMAGIC</a></li>
+            <li data-level="1"><span class="pub-num">8</span><a href="#the-or-cle">The Or@cle</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">9</span><a href="#echosystem-marlot-meyer">Echo–system - Marlot Meyer</a></li>
+            <li data-level="1"><span class="pub-num">9</span><a href="#echosystem">Echo–system</a></li>
             <li data-level="2"><span class="pub-num">9.1</span><span class="pub-toc-item">The Mother Tree</span></li>
             <li data-level="2"><span class="pub-num">9.2</span><span class="pub-toc-item">Sensitive System</span></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">10</span><a href="#planetary-acupuncture-ko-jihae">Planetary Acupuncture – Ko Jihae</a></li>
+            <li data-level="1"><span class="pub-num">10</span><a href="#planetary-acupuncture">Planetary Acupuncture</a></li>
             <li data-level="2"><span class="pub-num">10.1</span><span class="pub-toc-item">The Origin of the Project: From the Personal to the Planetary</span></li>
             <li data-level="3"><span class="pub-num">10.1.1</span><span class="pub-toc-item">1. The Body as Living Technology</span></li>
             <li data-level="3"><span class="pub-num">10.1.2</span><span class="pub-toc-item">2. Art and Healing as One Language</span></li>
             <li data-level="3"><span class="pub-num">10.1.3</span><span class="pub-toc-item">3. Memory: The Origin of Dance</span></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">11</span><a href="#screen-guardian-ginevra-petrozzi">Screen Guardian – Ginevra Petrozzi</a></li>
+            <li data-level="1"><span class="pub-num">11</span><a href="#screen-guardian">Screen Guardian</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">12</span><a href="#moonblood-annika-kappner-lucy-cordes-engelman">Moonblood – Annika Kappner, Lucy Cordes Engelman</a></li>
+            <li data-level="1"><span class="pub-num">12</span><a href="#moonblood">Moonblood</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">13</span><a href="#super-memory-3333-annika-kappner">Super Memory 3333 – Annika Kappner</a></li>
+            <li data-level="1"><span class="pub-num">13</span><a href="#super-memory-3333">Super Memory 3333</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
-            <li data-level="1"><span class="pub-num">14</span><a href="#tech-yoga-sieta-van-horck-setup">Tech Yoga – Sieta van Horck, SETUP</a></li>
+            <li data-level="1"><span class="pub-num">14</span><a href="#tech-yoga">Tech Yoga</a></li>
         </ol></li>
         <li class="pub-toc-group"><ol>
             <li data-level="1"><span class="pub-num">15</span><a href="#acknowledgements">Acknowledgements</a></li>
@@ -249,11 +249,14 @@
 </nav>
 
 <main>
-<article class="pub-section" id="introduction" data-title="Introduction" data-author="">
-<h2>Introduction</h2>
+<article class="pub-section" id="the-holistic-technology-salon" data-title="The Holistic Technology Salon" data-author="">
+<h2>The Holistic Technology Salon</h2>
 <p>The Holistic Technology Salon (HTS) is a living collective research space for co-creating alternative technological futures through multidimensional conversations that integrate diverse ways of knowing. Throughout 2023-2024, HTS organized gatherings and events in which artists, designers and researchers shared their knowledge with the community. The Holistic Technology Salon was created to counter the current conception of the technosphere as an autonomous, abstract domain divorced from ecological and social realities. The theoretical and ontological basis for HTS is to challenge this dominant perception, advocating for a relational understanding of technology as part of a living, entangled system that includes humans, non-human entities, and the environment. In response to a lack of holistic understanding of the technosphere, HTS asks: How can we relate to the technosphere as an integral part of the planetary experience from a care-centric perspective?</p>
 <p>Since 2023, HTS has developed through salons, workshops, performances, artistic commissions and interdisciplinary collaborations between artists, designers, researchers, technologists and audiences. Inspired by the historical salon as a space for exchange, HTS has evolved into a dynamic artistic research platform that weaves different ways of producing knowledge.</p>
 <h3 id="the-methodology">The Methodology</h3>
+<figure class="pub-figure">
+    <img src="/images/Coil-Celtic-Triple-Spiral-PNG-Photos.png" alt="" width="1097" height="1024" style="--pub-img-w: 1097; --pub-img-h: 1024" loading="lazy" decoding="async">
+</figure>
 <p>The Triskele is the inspiration for the artistic research methodology that guides HTS. The ancient Celtic symbol of three interconnected spirals represents our research as a living ecology, in which different forms of knowledge remain distinct, while continuously informing each other in a mutually beneficial way. The Triskel proposes a model of artistic research that includes PERCEPTION, COGNITION and RELATIONALITY.</p>
 <p><strong>PERCEPTION</strong> explores embodied knowledge through workshops, movement, ritual, making and participatory encounters, inviting participants to contribute directly to the evolution of the research through their lived experience.</p>
 <p><strong>COGNITION</strong> materializes through reading groups, writing, editorial processes and collaborations with academic researchers and writers.</p>
@@ -272,6 +275,7 @@
 <p>We embrace the fractality of this whole project and hope to invite participation into this ever-evolving spiral of meaning, that somehow is shaping itself around us.</p>
 </article>
 <article class="pub-section" id="in-search-of-holistic-methods" data-title="In Search of Holistic Methods" data-author="Dr Evelyn Wan">
+<p class="pub-kind">Essay</p>
 <h2>In Search of Holistic Methods</h2>
 <p class="pub-byline">Dr Evelyn Wan</p>
 <div class="pub-definition">
@@ -358,7 +362,7 @@
 <p>In this sense, a holistic method, whether in arts or sciences, emerges as an open-ended exploration. It is not universalising as a gesture, and does not attempt to force specific ontological and cosmological visions of different worlds onto this one. Instead, it remains attentive to our bodies and the various cosmovisions they inhabit, in the recognition that there are multiple portals and doorways into the many ‘pluriverses’around us, within and beyond Europe. Like holistic medicine that is often tailored to individual bodily constitution, a holistic method is also about the specificity of each individual body and how one relates differently to oneself, to one’s lineage, to each other, to technologies of the spirit and otherwise, and to the cosmos at large.</p>
 <p>A holistic method is not a hypothetical. It is to be lived.</p>
 <p>As part of the Holistic Technology Salon, I sincerely invite you to join us on this journey of reclaiming our bodies, our hearts, our spirits, and our souls from the grips of capitalist, patriarchal modernity. Together, we insist on the flourishing of other worlds in parallel to and beyond this one.</p>
-<h3 id="in-search-of-holistic-methods-works-cited">Works Cited</h3>
+<h3 id="in-search-of-holistic-methods-references">References</h3>
 <ul class="works-cited">
     <li>Anzaldúa, Gloria. <em>Borderlands</em>. Aunt Lute Books, 1987.</li>
     <li>Cahagnet, Louis-Alphonse. <em>Magie magnétique</em>. Baillière, 1858.</li>
@@ -385,7 +389,9 @@
 </ul>
 </article>
 <article class="pub-section" id="deep-planetary-sensing" data-title="Deep Planetary Sensing" data-author="Annika Kappner">
+<p class="pub-kind">Essay</p>
 <h2>Deep Planetary Sensing</h2>
+<p class="pub-byline">Annika Kappner</p>
 <figure class="pub-figure">
     <img src="/images/image14.jpg" alt="" width="1125" height="1115" style="--pub-img-w: 1125; --pub-img-h: 1115" loading="lazy" decoding="async">
 </figure>
@@ -519,6 +525,7 @@
 </ul>
 </article>
 <article class="pub-section" id="the-future-is-useful-only-when-not-tormented" data-title="The future is useful only when not tormented" data-author="Ginevra Petrozzi">
+<p class="pub-kind">Essay</p>
 <h2>The future is useful only when not tormented</h2>
 <p class="pub-byline">Ginevra Petrozzi</p>
 <p>The need to predict the future in advance has historically been used to do damage control. Predictions were made to answer specific or less specific questions, and after being received they entered the world, based on how the receiver would activate them. In literature, we have famous examples of decisions being made after a future prediction had been made and things subsequently going terribly wrong. In the case of <em>Oedipus Rex,</em> narrated by Sophocles, the protagonist famously tries to escape his future as it is predicted and delivered as fate. The moral of the whole story is that one’s fate cannot be escaped no matter what one does. Actions might be taken to avoid it, but one will still face it. Oedipus lays with his mother and kills his father, as predicted, not despite his efforts to escape his fate, but because of them (“I have suffered, friends, the worst horrors on earth, suffered against my will I swear to god, not a single thing self-willed—”)<sup class="pub-fnref"><a id="fnref-petrozzi-1" href="#fn-petrozzi-1">1</a></sup><span class="pub-note" id="fn-petrozzi-1" role="note"><span class="pub-note-inner"><span class="pub-note-text"><span class="pub-note-number">1</span> Sophocles. (1984). <em>Oedipus Rex</em> (R. Fagles, Trans.). Penguin Classics. (Original work published ca. 429 BCE).</span></span></span> In fact, we will never know how the story would have unfolded if Oedipus did not try to escape his fate with all his strength, and instead accepted it, or perhaps questioned it.</p>
@@ -566,6 +573,7 @@
 </figure>
 </article>
 <article class="pub-section" id="what-does-it-mean-to-be-in-right-relationship" data-title="What does it mean to be in &#x27;right relationship&#x27;?" data-author="Sieta van Horck">
+<p class="pub-kind">Essay</p>
 <h2>What does it mean to be in 'right relationship'?</h2>
 <p class="pub-byline">Sieta van Horck</p>
 <p>Take a moment and notice your breath<br />
@@ -639,7 +647,9 @@ D o w n…</p>
 </ul>
 </article>
 <article class="pub-section" id="ancestral-healing-in-the-age-of-ai" data-title="Ancestral Healing in the Age of AI" data-author="Georgia Kareola">
+<p class="pub-kind">Essay</p>
 <h2>Ancestral Healing in the Age of AI</h2>
+<p class="pub-byline">Georgia Kareola</p>
 <p>As I stepped into my friend’s apartment the other day, I noticed how his desktop screen displayed a conversation with a chatbot. A few days earlier, Jay had undergone surgery on his nose to correct a deviated septum. We jokingly called it “the nose job”.  While spending the day recovering at home, Jay (a Millenial cusp Gen Z with a degree in engineering) had asked the chatbot whether the increasing pain he’d felt since the operation was normal.</p>
 <p>Judging by the prominent place of the computer in the living room and the fact that it hadn’t been switched off in anticipation of my arrival, I concluded Jay wasn’t hiding this information from me. When he casually disappeared into the kitchen to prepare us some lunch, I, with a mixture of apprehension and curiosity, glanced over the dialogue. Chat had responded to Jay’s question in an empathic and comforting tone: the pain was, in fact, a good sign; a natural response of the body during the healing process. I felt relieved; a sign that my body acknowledged Chat’s words as a source of truth.</p>
 <p>Although I was initially, admittedly, a little taken aback by the explicit presence of the mediated medical assistance in the room and momentarily intimidated by the intimate nature of the conversation, my adaptable human mind also, within seconds, accepted the chatbot’s presence as obvious. Of course, physical discomfort drove Jay to AI, not back to his doctor.</p>
@@ -662,6 +672,9 @@ D o w n…</p>
 <p>In <a href="https://www.ebony.com/kwadwo-tuffour-founder-serene-bitters-transform-gut-health-african-herbalism/">an interview with online magazine EBONY</a>, Tuffour mentions how “there’s a deep healing wisdom in African herbalism that has often been overshadowed by Western medicine.” He adds that “The Black American community has historically been underserved when it comes to holistic wellness; we've been handed pills for pain but rarely given roots for restoration.” Tuffour specifically emphasises the holistic approach of ancestral African medicine and how he implements this in his company. According to him, African herbal traditions “honor the body as a system, rather than merely focusing on individual symptoms.” He points out how herbs like Soursop, Black Seed, and Moringa don’t just treat; they cleanse, rebuild, prevent, and restore balance. He concludes that, for this reason, the African tradition offers “more than herbal medicine….it’s ancestral knowledge, and it’s time we bring that power back into our daily lives.”</p>
 <p>So what is it that we're seeing on Mama Abeni’s Instagram account? It is easy to classify this content as <a href="https://www.theguardian.com/technology/2025/dec/27/more-than-20-of-videos-shown-to-new-youtube-users-are-ai-slop-study-finds">AI slop</a> generated only to push products, which of course is partially true. Yet in this specific case, there might be a slightly more noble cause. At least the product and company behind it are aimed at bringing African herbalism into the limelight. But does this justify the means? Is it morally acceptable, or even legal, to mislead an audience into thinking the person they’re watching (and perhaps even trusting) is authentic and speaking from a specific tradition? Is it, despite the indirect and commercial connection to African herbalism, not still an exploitation of African ancestral traditions, seeing that most of Mama Abeni’s content is centered around generic Western health advice?</p>
 <p>The use of machines to create influencers is nothing new. One of the first was  <a href="https://www.instagram.com/lilmiquela/">Lil Miquela</a>, the avant-garde virtual influencer introduced in 2016 by a Los Angeles company backed by Silicon Valley money, and who by now has collaborated with fashion labels like Prada, Calvin Klein, and Dior. Similar to the current synthetic ancestral influencers, Lil Miquela is made of pixels. A significant difference is that we always knew she was. There was no attempt at deception.</p>
+<figure class="pub-figure">
+    <img src="/images/image21.png" alt="" width="1170" height="1951" style="--pub-img-w: 1170; --pub-img-h: 1951" loading="lazy" decoding="async">
+</figure>
 <p>AI has developed enormously since the birth of Lil Miquela, and a recent (March 6, 2026) <a href="https://www.nytimes.com/2026/03/09/business/media/fake-ai-generated-accounts-social-media-supplements.html">New York Times article</a> observes how this technological leap is raising alarm among experts that consumers will unknowingly be duped by deepfakes. The authors refer to <a href="https://www.unsw.edu.au/newsroom/news/2026/02/humans-overconfident-telling-AI-faces-real-faces-people-fake">a study from earlier this year</a>  in The British Journal of Psychology, that found that people consistently overestimate their ability to recognize AI-generated faces. Even those with exceptional face-recognition ability (known as ‘super recognisers’) are fooled by faces produced by AI.  This, unsurprisingly, as the study concludes, leaves people vulnerable to “fraud and deception”, a risk which is predicted to intensify as technology improves.</p>
 <p>The same NYT article also references Timothy Caulfield, research director of the Health Law Institute at the University of Alberta, who observes that the use of AI has grown specifically in the wellness space, “a crowded but lucrative market where consumers rely on perceptions of authenticity and identity to make buying decisions.” With AI, Mr. Caulfield says, brands can experiment inexpensively with a huge variety of avatars until one works. They can avoid high influencer fees of real humans while targeting wellness seekers.</p>
 <p>This brings us to a second, successful synthetic influencer: <a href="https://www.instagram.com/mingsanhealing/">@mingsanhealing</a>, an adorable elderly Asian monk, supposedly 102 years old, who is mostly depicted in the setting of his allegedly Tibetan monastery. Buddhist artworks adorn the background, and at times we get a view of the Himalayan mountain range through one of the building’s windows. Dressed in ruby red and orange robes, with a bald head and a contagious smile that radiates a stage of enlightenment, this character has accrued 1.3 million followers on Instagram. His bio reads: Ming San | Healing Guide, Ancient wisdom for the mind &amp; body, followed by:</p>
@@ -678,6 +691,9 @@ D o w n…</p>
 <p>At times, the creators of Grimur’s content tend to get experimental. In one recent reel, Grimur is sitting at his kitchen table on which a dissected human leg is placed. It is not quite a medical prosthetic, not quite an actual leg. Grimur pours an artificial drink made of matcha and lemon down the inside of the leg, releasing big chunks of yellow fat. His commentary is “don’t drink this too often, because it is so effective, people will ask if you’re taking Ozempic.” It is in moments like this that the eeriness of the uncanny valley is felt even beyond the frontier, and I begin to feel an urge to leave a comment saying that I’d never heard of lemons or bananas being indigenous to Iceland.</p>
 <h3 id="our-valuable-and-vulnerable-desire-for-wisdom">Our valuable and vulnerable desire for wisdom</h3>
 <p>The makers and beneficiaries of these synthetic influencers capitalize on the human desire to transcend an often disembodied existence in a fast-paced world, by mimicking ancestral practices that offer a more wholesome and connected way of living, while building a simulation with multiple layers of fake. We are made to believe that these are real people speaking from ancient traditions, and since many people have lost touch with their own ancestral (wisdom) traditions, and/or lack the digital literacy or AI detection skills to identify them as fake, they buy what they see whether the reels convert into views, follows, or actual product purchases, or whether more metaphorically, viewers accept the influencers’ words as valid.</p>
+<figure class="pub-figure">
+    <img src="/images/111.png" alt="" width="1000" height="1999" style="--pub-img-w: 1000; --pub-img-h: 1999" loading="lazy" decoding="async">
+</figure>
 <p>Remarkably, all the synthetic influencers mentioned above display criticisms of consumerism, arguing against the intake of fast food, preservatives, food colouring, and pesticides; things that are quite obviously bad for human health, but which the average Western, and especially American, diet is unfortunately still riddled with. Health seekers hungry to escape an unsustainable lifestyle are targeted with basic lifestyle interventions cloaked in ancestral robes, like Ming San making a “detoxifying footbath” with Epsom salt, apple cider vinegar, and ginger.</p>
 <p>The fact that these creations have become so Frankensteinian, poses the question of whether they still refer to anything familiar at all, or whether they are an entirely novel phenomenon; a copy of a thing which no longer has a clear original, because it has deviated so much from the source. In his theory on the Simulacrum, Jean Beaudrillard argues that simulacra evolve through four stages: from reflecting reality, to distorting it, to masking the absence of reality, and finally becoming pure simulation, where the copy becomes more "real" than reality itself, a so-called hyperreality. Information Studies scholar <a href="https://www.athensjournals.gr/media/2025-11-3-3-Konzack.pdf">Lars Konzack argues</a> that AI-driven content increasingly operates as autonomous simulations, detached from any real referent, and that this destabilizes traditional notions of authenticity, authorship, and audience perception. Synthetic ancestral influencers hover between stages three and four. The deception lies in masking the absence of reality, while at more experimental moments, this content moves into the space of the hyperreal, leaving a trail of destabilization.</p>
 <h3 id="conclusion">Conclusion</h3>
@@ -713,9 +729,10 @@ D o w n…</p>
     <li>Website of the United Nations, last accessed 4 September 2026 <a href="https://social.desa.un.org/issues/indigenous-peoples">https://social.desa.un.org/issues/indigenous-peoples</a></li>
 </ul>
 </article>
-<article class="pub-section" id="the-or-cle-telemagic" data-title="The Or@cle" data-author="TELEMAGIC">
-<h2>The Or@cle - TELEMAGIC</h2>
-<p><em>Telemagic will show a reimagining of one of their starting works in the series</em> <em>*Oracles*.</em></p>
+<article class="pub-section" id="the-or-cle" data-title="The Or@cle" data-author="TELEMAGIC">
+<p class="pub-kind">Artwork</p>
+<h2>The Or@cle</h2>
+<p class="pub-byline">TELEMAGIC</p>
 <p><em>The Or@cle</em> is a prophetic machine with an endlessly changing unknown output; much like a stream. The visitor inserts a token, triggering a prophecy that forms meaning through chance-based procedures and scraping mechanisms. Rather than revealing a truth, it stages the moment when noise begins to feel all-knowing.</p>
 <figure class="pub-figure">
     <img src="/images/image3.jpg" alt="photo: asmallproductioncompany, TeleState @ de School, 2017" width="1500" height="1002" style="--pub-img-w: 1500; --pub-img-h: 1002" loading="lazy" decoding="async">
@@ -724,7 +741,7 @@ D o w n…</p>
     </figcaption>
 </figure>
 <p>This series of works stems from 2017, a time when we tried to alert people about the mystical qualities of (computer) technologies that were being overlooked. Much of the mystification we found is intentional obfuscation to make (a profit from) users dependent on their services and products, and so predict their future behavior. For consumers, it became impossible to question the inner meaning of their closest machines because they are never given the chance to understand them, let alone repair them, thus creating a perfect dependency on the loop of buying new products whenever the old fails or a new mystical version with exaggerated promises is released. The dominant framing of computers as neutral tools, as means towards predetermined ends, felt too utilitarian to us. It overlooked a lot that they were actually doing (like organising attention, trust, desire, behavior and belief), and could be doing.</p>
-<p>The Oracles we made symbolised the mythic relationship we hold to our closest machines and the wishes we projected onto them. They play with the deeply embedded longing for magical qualities that extend our human capacity through technological extensions, while questioning what it means to let go of control (if we ever had control in the first place).</p>
+<p>The Or@cles we made symbolised the mythic relationship we hold to our closest machines and the wishes we projected onto them. They play with the deeply embedded longing for magical qualities that extend our human capacity through technological extensions, while questioning what it means to let go of control (if we ever had control in the first place).</p>
 <p>When looking at our current world, it’s hard for us not to see this as prophetic in its own right. Today, we type all our most intimate questions into an all-knowing algorithm that (usually/always?) hallucinates an answer (of combinatory tokens) out of noise that gets presented as an absolute truth.</p>
 <p>For our participation in <em>the Holistic Technology Salon</em>, we, as a hacking practice, intend to hack our own practice. This means that we will return to our first era of collaborative making, breathe new life into the husk of an old work, and combine it with the energy that our practice grew into.</p>
 <p>118 full moons have passed since we started (one street removed from V2_ in the black hole of WORM) with organising the world's first ever paranormal tech fair, and a cycle brings us back. We still think the general statement is correct: utilitarian thinking was leaving many weaknesses in the mystical realm. But we couldn’t have imagined this length and deepening of power and agency transfer. It has fuelled us with a new sense of urgency and new methods to explore the underlying doom and gloom. We found that by hacking the mechanics hidden behind and within the (computer) technology, we could redirect and transpose this to places of exposing, informing and reimagining what other (maybe better) things these underlying powers could be doing.</p>
@@ -738,8 +755,13 @@ D o w n…</p>
 <p>Expect an embracing of the chaos that is ever-present. We expect a combination of a reimagined arcade machine (a relic in the form of an old camping internet station) in a <em>new form</em> with an updated soul and code, most likely accompanied by a work in progress that invites you to endlessly scroll. To what extent these streams will converge is, as of the time of this writing, still uncertain, as ever embracing the noisy way of finding meaning within our work.</p>
 <p><em>With \&lt;3 Telemagic</em></p>
 </article>
-<article class="pub-section" id="echosystem-marlot-meyer" data-title="Echo–system" data-author="Marlot Meyer">
-<h2>Echo–system - Marlot Meyer</h2>
+<article class="pub-section" id="echosystem" data-title="Echo–system" data-author="Marlot Meyer">
+<p class="pub-kind">Artwork</p>
+<h2>Echo–system</h2>
+<p class="pub-byline">Marlot Meyer</p>
+<figure class="pub-figure">
+    <img src="/images/IMG_2221.jpg" alt="" width="2000" height="2667" style="--pub-img-w: 2000; --pub-img-h: 2667" loading="lazy" decoding="async">
+</figure>
 <p>It is vital that we return to collective acts of attuning to ourselves, each other, and our environment in this increasingly polarised society. Tracing back to our early designation of nature and the body as a temple, <em>Echo-system</em> offers a technologically aided embodied ritual experience where the relationship between internal and external, individual and collective is created and a common rhythm and resonance can occur. The ritual space of <em>Echo-system</em> creates an interactive, collective experience of breathing, listening, and relating to each other through bioelectronic wearable bellies. In a time when much of technology aims to be seamless, frictionless, and omnipresent, how does it feel to <em>carry, bear</em>, and <em>be with</em> a technology? Through the rhythm of the breath, participants are able to beam ultrasonic signals to each other and receive electrical stimulation on their bodies in response to the breath of others. A non-human creature acts as both the site and the guide of the ritual, anchoring and attempting to harmonise the participants.</p>
 <h3 id="the-mother-tree">The Mother Tree</h3>
 <p>When looking for the form this central creature should take, I immediately considered it becoming some kind of Mother Tree. Trees, to me, have always offered themselves as a sort of portal to tune into a slower, deeper, cyclical way of living and looking at the world. They have wisdom they can teach us – if we’re willing to slow down and listen. As resonant mythological symbols and objects of veneration, trees have played a central role in our shared evolution on Earth. Trees have always been central sites for contemplation, gathering, worship, protection, and celebration. As we are now beginning to learn about the intelligence of a forest, we see that trees communicate underground through an immense web of fungi, at the centre of which lie the Mother Trees: the mysterious, powerful entities that nurture their kin and sustain the forest. Because the breath plays such a fundamental role in this work, and the breath itself is a constant symbiotic exchange with the trees and plants, the symbolic force of the tree acting as the guide and site for this experience made perfect sense.</p>
@@ -747,9 +769,11 @@ D o w n…</p>
 <h3 id="sensitive-system">Sensitive System</h3>
 <p>As a precursor to this work for the Holistic Technology Salon, I hosted a workshop experience with wearable vests titled <em>Sensitive System</em>. Here, the ‘artwork’ and meaning of the work were created through the active listening and sensing experience of the 14 participants. The wearable electronics would measure breath and heart rate, translate these into spatial sound, and individual microphones on the wearables would pick up on the frequency and amplitude of the sound and translate this back to each body in the form of electrical stimulation, essentially creating a feedback loop within and between each body. With this experience, I was trying to reimagine how sensing technologies could collect data and information from bodies without allowing that data to be extracted and removed from the site and the source of that data. Through immediate sonification of data, the information remains in the time and space in which it was measured. Because of the resonant quality of sound as it moves through space and bounces off different materialities and bodies, when it was picked up again by the microphones on the vests, the signal had changed to include this information in it.</p>
 </article>
-<article class="pub-section" id="planetary-acupuncture-ko-jihae" data-title="Planetary Acupuncture" data-author="Ko Jihae">
-<h2>Planetary Acupuncture – Ko Jihae</h2>
-<p class="pub-byline">The Body as Needle, The Collective as Field</p>
+<article class="pub-section" id="planetary-acupuncture" data-title="Planetary Acupuncture" data-author="Ko Jihae">
+<p class="pub-kind">Artwork</p>
+<h2>Planetary Acupuncture</h2>
+<p class="pub-byline">Ko Jihae</p>
+<p class="pub-byline pub-subtitle">The Body as Needle, The Collective as Field</p>
 <blockquote>
 <p>“There is deep wisdom within our very flesh, if we can only come to our senses and feel it.” - Elizabeth A. Behnke</p>
 </blockquote>
@@ -798,40 +822,67 @@ D o w n…</p>
 <p>One day, while moving with my eyes closed, I began to feel an immense energy flowing through me. My hands and my body were moved by sensation. When I opened my eyes and continued following these sensations, I found myself moving with the wind, the trees, and the old rocks around me. My body had become the forest, the mountain, and the sky. I felt both completely expanded and deeply present within every sensation of my body. I experienced a profound sense of security, belonging, and power. The dance was intimate and sacred. I was home.</p>
 <p>This embodied experience of energy dance has remained the compass of my life's path. Through <em>Planetary Acupuncture</em>, I return to the origin of dance, not simply as performance, but as an intimate and universal language that reconnects us with ourselves, with one another, and with the living Earth.</p>
 </article>
-<article class="pub-section" id="screen-guardian-ginevra-petrozzi" data-title="Screen Guardian" data-author="Ginevra Petrozzi">
-<h2>Screen Guardian – Ginevra Petrozzi</h2>
+<article class="pub-section" id="screen-guardian" data-title="Screen Guardian" data-author="Ginevra Petrozzi">
+<p class="pub-kind">Artwork</p>
+<h2>Screen Guardian</h2>
+<p class="pub-byline">Ginevra Petrozzi</p>
+<figure class="pub-figure">
+    <img src="/images/lion_cc_poster.jpg" alt="" width="1416" height="846" style="--pub-img-w: 1416; --pub-img-h: 846" loading="lazy" decoding="async">
+</figure>
 <p><em>Screen Guardian</em> investigates the role of objects in magical practices, while connecting these historical forms with contemporary technologies. In doing so, the work looks to bring together the power of magical imagery and the mysteries of technology and digital infrastructures. 'Screen Guardian' is an aluminium door depicting a lion as the protector of a computer screen. In Etruria (the area north of Rome, where the pre-Roman population of the Etruscans lived), lions were portrayed on sarcophagi as protectors of tombs. The door enacts an ‘apotropaic' protection from harmful web content through  its material heft, by depicting an apotropaic symbol such as the lion and by physically preventing the screen from being fully visible.  The door shapes new ways of relating to screens, to web interfaces, but also to one's technologically mediated yet non-technically meaningful being in the world, a particular feature of surveillance capitalism.</p>
+<figure class="pub-figure">
+    <img src="/images/IMG_5281.jpg" alt="" width="2000" height="2667" style="--pub-img-w: 2000; --pub-img-h: 2667" loading="lazy" decoding="async">
+</figure>
 </article>
-<article class="pub-section" id="moonblood-annika-kappner-lucy-cordes-engelman" data-title="Moonblood" data-author="Annika Kappner, Lucy Cordes Engelman">
-<h2>Moonblood – Annika Kappner, Lucy Cordes Engelman</h2>
+<article class="pub-section" id="moonblood" data-title="Moonblood" data-author="Annika Kappner, Lucy Cordes Engelman">
+<p class="pub-kind">Artwork</p>
+<h2>Moonblood</h2>
+<p class="pub-byline">Annika Kappner, Lucy Cordes Engelman</p>
+<figure class="pub-figure">
+    <img src="/images/MoonbloodStill_1.jpg" alt="" width="2000" height="1099" style="--pub-img-w: 2000; --pub-img-h: 1099" loading="lazy" decoding="async">
+</figure>
 <p><em>Moonblood</em> is an immersive video spell by Annika Kappner and Lucy Cordes Engelman that explores Earth’s cyclicality through the lens of menstruation and ancient mother/goddess worship across the planet. Drawing on ecofeminist and technofeminist thought, the project challenges the linear logic of the Capitalocene while proposing that cycles—birth and death, expansion and contraction, inhale and exhale—might be a transformative framework for living. Guided by the voice(s) of an ancient yet futuristic tech doula, visitors journey through histories of suppressed matrilineal knowledge toward speculative futures rooted in balance and reciprocity. Through moving image, archival material, collective movement, somatic exercises, scent, and sound, the work creates a sensorial environment for embodied reflection. <em>Moonblood</em> ultimately invites participants to reimagine their relationship to nature, technology, and the sacred by embracing the power and wisdom of cyclical existence.</p>
-<p><em>Moonblood</em> is an ongoing iterative project supported by the Stimuleringsfonds. Different versions have been shown at affect lab, Creative Europe, WORM Rotterdam, and MU Hybrid Art House.</p>
+<p><em>Moonblood</em> is an ongoing iterative project supported by the Stimuleringsfonds and Fonds Kwadraat. Different versions have been shown at affect lab, Creative Europe, WORM Rotterdam, and MU Hybrid Art House.</p>
 </article>
-<article class="pub-section" id="super-memory-3333-annika-kappner" data-title="Super Memory 3333" data-author="Annika Kappner">
-<h2>Super Memory 3333 – Annika Kappner</h2>
+<article class="pub-section" id="super-memory-3333" data-title="Super Memory 3333" data-author="Annika Kappner">
+<p class="pub-kind">Artwork</p>
+<h2>Super Memory 3333</h2>
+<p class="pub-byline">Annika Kappner</p>
+<figure class="pub-figure">
+    <img src="/images/The_Sound_of_the_Conch_COVER.jpg" alt="" width="2000" height="1456" style="--pub-img-w: 2000; --pub-img-h: 1456" loading="lazy" decoding="async">
+</figure>
 <p><em>Super Memory 3333</em> is a painting and audio work that reflects on the emergent nature of organic memory in contrast to digital memory, as a procedural form of storage and retrieval. The audio piece explores the nature of memory moving between neuroscience, neuromorphic computing, relationality and cosmology. It explores our changing relationship with memory as technological and scientific advancements and shifts in perception of the world go hand in hand. The accompanying painting translates these questions into a material and sensory process. Combining process-based painting with holographic glitter, acrylic gels, used RAMs and residues from optical computing chips, it explores how perception of material reality is continuously altered through, among other things, light, movement, and sound. The reflective and shifting surfaces make the work unstable: what appears to be a fixed image changes with the position and movement of the viewer, suggesting memory not as static but as something relational, emergent and continuously reconstructed.</p>
 <p>The work is being developed as part of an ongoing art-science collaboration with the NL-ECO Consortium, supported by NWO.</p>
 </article>
-<article class="pub-section" id="tech-yoga-sieta-van-horck-setup" data-title="Tech Yoga" data-author="Sieta van Horck, SETUP">
-<h2>Tech Yoga – Sieta van Horck, SETUP</h2>
+<article class="pub-section" id="tech-yoga" data-title="Tech Yoga" data-author="Sieta van Horck, SETUP">
+<p class="pub-kind">Artwork</p>
+<h2>Tech Yoga</h2>
+<p class="pub-byline">Sieta van Horck, SETUP</p>
+<figure class="pub-figure">
+    <img src="/images/bdm-20210815-0071.jpg" alt="" width="2000" height="1333" style="--pub-img-w: 2000; --pub-img-h: 1333" loading="lazy" decoding="async">
+</figure>
 <p>The last thing you see at night, and the first touch in the morning. Your smartphone: companion, portal, distraction, mirror. But what does it mean to be so deeply connected to a technological device?</p>
 <p>Tech Yoga is a yoga practice for you and your smartphone. Through 11 exercises, we explore our relationship with technology: how does it feel to hold, use and experience our devices differently? Can we approach technology through attention, curiosity and relaxation, rather than habit? Inspired by yoga and ancient traditions of contemplation, multidisciplinary artist and yogi Sieta van Horck invites you not to put your phone away, but to consciously enter into relationship with it. How does it feel not just to use but to be present with it?</p>
 <p>This work has been co-produced by SETUP and Sieta van Horck.</p>
 </article>
 <article class="pub-section" id="acknowledgements" data-title="Acknowledgements" data-author="">
 <h2>Acknowledgements</h2>
+<figure class="pub-figure">
+    <img src="/images/Triskele_Introduction.png" alt="" width="1920" height="1920" style="--pub-img-w: 1920; --pub-img-h: 1920" loading="lazy" decoding="async">
+</figure>
 <p>The Holistic Technology Salon extends gratitude to all who crossed paths with it, contributed to its birth, its growth and transformation, and continue to do so.</p>
 <p>The contributors to this publication and the exhibition taking place at V2_: Jihae Ko, Telemagic, Marlot Meyer, Georgia Kareola, Evelyn Wan.</p>
 <p>The wonderful artists and curators who shared their work within Salons, community gatherings and radio shows: Cecilia Casabona, Sisonke Papu, known as KHNYSA, Martina Carbone, Dasha Ilina.</p>
-<p>The inhabitants of the cultural field of the Netherlands, either representing cultural institutions or themselves as researchers, curators and more:Angelique Spaninks (Mu Hybrid Art House, Eindhoven), Natasha Greenhalgh (Next Museum, Amsterdam), Daniela Tenenbaum (IMPAKT Festival, Utrecht), Nadia Piet (AIxDESIGN), Georgia Kareola (Neo-Metabolism) and Maia Kenney (curator of The Couch, Zaandam).</p>
+<p>The inhabitants of the cultural field of the Netherlands, either representing cultural institutions or themselves as researchers, curators and more: Angelique Spaninks (Mu Hybrid Art House, Eindhoven), Natasha Greenhalgh (Next Museum, Amsterdam), Daniela Tenenbaum (IMPAKT Festival, Utrecht), Nadia Piet (AIxDESIGN), and Maia Kenney (former curator of The Couch, Zaandam and independent curator).</p>
 <p>Danae Tapia for initiating the serendipitous event that brought us together as a triad.</p>
 <p>Stimuleringsfonds Creatieve Industrie for the financial support given to this project, which includes the exhibition at V2_, this e-publication and our official website.</p>
-<p>Studio Kikimara for the exhibition design, which features a five-by-five-meter inflatable Triskele symbol, dreamt by Annika sometime in 2025 and brought to life by Rebecca and Rachel.</p>
+<p>KIKIMARA Studio for the exhibition design, which features a five-by-five-meter inflatable Triskele symbol, dreamt by Annika sometime in 2025 and brought to life by Rebecca Schedler and Rachel Refael.</p>
 <p>Federico Santarini for the development and design of our official website, and Lucy Cordes Engelman for the proofreading and editing of the texts in these pages.</p>
-<p>The V2_ Team for the unfaultering support throughout the life of HTS: Fabian Saavedra Lara, Nancy Hoffman, Boris Debackere, Arie Altena, Richard Bierhuizen, Sebastian Frisch, Wilco Tuinman, Florian Weigl, Joke Brouwe, Stellata Koppe, Alex Falk, Fenna de Jong, Fabiana Basili, including all others that have contributed and all volunteers involved. Thank you.</p>
+<p>The V2_ Team for the unfaultering support throughout the life of HTS: Fabian Saavedra Lara, Nancy Hoffman, Boris Debackere, Arie Altena, Richard Bierhuizen, Sebastian Frisch, Wilco Tuinman, Florian Weigl, Joke Brouwe, Stellata Koppe, Alex Falk, Fenna de Jong, Fabiana Basili, Tancredi di Giovanni, Merijn van Ham, including all others that have contributed and all volunteers involved.</p>
 <p>Operator Radio for the airtime given to us to fully embrace the dialogue part of our research and our thoughts when nobody is moderating.</p>
-<p>Families, friends and pets</p>
-<p>The Technosphere and Planet Earth</p>
+<p>Families, friends and pets.</p>
+<p>The Technosphere and Planet Earth.</p>
+<p>Thank you.</p>
 <p>Sincerely,</p>
 <p>Annika, Ginevra and Sieta</p>
 </article>

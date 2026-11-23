@@ -90,7 +90,7 @@
     --pub-h3-size: 1.25rem;
     /* sottotitoli */
     --pub-h3-line-height: 1.25;
-    --pub-h3-color: var(--pub-text);
+    --pub-h3-color: var(--pub-muted);
     /* colore dei sottotitoli (es. var(--pub-muted) o var(--pub-accent)) */
     --pub-h4-size: 1.25rem;
     /* sotto-sottotitoli (terzo livello) */
@@ -186,6 +186,10 @@
     /* ---------- Barra in alto e indice a tutto schermo (solo con JavaScript) ---------- */
     --pub-topbar-height: 3.5rem;
     /* altezza della barra (le ancore si fermano sotto di lei) */
+    --pub-subbar-height: 0rem;
+    /* altezza della seconda barra, quella con il nome del testo: c'è solo su telefono (vedi @media in fondo ai valori), altrove 0 */
+    --pub-topbar-total: calc(var(--pub-topbar-height) + var(--pub-subbar-height));
+    /* altezza di tutto ciò che sta fisso in alto: è sotto questa che si fermano le ancore. Non si modifica: si regolano le due altezze sopra */
     --pub-topbar-bg: var(--pub-bg);
     /* sfondo della barra */
     --pub-topbar-size: 1rem;
@@ -267,6 +271,8 @@
         --pub-subheading-gap: 2.5rem;
         --pub-cover-min-height: 60svh;
         --pub-works-hanging-indent: 1.5rem;
+        --pub-subbar-height: 2.75rem;
+        /* seconda barra sotto la prima, con il nome del testo e l'autore (fino a due righe) */
     }
 }
 
@@ -289,7 +295,7 @@
 }
 
 html {
-    scroll-padding-top: var(--pub-topbar-height);
+    scroll-padding-top: var(--pub-topbar-total);
     /* i titoli raggiunti da un link si fermano sotto la barra in alto */
 }
 
@@ -372,15 +378,16 @@ h3 {
     line-height: var(--pub-h3-line-height);
     color: var(--pub-h3-color);
     margin-top: var(--pub-subheading-gap);
-    margin-bottom: var(--pub-heading-gap);
+    margin-bottom: 1rem;
 }
 
 h4 {
     font-size: var(--pub-h4-size);
     line-height: var(--pub-h4-line-height);
     color: var(--pub-h4-color);
-    margin-top: var(--pub-subheading-gap);
-    margin-bottom: var(--pub-heading-gap);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-transform: capitalize;
 }
 
 /* Riga dell'autore sotto il titolo di un testo. */
@@ -393,6 +400,38 @@ h4 {
     text-transform: lowercase;
 }
 
+/* Sottotitolo sotto la riga dell'autore (Planetary Acupuncture): stessa voce della byline, senza il rientro verso l'alto. */
+.pub-byline+.pub-byline {
+    margin-top: 0;
+}
+
+/* Tipo di testo ("Essay", "Artwork") sopra il titolo. Prende lo spazio che il titolo ha di solito sopra di sé. */
+.pub-kind, .pub-label {
+    /* margin-top: 10rem;
+    margin-bottom: calc(var(--pub-heading-gap) / 2);
+    font-family: var(--pub-font-label);
+    font-size: var(--pub-small-size);
+    letter-spacing: var(--pub-label-letter-spacing);
+    color: var(--pub-muted); */
+    font-family: var(--pub-font-heading);
+    font-weight: 400;
+    font-size: .75rem;
+    line-height: 1.2;
+    color: var(--pub-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    font-style: normal;
+
+}
+
+.pub-kind{
+    margin-top: 10rem;
+}
+
+.pub-kind+h2 {
+    margin-top: 0;
+}
+
 /* ---------- Indice ---------- */
 .pub-contents {
     max-width: var(--pub-measure);
@@ -400,13 +439,13 @@ h4 {
     padding-inline: var(--pub-gutter);
 }
 
-.pub-label {
+/* .pub-label {
     margin: 0 0 var(--pub-heading-gap);
     font-family: var(--pub-font-label);
     font-size: var(--pub-small-size);
     letter-spacing: var(--pub-label-letter-spacing);
     color: var(--pub-muted);
-}
+} */
 
 .pub-contents ol {
     list-style: none;
@@ -521,19 +560,34 @@ h4 {
 
 .pub-toc a {
     text-decoration: none;
+    /* Il link è un elemento della griglia della voce, quindi di norma si stenderebbe per tutta la colonna del titolo: l'alone (a:hover) scatterebbe
+       anche sullo spazio vuoto a destra del nome. Così occupa solo il testo, e alone e schiarimento delle voci (sotto) partono nello stesso punto. */
+    justify-self: start;
 }
 
-/* Con il mouse sul capitolo, le sue voci (sottocapitoli e sotto-sottocapitoli, numeri compresi) diventano più chiare: il colore di prima
-   mescolato con il bianco, di --pub-toc-hover-lighten. Valgono solo le voci dello stesso gruppo (le sorelle che seguono il capitolo). */
+/* Voci di sottocapitoli e sotto-sottocapitoli che sono link (solo nell'indice a tutto schermo, .pub-menu): restano del colore della voce,
+   come quando non erano link, e al passaggio del mouse (o con il focus) diventano bianche con l'alone, come tutti i link. */
+.pub-toc a.pub-toc-item {
+    color: inherit;
+}
+
+.pub-toc li a.pub-toc-item:hover,
+.pub-toc li a.pub-toc-item:focus-visible {
+    color: var(--pub-link-hover-color);
+}
+
+/* Con il mouse sul NOME del capitolo (il link, non l'intera riga), le sue voci (sottocapitoli e sotto-sottocapitoli, numeri compresi) diventano
+   più chiare: il colore di prima mescolato con il bianco, di --pub-toc-hover-lighten. Valgono solo le voci dello stesso gruppo (le sorelle che
+   seguono il capitolo). Prima si guardava la riga intera (numero, spazio a destra, filetto): scattava su un'area più grande dell'alone. */
 .pub-toc li,
 .pub-toc .pub-num,
 .pub-toc .pub-toc-item {
     transition: color var(--pub-toc-hover-fade);
 }
 
-.pub-toc li[data-level="1"]:hover~li,
-.pub-toc li[data-level="1"]:hover~li .pub-num,
-.pub-toc li[data-level="1"]:hover~li .pub-toc-item {
+.pub-toc li[data-level="1"]:has(a:is(:hover, :focus-visible))~li,
+.pub-toc li[data-level="1"]:has(a:is(:hover, :focus-visible))~li .pub-num,
+.pub-toc li[data-level="1"]:has(a:is(:hover, :focus-visible))~li .pub-toc-item {
     color: var(--pub-toc-hover-color);
 }
 
@@ -775,7 +829,9 @@ blockquote p:last-child {
        prende tutto lo spazio che resta (altrimenti sul telefono verrebbe accorciato troppo); su schermo largo vedi la regola più sotto */
     align-items: center;
     gap: 1.5rem;
-    height: var(--pub-topbar-height);
+    grid-template-rows: var(--pub-topbar-height) var(--pub-subbar-height);
+    /* seconda riga: la seconda barra, alta 0 tranne su telefono */
+    height: var(--pub-topbar-total);
     padding-inline: var(--pub-gutter);
     background: var(--pub-topbar-bg);
     border-bottom: var(--pub-rule-width) solid var(--pub-topbar-rule);
@@ -845,6 +901,53 @@ blockquote p:last-child {
     color: var(--pub-link-hover-color);
 }
 
+/* Telefono: il nome del testo (e l'autore) non sta in una riga stretta tra marchio e "Contents", dove veniva tagliato. Va in una seconda barra
+   sotto la prima, larga quanto lo schermo, che può andare su due righe. Con l'indice aperto la seconda barra sparisce (e la barra torna alta
+   quanto la prima, così non copre le voci dell'indice). */
+@media (max-width: 40rem) {
+    .js .pub-topbar {
+        grid-template-columns: 1fr auto;
+        gap: 0 1.5rem;
+    }
+
+    .pub-topbar-chapter {
+        grid-row: 2;
+        grid-column: 1 / -1;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        /* il testo sta al centro della barra in verticale, che sia su una riga o su due */
+        white-space: normal;
+        overflow: visible;
+        margin-inline: calc(-1 * var(--pub-gutter));
+        padding: 0 var(--pub-gutter);
+        border-top: var(--pub-rule-width) solid var(--pub-topbar-rule);
+        font-size: 0.8125rem;
+        line-height: 1.25;
+        text-align: left;
+        transition: opacity var(--pub-menu-fade), visibility 0s;
+    }
+
+    .pub-topbar-text {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        /* due righe al massimo, poi puntini */
+        overflow: hidden;
+        overflow-wrap: anywhere;
+    }
+
+    .pub-menu-open .pub-topbar {
+        height: var(--pub-topbar-height);
+    }
+
+    .pub-menu-open .pub-topbar-chapter {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
 /* Da 64rem in su (schermo largo) per navigare nel dettaglio c'è la barra laterale dei numeri: "Contents" non serve nella barra in alto.
    La colonna di destra resta (vuota), così il titolo del testo rimane al centro. Sotto, "Contents" apre l'indice a tutto schermo. */
 @media (min-width: 64rem) {
@@ -893,7 +996,7 @@ blockquote p:last-child {
 }
 
 .pub-menu a[aria-current] {
-    color: var(--pub-menu-current-color);
+    text-decoration: underline;
 }
 
 .pub-menu-open {
