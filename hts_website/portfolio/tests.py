@@ -25,7 +25,7 @@ from .models import Contributor, Project, Reference, SiteSettings
 
 class PublicationMiddlewareTests(SimpleTestCase):
     """Sottodominio della pubblicazione. Usa una cartella temporanea al posto di publication/
-    e host finti (publication.localhost / localhost); nessun database."""
+    e host finti (trifoldtrinetrinity.localhost / localhost); nessun database."""
 
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
@@ -40,7 +40,7 @@ class PublicationMiddlewareTests(SimpleTestCase):
         override.enable()
         self.addCleanup(override.disable)
 
-        self.publication = Client(HTTP_HOST="publication.localhost")
+        self.publication = Client(HTTP_HOST="trifoldtrinetrinity.localhost")
         self.main = Client(HTTP_HOST="localhost")
 
     def test_subdomain_serves_index(self):
@@ -121,11 +121,11 @@ class ReferenceListTests(TestCase):
 
     def test_reference_list_links_to_its_projects(self):
         html = self.client.get("/references/").content.decode()
-        self.assertIn(f'<a href="/projects/{self.project.pk}/">Linked project</a>', html)
+        self.assertIn(f'<a href="/archive/{self.project.pk}/">Linked project</a>', html)
         self.assertNotIn("Lonely project", html)
 
     def test_project_feed_shows_its_references(self):
-        html = self.client.get("/projects/feed/").content.decode()
+        html = self.client.get("/archive/feed/").content.decode()
         linked = html.split('id="project-%d"' % self.project.pk)[1].split("</section>")[0]
         lonely = html.split('id="project-%d"' % self.other_project.pk)[1].split("</section>")[0]
         self.assertIn("Book one", linked)
@@ -143,7 +143,7 @@ class FeedReferenceFormatTests(TestCase):
         Reference.objects.create(title="anonymous zine", kind="link", url="https://example.com/z").projects.add(cls.project)
 
     def feed(self):
-        return self.client.get("/projects/feed/").content.decode()
+        return self.client.get("/archive/feed/").content.decode()
 
     def test_title_is_italic_with_only_the_first_letter_capitalised(self):
         self.assertIn("<em>The cyborg manifesto&nbsp;", self.feed())
@@ -188,10 +188,10 @@ class AboutPageTests(TestCase):
         html = self.client.get("/about/").content.decode()
         self.assertIn(f"© {timezone.now().year} Holistic Technology Salon", html)
 
-    @override_settings(PUBLICATION_URL="https://publication.example.org")
+    @override_settings(PUBLICATION_URL="https://trifoldtrinetrinity.example.org")
     def test_epub_title_links_to_the_publication(self):
         html = self.client.get("/about/").content.decode()
-        self.assertEqual(html.count('<a href="https://publication.example.org">Trifold Trine Trinity</a>'), 2)  # nel testo e nel colophon
+        self.assertEqual(html.count('<a href="https://trifoldtrinetrinity.example.org" target="_blank" rel="noopener">Trifold Trine Trinity</a>'), 2)  # nel testo e nel colophon
 
     @override_settings(PUBLICATION_URL="")
     def test_epub_title_is_plain_text_without_a_publication_address(self):
@@ -214,8 +214,8 @@ class NavbarActiveLinkTests(TestCase):
     def test_each_page_highlights_its_own_entry(self):
         for path, label in [
             ("/", "Home"),
-            ("/projects/", "Archive"),
-            ("/projects/feed/", "Archive"),  # il feed fa parte dell'archivio
+            ("/archive/", "Archive"),
+            ("/archive/feed/", "Archive"),  # il feed fa parte dell'archivio
             ("/contributors/", "Contributors"),
             (f"/contributors/{self.contributor.pk}/", "Contributors"),
             ("/agenda/", "Agenda"),
@@ -382,7 +382,7 @@ class ProjectEmbedTests(TestCase):
         cls.plain = Project.objects.create(title="Plain project", description="d")
 
     def section(self, project):
-        html = self.client.get("/projects/feed/").content.decode()
+        html = self.client.get("/archive/feed/").content.decode()
         return html.split('id="project-%d"' % project.pk)[1].split("</section>")[0]
 
     def test_feed_renders_both_players_for_a_project_that_has_them(self):
@@ -439,7 +439,7 @@ class SiteSettingsTests(TestCase):
         self.assertNotIn('id="intro"', self.client.get("/").content.decode())
 
     def test_other_pages_never_have_the_intro(self):
-        for path in ["/about/", "/projects/", "/agenda/", "/contributors/"]:
+        for path in ["/about/", "/archive/", "/agenda/", "/contributors/"]:
             with self.subTest(path=path):
                 self.assertNotIn('id="intro"', self.client.get(path).content.decode())
 
@@ -529,8 +529,8 @@ class RandomProjectTests(TestCase):
 
     def pk_from_redirect(self, category):
         """Segue i reindirizzamenti fino al feed e restituisce il progetto in fondo all'ancora (#project-<pk>)."""
-        response = self.client.get(f"/projects/random/{category}/", follow=True)
-        self.assertEqual(response.redirect_chain[-1][0].split("#")[0], "/projects/feed/")
+        response = self.client.get(f"/archive/random/{category}/", follow=True)
+        self.assertEqual(response.redirect_chain[-1][0].split("#")[0], "/archive/feed/")
         return int(response.redirect_chain[-1][0].split("#project-")[1])
 
     def test_always_lands_on_a_project_of_that_category(self):
@@ -544,19 +544,19 @@ class RandomProjectTests(TestCase):
         self.assertGreater(len(landed), 1)  # su 3 progetti e 40 prove: restare su uno solo ha probabilità ~1 su 10^19
 
     def test_category_without_projects_goes_to_the_whole_feed(self):
-        response = self.client.get("/projects/random/cognition/")
-        self.assertRedirects(response, "/projects/feed/", fetch_redirect_response=False)
+        response = self.client.get("/archive/random/cognition/")
+        self.assertRedirects(response, "/archive/feed/", fetch_redirect_response=False)
 
     def test_unknown_category_is_404(self):
-        self.assertEqual(self.client.get("/projects/random/nonsense/").status_code, 404)
+        self.assertEqual(self.client.get("/archive/random/nonsense/").status_code, 404)
 
     def test_response_is_not_cacheable(self):
-        self.assertIn("no-cache", self.client.get("/projects/random/perception/")["Cache-Control"])
+        self.assertIn("no-cache", self.client.get("/archive/random/perception/")["Cache-Control"])
 
     def test_home_links_follow_the_path_order(self):
         """Tracciato 1 = relationality, 2 = perception, 3 = cognition (i valori di Project.CATEGORIES)."""
         html = self.client.get("/").content.decode()
-        self.assertEqual(re.findall(r'href="/projects/random/(\w+)/"', html), ["relationality", "perception", "cognition"])
+        self.assertEqual(re.findall(r'href="/archive/random/(\w+)/"', html), ["relationality", "perception", "cognition"])
         self.assertEqual(re.findall(r'aria-label="(Relationality|Perception|Cognition)"', html), ["Relationality", "Perception", "Cognition"])
 
     @override_settings(PUBLICATION_URL="")  # senza il cerchio (il .env locale può impostarla)
@@ -565,12 +565,12 @@ class RandomProjectTests(TestCase):
         label = html.split('class="home-triskele-label"')[1].split("</p>")[0]
         self.assertEqual(re.findall(r">(\w+)</span>", label), ["Relationality", "Perception", "Cognition"])
 
-    @override_settings(PUBLICATION_URL="https://publication.example.org")
+    @override_settings(PUBLICATION_URL="https://trifoldtrinetrinity.example.org")
     def test_home_perimeter_links_to_the_publication(self):
         """Il perimetro attorno al triskele è un quarto link, alla pubblicazione, con il suo nome sotto."""
         html = self.client.get("/").content.decode()
         perimeter = html.split('triskele-link-4"')[1].split("</a>")[0]
-        self.assertIn('href="https://publication.example.org"', perimeter)
+        self.assertIn('href="https://trifoldtrinetrinity.example.org"', perimeter)
         self.assertIn('aria-label="Publication"', perimeter)
         self.assertEqual(perimeter.count("<path"), 3)  # glow, area cliccabile, linea
         label = html.split('class="home-triskele-label"')[1].split("</p>")[0]

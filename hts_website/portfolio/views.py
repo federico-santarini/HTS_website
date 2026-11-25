@@ -62,7 +62,7 @@ def project_detail(request, pk):
     """Non ha una pagina propria: porta al feed, già scrollato sul progetto richiesto.
 
     Il redirect aggiunge l'ancora #project-<pk> e il browser fa lo scroll da solo.
-    L'indirizzo /projects/<pk>/ resta perché {% url 'project_detail' pk %} è usato
+    L'indirizzo /archive/<pk>/ resta perché {% url 'project_detail' pk %} è usato
     nell'archivio, nella pagina dei contributor e in quella delle referenze.
     """
     get_object_or_404(Project, pk=pk)  # pk inesistente -> 404 invece di un'ancora a vuoto

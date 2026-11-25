@@ -38,7 +38,7 @@
 {% comment %} <ul>
     {% for reference in references %}
     <li style="margin-bottom: 40px;" class="col-6">
-        <strong>{% if reference.url %}<a href="{{ reference.url }}">{{ reference.title }}</a>{% else %}{{ reference.title }}{% endif %}</strong>
+        <strong>{% if reference.url %}<a href="{{ reference.url }}" target="_blank" rel="noopener">{{ reference.title }}</a>{% else %}{{ reference.title }}{% endif %}</strong>
         ({{ reference.get_kind_display }})
         {% if reference.author or reference.year %}
         <div>{{ reference.author }}{% if reference.author and reference.year %}, {% endif %}{{ reference.year|default_if_none:"" }}</div>

@@ -6,10 +6,10 @@ from . import views
 # se ne cambi uno, aggiorna anche i template che lo usano.
 urlpatterns = [
     path("", views.home, name="home"),
-    path("projects/", views.project_list, name="project_list"),
-    path("projects/<int:pk>/", views.project_detail, name="project_detail"),  # redirect al feed
-    path("projects/feed/", views.project_feed, name="project_feed"),
-    path("projects/random/<slug:category>/", views.random_project, name="random_project"),  # redirect a un progetto a caso
+    path("archive/", views.project_list, name="project_list"),
+    path("archive/<int:pk>/", views.project_detail, name="project_detail"),  # redirect al feed
+    path("archive/feed/", views.project_feed, name="project_feed"),
+    path("archive/random/<slug:category>/", views.random_project, name="random_project"),  # redirect a un progetto a caso
     path("contributors/", views.contributor_list, name="contributor_list"),
     path("contributors/<int:pk>/", views.contributor_detail, name="contributor_detail"),
     path("agenda/", views.event_list, name="event_list"),

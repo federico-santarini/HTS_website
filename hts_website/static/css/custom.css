@@ -3,13 +3,13 @@
 
    INDICE: per saltare a una sezione cerca il suo numero tra parentesi quadre, per esempio  [07]
 
-   [01] FONT                         caratteri Machina (trial) e @font-face
+   [01] FONT                         Machina Inktrap (variable, con licenza)
    [02] VARIABILI DEL SITO           colori, caratteri e misure usati in più punti (:root)
    [03] BASE                         pagina, titoli, link
    [04] NAVBAR E MENU                barra in cima e menu "liquid glass"
    [05] TESTO CONDIVISO              etichette e titoli di lista usati in più pagine
-   [06] ARCHIVIO                     lista dei progetti (/projects/)
-   [07] FEED DEI PROGETTI            un progetto dopo l'altro (/projects/feed/)
+   [06] ARCHIVIO                     lista dei progetti (/archive/)
+   [07] FEED DEI PROGETTI            un progetto dopo l'altro (/archive/feed/)
    [08] GALLERIA IMMAGINI            miniature dei progetti e modale con carosello
    [09] PLAYER YOUTUBE E SOUNDCLOUD  copertina con "Play" e controlli custom
    [10] CONTRIBUTOR                  card dell'elenco e pagina del singolo contributor
@@ -46,28 +46,18 @@
    ========================================================================== */
 
 /*
- * FONT: PP Neue Machina, versione TRIAL (cartella static/fonts/trial/, ignorata da git).
- * Due famiglie, ciascuna in Light (300), Regular (400) e Ultrabold (800), con i corsivi:
- *   "Machina Plain"   -> testo
- *   "Machina Inktrap" -> titoli
- * Quando ci sarà la licenza: mettere i file (meglio in WOFF2) in static/fonts/, aggiornare gli url()
- * qui sotto e togliere la cartella trial dal .gitignore, se la licenza permette di versionare i file.
+ * FONT: PP Neue Machina Inktrap, versione CON LICENZA (solo dritto), unico carattere "Machina" del sito:
+ * testo base (--bs-body-font-family) e titoli (--hts-font-display). Il resto è in Alegreya.
+ * Variable font (static/fonts/machina/), asse wght da 100 a 900: qualsiasi peso intermedio funziona e si
+ * può animare (transition/animation su font-weight o font-variation-settings: "wght" ...). Istanze di
+ * riferimento: Thin 100, Ultralight 200, Light 300, Regular 375 (non 400!), Medium 450, Semibold 600,
+ * Bold 700, Ultrabold 800, Black 900.
+ * Non c'è il corsivo: un font-style: italic su Inktrap verrebbe inclinato dal browser (corsivo finto).
  * I percorsi sono relativi a questo file (../fonts/ = /static/fonts/). font-display: swap fa vedere
  * subito il testo con un font di riserva mentre il carattere si carica.
- * Nel trial mancano solo le frecce ▲ ▼ dell'ordinamento nell'archivio: usano il font di riserva.
+ * In Inktrap mancano le frecce ▲ ▼ (ordinamento dell'archivio, oggi commentato): userebbero il font di riserva.
  */
-@font-face { font-family: "Machina Plain"; font-weight: 300; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainLight.otf") format("opentype"); }
-@font-face { font-family: "Machina Plain"; font-weight: 300; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainLightItalic.otf") format("opentype"); }
-@font-face { font-family: "Machina Plain"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainRegular.otf") format("opentype"); }
-@font-face { font-family: "Machina Plain"; font-weight: 400; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainRegularItalic.otf") format("opentype"); }
-@font-face { font-family: "Machina Plain"; font-weight: 800; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainUltrabold.otf") format("opentype"); }
-@font-face { font-family: "Machina Plain"; font-weight: 800; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-PlainUltraboldItalic.otf") format("opentype"); }
-@font-face { font-family: "Machina Inktrap"; font-weight: 300; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapLight.otf") format("opentype"); }
-@font-face { font-family: "Machina Inktrap"; font-weight: 300; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapLightItalic.otf") format("opentype"); }
-@font-face { font-family: "Machina Inktrap"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapRegular.otf") format("opentype"); }
-@font-face { font-family: "Machina Inktrap"; font-weight: 400; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapRegularItalic.otf") format("opentype"); }
-@font-face { font-family: "Machina Inktrap"; font-weight: 800; font-style: normal; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapUltrabold.otf") format("opentype"); }
-@font-face { font-family: "Machina Inktrap"; font-weight: 800; font-style: italic; font-display: swap; src: url("../fonts/trial/PPNeueMachina-InktrapUltraboldItalic.otf") format("opentype"); }
+@font-face { font-family: "Machina Inktrap"; font-weight: 100 900; font-style: normal; font-display: swap; src: url("../fonts/machina/PPNeueMachina-InktrapUprightVariable.woff2") format("woff2"); }
 
 /* ==========================================================================
    [02] VARIABILI DEL SITO
@@ -83,7 +73,7 @@
        --bs-heading-color: ...;
        --bs-link-color-rgb: 0, 0, 0;     (i colori dei link vogliono la forma "r, g, b")
        */
-    --bs-body-font-family: "Machina Plain", sans-serif;
+    --bs-body-font-family: "Machina Inktrap", sans-serif;
     --bs-body-font-size: 1rem;
     --bs-body-color: white;
     --bs-body-bg: #000000;
@@ -111,7 +101,7 @@
 
 
     --hts-muted: #989898;
-    --hts-font-display: "Machina Inktrap", "Machina Plain", sans-serif;
+    --hts-font-display: "Machina Inktrap", sans-serif;
     --hts-font-serif: "Alegreya", serif;
     --hts-font-label: "Alegreya SC", serif;
     --hts-navbar-height: 3.5rem;
@@ -136,7 +126,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
     font-weight: 400;
-    font-style: italic;
 }
 
 h1, .h1 {
@@ -171,7 +160,7 @@ a:hover, a:focus {
     --bs-navbar-toggler-padding-y: 0;
     --bs-navbar-toggler-font-size: 1rem;
     --bs-navbar-toggler-border-color: transparent;
-    font-weight: 300;
+    font-weight: 400;
     text-transform: uppercase;
     height: var(--hts-navbar-height);
     padding-block: 0;

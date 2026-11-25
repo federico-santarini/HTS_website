@@ -37,7 +37,7 @@ HTS_website/
     ├── static/                   # file statici del sito
     │   ├── css/custom.css        # lo stile personale, caricato dopo Bootstrap; in sezioni numerate [01]-[13], indice in cima
     │   ├── audio/intro.mp3       # suono dell'intro animato (15 s)
-    │   ├── fonts/trial/          # font in versione trial (ignorata da git, vedi Frontend)
+    │   ├── fonts/machina/        # Machina Inktrap con licenza (variable WOFF2, vedi Frontend)
     │   ├── js/                   # gallery.js (modale immagini), players.js (player), intro.js (intro animato)
     │   └── vendor/bootstrap/     # Bootstrap 5.3.8, copia locale (non si modifica)
     └── media/                    # immagini caricate dall'admin (non versionata)
@@ -61,8 +61,8 @@ python manage.py runserver
 ```
 
 - Sito: <http://localhost:8000> · Admin: <http://localhost:8000/admin/>
-- Pubblicazione: <http://publication.localhost:8000> (i sottodomini `*.localhost` funzionano senza configurare nulla)
-- Per vedere il link "Publication" in navbar, nel `.env` imposta `PUBLICATION_URL=http://publication.localhost:8000`
+- Pubblicazione: <http://trifoldtrinetrinity.localhost:8000> (i sottodomini `*.localhost` funzionano senza configurare nulla)
+- Per vedere il link "Publication" in navbar, nel `.env` imposta `PUBLICATION_URL=http://trifoldtrinetrinity.localhost:8000`
 
 ### Variabili d'ambiente
 
@@ -109,15 +109,15 @@ Chi modifica cosa nell'admin (le relazioni many-to-many si modificano da **un so
 | Indirizzo | View | Cosa fa |
 |---|---|---|
 | `/` | `home` | Home: il triskele a schermo intero, con l'intro animato sopra (se acceso). Ogni tracciato è un link a un progetto a caso di una categoria |
-| `/projects/` | `project_list` | Archivio: tabella con ordinamento (`?sort=`) e filtro per tipologia (`?type=`) |
-| `/projects/feed/` | `project_feed` | Tutti i progetti uno dopo l'altro, con i player YouTube/SoundCloud |
-| `/projects/<id>/` | `project_detail` | Non ha pagina propria: reindirizza al feed, scrollato su quel progetto |
-| `/projects/random/<categoria>/` | `random_project` | Reindirizza a un progetto a caso di quella categoria (`project_category`); se non ce ne sono, al feed. Categoria inesistente: 404. Mai in cache |
+| `/archive/` | `project_list` | Archivio: tabella con ordinamento (`?sort=`) e filtro per tipologia (`?type=`) |
+| `/archive/feed/` | `project_feed` | Tutti i progetti uno dopo l'altro, con i player YouTube/SoundCloud |
+| `/archive/<id>/` | `project_detail` | Non ha pagina propria: reindirizza al feed, scrollato su quel progetto |
+| `/archive/random/<categoria>/` | `random_project` | Reindirizza a un progetto a caso di quella categoria (`project_category`); se non ce ne sono, al feed. Categoria inesistente: 404. Mai in cache |
 | `/contributors/`, `/contributors/<id>/` | `contributor_*` | Elenco e dettaglio dei contributor |
 | `/agenda/` | `event_list` | Eventi futuri e passati in due sezioni (la pagina "Agenda" del menu; non è l'archivio dei progetti di tipo "event"). Prima era `/events/` |
 | `/references/` | `reference_list` | Referenze, filtro per tipo (`?kind=`) |
 | `/about/` | `about` | Pagina About: testo e colophon (elenco `<dl>` di crediti, a colonne, discreto: grigio e piccolo), scritti direttamente nel template `about.html`; stile in `custom.css`, sezione [14]. La voce "Contact" usa `CONTACT_EMAIL` |
-| `publication.<dominio>` | `PublicationMiddleware` | La pubblicazione statica (vedi sotto) |
+| `trifoldtrinetrinity.<dominio>` | `PublicationMiddleware` | La pubblicazione statica (vedi sotto) |
 
 ## Frontend (Bootstrap)
 
@@ -137,22 +137,21 @@ README di quella cartella.
   ricompilare Bootstrap con Sass, che oggi non è configurato (richiederebbe Node nel progetto).
 - **I file statici**: in sviluppo li serve Django; in produzione `collectstatic` li raccoglie e li serve WhiteNoise.
   Si usano nei template con `{% load static %}` e `{% static '...' %}`.
-- **Font**: PP Neue Machina in versione **trial**, in `hts_website/static/fonts/trial/` (12 file OTF: famiglie
-  Plain e Inktrap, ciascuna in Light/Regular/Ultrabold con i corsivi). La cartella è nel `.gitignore` perché la
-  licenza di prova non permette di distribuire i file: **chi clona il repository, o il sito pubblicato, non li ha**
-  e vede il carattere di riserva (`sans-serif`). Le `@font-face` sono in cima a `custom.css`: "Machina Plain" per
-  il testo (`--bs-body-font-family`) e "Machina Inktrap" per i titoli (Bootstrap non ha una variabile per i titoli,
-  quindi c'è una regola su `h1…h6`). Nel trial mancano solo ▲ ▼ (frecce di ordinamento): usano il carattere di riserva.
-  **Con la licenza**: mettere i file (meglio WOFF2, se la licenza permette la conversione) in `static/fonts/`,
-  aggiornare gli `url()` in `custom.css` e togliere la riga dal `.gitignore` solo se la licenza consente di versionarli
-  (in un repository pubblico di solito no).
+- **Font**: **PP Neue Machina Inktrap, solo dritto, con licenza**, come **variable font**
+  (`hts_website/static/fonts/machina/`, un solo WOFF2, asse `wght` 100–900): ogni peso intermedio è disponibile e si può
+  animare. È l'unico carattere Machina: testo base (`--bs-body-font-family`) e titoli (`--hts-font-display`; Bootstrap non
+  ha una variabile per i titoli, quindi c'è una regola su `h1…h6`). Il resto è in Alegreya. La `@font-face` è in cima a
+  `custom.css` (e ripetuta in `publication.css`). Attenzione: il Regular del variable è a **375**, non 400 (Medium 450).
+  Non esiste il corsivo: un `font-style: italic` su Inktrap viene inclinato dal browser (corsivo finto); si usa solo in
+  pochi punti della pubblicazione (note dentro le citazioni, titoli nelle note, "holistic").
+  In Inktrap mancano ▲ ▼ (frecce di ordinamento dell'archivio, oggi commentato): userebbero il carattere di riserva.
 - **Tema scuro**: l'attributo `data-bs-theme="dark"` sul tag `<html>` fa cambiare a Bootstrap molte variabili insieme
   (colore del testo, icona della navbar, ecc.). Sta in `base.html` e anche nella pubblicazione.
 - **La pubblicazione** ha uno stile tutto suo: `publication/publication.css`, che **non usa Bootstrap né `custom.css`**.
   Cambiare uno non tocca l'altro. Tutto ciò che si regola (colori, caratteri, corpi, larghezza della colonna, spazi, filetti)
   è in un blocco di variabili `--pub-...` in cima al file, a gruppi e commentate: per cambiare l'aspetto si cambiano
-  i valori, le regole sotto non servono. In comune col sito restano solo il viola e i font Machina (trial): i loro
-  `@font-face` sono ripetuti in `publication.css` con percorsi `/static/fonts/trial/...` (`/static/` è servito anche dal
+  i valori, le regole sotto non servono. In comune col sito restano solo il viola e il font Machina Inktrap (variable, con licenza): la sua
+  `@font-face` è ripetuta in `publication.css` con percorso `/static/fonts/machina/...` (`/static/` è servito anche dal
   sottodominio). Il testo lungo è in Alegreya, caricata da Google Fonts nel `<head>` di `index.html` (con corsivo e
   grassetto veri: come per il sito, da scaricare in locale quando si autorizzerà).
 
@@ -162,8 +161,8 @@ README di quella cartella.
 `date` per l'ordinamento (lista bianca, perché il valore va in `order_by`). La colonna Type non è ordinabile perché
 un progetto può avere più tipologie.
 
-**`/projects/<id>/` e il feed.** Cliccando un progetto nell'archivio si va al feed già scrollato su di lui:
-`project_detail` fa un redirect a `/projects/feed/#project-<id>` e il browser scrolla da solo all'elemento con
+**`/archive/<id>/` e il feed.** Cliccando un progetto nell'archivio si va al feed già scrollato su di lui:
+`project_detail` fa un redirect a `/archive/feed/#project-<id>` e il browser scrolla da solo all'elemento con
 quell'`id`. Se cambi gli `id` nel template `_project.html`, rompi lo scroll.
 Perché l'ancora atterri giusta, le immagini del feed devono avere `width` e `height` nell'`<img>`: sono `loading="lazy"`
 e, senza dimensioni, occupano 0 px finché non si caricano, poi spingono in basso i progetti sotto (scarto diverso per
@@ -192,7 +191,7 @@ comportamento in `static/js/players.js`, aspetto in `custom.css` (sezione [09]).
 
 **Triskele della home.** La home mostra il triskele (`home.html`, disegno in `_triskele.html`, condiviso con l'intro): stesso
 disegno, stessa posizione (centro dello schermo) e stessa dimensione (`--hts-triskele-size` in `custom.css`) di quello dell'intro, così
-quando l'intro si dissolve si vede lo stesso disegno senza salti. Ogni tracciato è un link a `/projects/random/<categoria>/`:
+quando l'intro si dissolve si vede lo stesso disegno senza salti. Ogni tracciato è un link a `/archive/random/<categoria>/`:
 tracciato 1 (in alto) = **relationality**, 2 (in basso a sinistra) = **perception**, 3 (in basso a destra) = **cognition**.
 La categoria è il campo `project_category` del progetto, che si imposta dall'admin (valori: `relationality`, `perception`, `cognition`).
 Attorno alle spirali c'è un **perimetro** (un tracciato chiuso dello stesso disegno), anche lui link (il quarto, `triskele-link-4` di
@@ -220,9 +219,10 @@ rimisurati i `data-center` (vedi sotto) e `0,4746` (altezza/larghezza del viewBo
   sfondo nero e il testo d'ingresso che pulsa con l'alone `--hts-glow` (variabili `--intro-glow-duration` e `--intro-glow-min`
   in `custom.css`); senza la classe, lo sfondo liquido.
 - **Rete di sicurezza**: senza JavaScript lo strato non compare; se `intro.js` non parte, sparisce da solo dopo 4 secondi.
-- **Audio**: ritagliato da un video YouTube ("The Sound of dial-up Internet", William Termini, licenza YouTube standard):
-  **prima di pubblicare il sito va verificato il diritto d'uso**, o sostituito con una registrazione libera (stesso nome
-  di file `static/audio/intro.mp3`). La durata dell'intro non dipende dal file: si regola con `TIMELINE.duration`.
+- **Audio**: "Dial Up Internet Sound" di Free Sounds Library (https://www.freesoundslibrary.com/dial-up-internet-sound/),
+  licenza **CC BY 4.0**, ritagliato a 15 s (l'originale dura 24 s) e rinominato `static/audio/intro.mp3`. La licenza chiede
+  l'attribuzione: è nei crediti della pagina About ("Intro Sound", con link alla fonte e alla licenza e la nota "edited").
+  Se si cambia l'audio, va aggiornato anche quel credito. La durata dell'intro non dipende dal file: si regola con `TIMELINE.duration`.
 - Non provato su iPhone/Safari: lì il comportamento dell'audio è il più delicato.
 
 **Cancellare una tipologia.** Per una many-to-many Django non ha `on_delete=PROTECT`: senza protezione
@@ -230,7 +230,7 @@ cancellerebbe in silenzio i collegamenti con i progetti. Per questo `ProjectType
 progetti collegati come "protetti" e non mostra il pulsante di conferma. Funziona dall'admin, non da `manage.py shell`.
 
 **La pubblicazione sul sottodominio.** `PublicationMiddleware` guarda l'host della richiesta: se inizia per
-`publication.` serve i file di `hts_website/publication/` (con `index.html` per le cartelle) e risponde 404 a tutto il
+`trifoldtrinetrinity.` serve i file di `hts_website/publication/` (con `index.html` per le cartelle) e risponde 404 a tutto il
 resto, `/admin/` compreso. Per gli altri host non fa nulla. Con `DEBUG=True` le modifiche ai file si vedono subito;
 in produzione l'elenco dei file è fissato all'avvio, quindi dopo ogni modifica serve un nuovo deploy.
 La pubblicazione è una pagina unica: titolo, indice e un `<article id="...">` per ogni testo (Introduction, How to
@@ -240,7 +240,7 @@ che sta dentro il paragrafo subito dopo il numero (e dopo la virgola o il punto 
 (`aria-expanded`, e un indirizzo `#fn-AUTORE-N` apre la nota), l'aspetto nei valori `--pub-note-*` di `publication.css`.
 Senza JavaScript le note restano sempre visibili.
 **Barra in alto e indice**: con JavaScript compare una barra fissa (`.pub-topbar`): a sinistra il marchio HTS (porta al sito principale:
-`publication.js` ne ricava l'indirizzo togliendo "publication." dall'host), al centro il nome del testo in cui si è e il suo
+`publication.js` ne ricava l'indirizzo togliendo "trifoldtrinetrinity." dall'host), al centro il nome del testo in cui si è e il suo
 autore, a destra il pulsante "Contents" che apre l'indice a tutto schermo (solo sotto i 1024px: da lì in su c'è la barra laterale) (`.pub-menu`, con sfondo nero pieno e dissolvenza come il menu
 del sito; si chiude con lo stesso pulsante, con Esc o scegliendo una voce). Nome e autore vengono da `data-title` e
 `data-author` di ogni `<article>` in `index.html`: per correggerli basta cambiare quegli attributi; i valori
@@ -311,11 +311,11 @@ d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e G
 | `R2_BUCKET_NAME`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_PUBLIC_DOMAIN` | storage delle immagini (vedi sotto) |
 | `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_PASSWORD`, `DJANGO_SUPERUSER_EMAIL` | il tuo account admin. Dopo il primo deploy la password si cambia dall'admin; quella nella variabile non serve più |
 | `DEBUG` | **non impostarla** (vale False) |
-| `ALLOWED_HOSTS` | non serve con l'indirizzo gratuito (`RAILWAY_PUBLIC_DOMAIN` lo imposta Railway); con il dominio vero: `dominio.it,www.dominio.it,publication.dominio.it` |
+| `ALLOWED_HOSTS` | non serve con l'indirizzo gratuito (`RAILWAY_PUBLIC_DOMAIN` lo imposta Railway); con il dominio vero: `dominio.it,www.dominio.it,trifoldtrinetrinity.dominio.it` |
 | `PUBLICATION_URL` | vuota finché non c'è il dominio (il link "Publication" resta nascosto) |
 
 **Passi, in ordine**
-1. **GitHub**: pubblicare i commit (`git push`). Il repository non contiene segreti né i font trial.
+1. **GitHub**: pubblicare i commit (`git push`). Il repository non contiene segreti.
 2. **Cloudflare R2** (immagini): R2 -> Create bucket -> nel bucket Settings -> attivare l'accesso pubblico (dominio `r2.dev`, che diventa
    `R2_PUBLIC_DOMAIN`, senza `https://`) -> "Manage R2 API tokens" -> Create token con permesso *Object Read & Write* sul solo bucket.
    Si ottengono Account ID, Access Key ID e Secret Access Key. Il bucket ha un CORS di default che basta (le immagini si caricano dall'admin sul server, non dal browser).
@@ -323,7 +323,7 @@ d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e G
    Inserire le variabili della tabella sopra. Settings -> Networking -> **Generate Domain** (indirizzo `*.up.railway.app`) e rifare il deploy:
    fino ad allora il sito risponde 400 perché non conosce il proprio indirizzo.
 4. **Primo accesso**: `https://<indirizzo>/admin/` con le credenziali delle variabili. In *Site settings* si accende o spegne l'intro
-   animato (online parte **spento**: il suo audio ha una licenza da verificare).
+   animato (su un database nuovo parte **spento**: va acceso a mano).
 5. **Autori**: Users -> Add user (nome e password), poi nella scheda dell'utente spuntare **Staff status** e aggiungerlo al gruppo **Authors**.
    Gli autori gestiscono progetti, contributor, eventi, referenze, tipologie e immagini; non vedono utenti, gruppi né Site settings.
    **Mai** spuntare "Superuser status" agli autori.
@@ -333,22 +333,20 @@ d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e G
   conviene che le modifiche ai modelli siano *additive* (aggiungere campi con valore predefinito o facoltativi); per rinominare o togliere un campo, prima un backup.
 - **Immagini**: finiscono su R2 e non si perdono ai deploy. Senza le variabili `R2_*`, online le immagini non si vedrebbero (con DEBUG spento Django non serve `media/`).
   Le immagini nel `media/` locale non vengono caricate online.
-- **Font**: online mancano i font Machina (trial, ignorati da git): sito e pubblicazione usano il carattere di riserva.
-- **Pubblicazione**: vive su `publication.<dominio>`; con l'indirizzo gratuito di Railway non è raggiungibile (l'host `publication.*.up.railway.app` non è ammesso).
+- **Pubblicazione**: vive su `trifoldtrinetrinity.<dominio>`; con l'indirizzo gratuito di Railway non è raggiungibile (l'host `trifoldtrinetrinity.*.up.railway.app` non è ammesso).
 - **Backup**: i dati sono nel Postgres di Railway: controllare nel suo pannello le opzioni di backup prima di affidargli contenuti importanti.
 
 **Quando ci sarà il dominio**
-- [x] Collegare in Railway il dominio principale e `publication.<dominio>` allo stesso servizio (Settings -> Networking -> Custom Domain) e creare in
+- [x] Collegare in Railway il dominio principale e `trifoldtrinetrinity.<dominio>` allo stesso servizio (Settings -> Networking -> Custom Domain) e creare in
   Cloudflare i record DNS che Railway indica (CNAME per `@` e per `publication`, più il TXT di verifica), lasciandoli su "DNS only".
   Il piano Hobby ha un limite di domini personalizzati per servizio: se non basta per `www.`, in Cloudflare si può reindirizzare `www.` al dominio principale.
-- [x] Creare la variabile `ALLOWED_HOSTS` (`dominio,publication.dominio`, separati da virgola, senza `https://`) e impostare
-  `PUBLICATION_URL=https://publication.<dominio>`. **`ALLOWED_HOSTS` non esiste finché non la si crea**: con l'indirizzo gratuito non serviva
+- [x] Creare la variabile `ALLOWED_HOSTS` (`dominio,trifoldtrinetrinity.dominio`, separati da virgola, senza `https://`) e impostare
+  `PUBLICATION_URL=https://trifoldtrinetrinity.<dominio>`. **`ALLOWED_HOSTS` non esiste finché non la si crea**: con l'indirizzo gratuito non serviva
   (lo aggiunge `RAILWAY_PUBLIC_DOMAIN`), ma con un dominio proprio, senza, ogni pagina risponde **400 Bad Request**.
 - [ ] Attivare HSTS (`SECURE_HSTS_SECONDS`, prima con valore basso) solo col dominio definitivo; `check --deploy` lo segnala finché manca.
 - [ ] Valutare un dominio proprio per le immagini (es. `media.<dominio>`) al posto di `r2.dev`: se cambia, `R2_PUBLIC_DOMAIN` si aggiorna, ma gli indirizzi delle immagini già salvate restano quelli vecchi se il bucket resta lo stesso.
 - [ ] Con i font veri (licenza) nel repository, passare a `CompressedManifestStaticFilesStorage` in `settings.py` (nomi dei file con impronta: risolve la cache dei browser).
 - [ ] Spegnere `NOINDEX` quando il sito è pronto.
-- [ ] Verificare i diritti dell'audio dell'intro prima di accenderlo online.
 
 ## Idee rimandate
 

@@ -33,7 +33,7 @@
             <div class="sc-player col-10 col-lg-6" data-sc-player>
                 <button type="button" class="sc-toggle" disabled>Play</button>
                 <div class="sc-meta">
-                    <a class="sc-title" href="{{ project.soundcloud_url }}">Listen on SoundCloud</a>
+                    <a class="sc-title" href="{{ project.soundcloud_url }}" target="_blank" rel="noopener">Listen on SoundCloud</a>
                     <span class="sc-artist"></span>
                 </div>
                 <span class="sc-time" aria-hidden="true"></span>
@@ -118,7 +118,7 @@
         <div class="row justify-content-center mt-5 mb-5">
             <div class="col-10 col-lg-4">
                 <div class="ratio ratio-16x9">
-                    <a class="yt-facade" href="{{ project.youtube_url }}"
+                    <a class="yt-facade" href="{{ project.youtube_url }}" target="_blank" rel="noopener"
                         data-embed-url="{{ project.youtube_embed_url }}" data-title="{{ project.title }} (YouTube)"
                         aria-label="Play video: {{ project.title }}">
                         <img src="{{ project.youtube_thumbnail_url }}" alt="" width="480" height="360" loading="lazy">
@@ -140,7 +140,7 @@
                 {% with title=reference.title|lower|capfirst %}
                 <li class="mb-3">{% if reference.author %}<span class="reference-author">{{ reference.author }}</span>,
                     {% endif %}<em>{{ title }}&nbsp;&nbsp;&nbsp;&nbsp;</em>{% if reference.url %}(<a
-                        href="{{ reference.url }}">{{ reference.get_kind_display }}</a>){% else %}({{ reference.get_kind_display }}){% endif %}
+                        href="{{ reference.url }}" target="_blank" rel="noopener">{{ reference.get_kind_display }}</a>){% else %}({{ reference.get_kind_display }}){% endif %}
                 </li>
                 {% endwith %}
                 {% endfor %}

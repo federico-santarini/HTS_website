@@ -38,7 +38,7 @@
                     <li class="nav-item"><a class="nav-link{% if page == 'contributor_list' or page == 'contributor_detail' %} active{% endif %}"{% if page == 'contributor_list' or page == 'contributor_detail' %} aria-current="page"{% endif %} href="{% url 'contributor_list' %}">Contributors</a></li>
                     <li class="nav-item"><a class="nav-link{% if page == 'event_list' %} active{% endif %}"{% if page == 'event_list' %} aria-current="page"{% endif %} href="{% url 'event_list' %}">Agenda</a></li>
                     <li class="nav-item"><a class="nav-link{% if page == 'reference_list' %} active{% endif %}"{% if page == 'reference_list' %} aria-current="page"{% endif %} href="{% url 'reference_list' %}">References</a></li>
-                    {% if PUBLICATION_URL %}<li class="nav-item"><a class="nav-link" href="{{ PUBLICATION_URL }}">Publication</a></li>{% endif %}
+                    {% if PUBLICATION_URL %}<li class="nav-item"><a class="nav-link" href="{{ PUBLICATION_URL }}" target="_blank" rel="noopener">Publication</a></li>{% endif %}
                     <li class="nav-item"><a class="nav-link{% if page == 'about' %} active{% endif %}"{% if page == 'about' %} aria-current="page"{% endif %} href="{% url 'about' %}">About</a></li>
                 </ul>
                 </div>

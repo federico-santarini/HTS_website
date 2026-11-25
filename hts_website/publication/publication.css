@@ -9,25 +9,20 @@
  *   - clamp(minimo, preferito, massimo) = un valore che cresce con lo schermo ma resta tra due limiti.
  * Nel blocco @media in fondo (schermi stretti) si ridefiniscono solo alcuni valori: stessi nomi, valori per il telefono.
  *
- * Il pezzo in comune con il sito: i file dei font "Machina" (trial) e il viola. Se cambiano là, vanno cambiati anche qui.
+ * Il pezzo in comune con il sito: il file del font "Machina Inktrap" (variable, static/fonts/machina/) e il viola. Se cambiano là, vanno cambiati anche qui.
  */
 
-/* Font titoli: PP Neue Machina Inktrap, versione TRIAL (static/fonts/trial/, ignorata da git). I percorsi partono dalla radice
-   del sottodominio: /static/ è servito anche da qui. Il corpo del testo usa Alegreya, caricata da index.html (Google Fonts). */
+/* Font titoli: PP Neue Machina Inktrap, versione CON LICENZA, variable font (static/fonts/machina/): qualsiasi peso da 100
+   a 900. I percorsi partono dalla radice del sottodominio: /static/ è servito anche da qui. Il corpo del testo usa Alegreya,
+   caricata da index.html (Google Fonts).
+   Inktrap non ha il corsivo: dove un testo in Inktrap è in corsivo (note e numeri di nota dentro una citazione, titoli in <em> nelle
+   note, il termine "holistic" del dizionario) il browser inclina il dritto (corsivo finto). È voluto, solo in questi pochi casi. */
 @font-face {
     font-family: "Machina Inktrap";
-    font-weight: 300;
+    font-weight: 100 900;
     font-style: normal;
     font-display: swap;
-    src: url("/static/fonts/trial/PPNeueMachina-InktrapLight.otf") format("opentype");
-}
-
-@font-face {
-    font-family: "Machina Inktrap";
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    src: url("/static/fonts/trial/PPNeueMachina-InktrapRegular.otf") format("opentype");
+    src: url("/static/fonts/machina/PPNeueMachina-InktrapUprightVariable.woff2") format("woff2");
 }
 
 :root {
@@ -52,12 +47,12 @@
     /* ---------- Caratteri ---------- */
     --pub-font-body: "Alegreya", Georgia, serif;
     /* testo lungo */
-    --pub-font-heading: "Machina Inktrap", "Machina Plain", sans-serif;
+    --pub-font-heading: "Machina Inktrap", sans-serif;
     /* titoli e indice */
     --pub-font-label: "Alegreya SC", "Alegreya", Georgia, serif;
     /* etichette piccole ("Contents"), didascalie */
     --pub-heading-weight: 300;
-    /* 300 = leggero, 400 = normale (sono i due pesi caricati sopra) */
+    /* variable font: qualsiasi valore da 100 a 900 (300 = Light, 375 = Regular, 450 = Medium) */
     --pub-heading-transform: uppercase;
     /* uppercase | none */
     --pub-heading-letter-spacing: 0.02em;

@@ -54,10 +54,10 @@
     const menu = document.getElementById('pub-menu');
     if (!topbar || !menu) return;
 
-    // Il marchio porta al sito principale: stesso indirizzo senza il primo pezzo "publication." (publication.dominio.it -> dominio.it,
-    // in locale publication.localhost:8000 -> localhost:8000). Non si può scrivere a mano nel file perché dipende dal dominio.
+    // Il marchio porta al sito principale: stesso indirizzo senza il primo pezzo "trifoldtrinetrinity." (trifoldtrinetrinity.dominio.it -> dominio.it,
+    // in locale trifoldtrinetrinity.localhost:8000 -> localhost:8000). Non si può scrivere a mano nel file perché dipende dal dominio.
     const brand = topbar.querySelector('.pub-topbar-brand');
-    if (brand) brand.href = `${location.protocol}//${location.host.replace(/^publication\./, '')}/`;
+    if (brand) brand.href = `${location.protocol}//${location.host.replace(/^trifoldtrinetrinity\./, '')}/`;
 
     const toggle = topbar.querySelector('.pub-topbar-toggle');
     const titleEl = topbar.querySelector('.pub-topbar-title');

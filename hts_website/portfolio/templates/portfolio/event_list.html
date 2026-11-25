@@ -13,12 +13,12 @@
 <article class="container row border-bottom py-4 archive-row">
     <div class="col-lg-3 p-0">
         <div class="list-label">{{ event.date|date:"j F Y" }}</div>
-        {% if event.location_label %}<div class="reference-label text-break mt-1">{% if event.location_url %}<a href="{{ event.location_url }}">{{ event.location_label }}</a>{% else %}{{ event.location_label }}{% endif %}</div>{% endif %}
+        {% if event.location_label %}<div class="reference-label text-break mt-1">{% if event.location_url %}<a href="{{ event.location_url }}" target="_blank" rel="noopener">{{ event.location_label }}</a>{% else %}{{ event.location_label }}{% endif %}</div>{% endif %}
     </div>
     <div class="col-lg-9 p-0 mt-3 mt-lg-0">
         <h3 class="event-title">{{ event.title }}</h3>
         <p class="project-description mt-2 mb-0 col-lg-8">{{ event.description }}</p>
-        {% if event.event_url %}<div class="list-label"><a href="{{ event.event_url }}">More info</a></div>{% endif %}
+        {% if event.event_url %}<div class="list-label"><a href="{{ event.event_url }}" target="_blank" rel="noopener">More info</a></div>{% endif %}
     </div>
 </article>
 {% empty %}
@@ -32,12 +32,12 @@
 <article class="container row border-bottom py-4 archive-row">
     <div class="col-lg-3 p-0">
         <div class="list-label">{{ event.date|date:"j F Y" }}</div>
-        {% if event.location_label %}<div class="reference-label text-break mt-1">{% if event.location_url %}<a href="{{ event.location_url }}">{{ event.location_label }}</a>{% else %}{{ event.location_label }}{% endif %}</div>{% endif %}
+        {% if event.location_label %}<div class="reference-label text-break mt-1">{% if event.location_url %}<a href="{{ event.location_url }}" target="_blank" rel="noopener">{{ event.location_label }}</a>{% else %}{{ event.location_label }}{% endif %}</div>{% endif %}
     </div>
     <div class="col-lg-9 p-0 mt-3 mt-lg-0">
         <h3 class="event-title">{{ event.title }}</h3>
         <p class="project-description mt-2 mb-0 col-lg-8">{{ event.description }}</p>
-        {% if event.event_url %}<div class="list-label"><a href="{{ event.event_url }}">More info</a></div>{% endif %}
+        {% if event.event_url %}<div class="list-label"><a href="{{ event.event_url }}" target="_blank" rel="noopener">More info</a></div>{% endif %}
     </div>
 </article>
 {% empty %}

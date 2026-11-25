@@ -41,7 +41,7 @@ PUBLICATION_URL = os.environ.get("PUBLICATION_URL", "")
 # Indirizzo e-mail di contatto, mostrato nel colophon della pagina About (vuoto = la voce "Contact" non compare).
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "")
 PUBLICATION_DIR = BASE_DIR / "publication"
-PUBLICATION_SUBDOMAIN = "publication"
+PUBLICATION_SUBDOMAIN = "trifoldtrinetrinity"
 
 def env_list(name):
     """Variabile d'ambiente con valori separati da virgola -> lista (vuota se manca)."""
@@ -49,7 +49,7 @@ def env_list(name):
 
 
 # Host ammessi. In sviluppo qualsiasi (anche il telefono in rete locale); online solo quelli elencati:
-# - ALLOWED_HOSTS nell'ambiente: indirizzi separati da virgola (con il dominio vero: dominio, www e publication.<dominio>;
+# - ALLOWED_HOSTS nell'ambiente: indirizzi separati da virgola (con il dominio vero: dominio, www e trifoldtrinetrinity.<dominio>;
 #   un punto davanti, ".esempio.it", vale per il dominio e tutti i suoi sottodomini);
 # - RAILWAY_PUBLIC_DOMAIN: lo imposta Railway da solo (l'indirizzo gratuito *.up.railway.app del servizio).
 # CSRF_TRUSTED_ORIGINS (serve al login dell'admin dietro HTTPS) si ricava dagli stessi indirizzi.

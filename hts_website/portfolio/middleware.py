@@ -8,7 +8,7 @@ class PublicationMiddleware:
     """Serve la pubblicazione statica sul sottodominio dedicato.
 
     Se la richiesta arriva da <PUBLICATION_SUBDOMAIN>.qualcosa (in produzione es.
-    publication.tuodominio.it, in locale publication.localhost:8000) risponde con i file
+    trifoldtrinetrinity.tuodominio.it, in locale trifoldtrinetrinity.localhost:8000) risponde con i file
     della cartella PUBLICATION_DIR, e con 404 per qualsiasi altro percorso: su quel
     sottodominio il sito Django (compreso /admin/) non è raggiungibile.
 
@@ -34,7 +34,7 @@ class PublicationMiddleware:
         self.publication.add_files(settings.PUBLICATION_DIR)
 
     def __call__(self, request):
-        # Primo pezzo dell'host: "publication.localhost:8000" -> "publication".
+        # Primo pezzo dell'host: "trifoldtrinetrinity.localhost:8000" -> "trifoldtrinetrinity".
         # get_host() controlla anche ALLOWED_HOSTS (quando sarà ristretto, includere il sottodominio).
         if request.get_host().split(".")[0] != settings.PUBLICATION_SUBDOMAIN:
             return self.get_response(request)
