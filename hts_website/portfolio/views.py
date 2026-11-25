@@ -92,18 +92,30 @@ def contributor_detail(request, pk):
     return render(request, "portfolio/contributor_detail.html", {"contributor": contributor})
 
 
+EVENT_FILTERS = (("upcoming", "Upcoming"), ("past", "Past"))
+
+
 def event_list(request):
-    """Due liste separate: eventi futuri (dal più vicino) e passati (dal più recente).
+    """Due liste separate: eventi futuri (dal più vicino) e passati (dal più recente),
+    con filtro opzionale ?when=upcoming|past.
 
     La divisione si fa qui con due query, non nel template, così ordine e filtro
-    li esegue il database. "Oggi" conta come futuro.
+    li esegue il database. "Oggi" conta come futuro. Un valore di when non valido
+    viene ignorato (si vedono entrambe le liste).
     """
+    when = request.GET.get("when", "")
+    if when not in dict(EVENT_FILTERS):
+        when = ""
     today = timezone.localdate()
     upcoming_events = Event.objects.filter(date__gte=today).order_by("date")
     past_events = Event.objects.filter(date__lt=today).order_by("-date")
     return render(request, "portfolio/event_list.html", {
         "upcoming_events": upcoming_events,
         "past_events": past_events,
+        "show_upcoming": when in ("", "upcoming"),
+        "show_past": when in ("", "past"),
+        "current_when": when,
+        "event_filters": EVENT_FILTERS,
     })
 
 

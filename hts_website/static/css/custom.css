@@ -819,6 +819,11 @@ a:hover, a:focus {
     font-style: normal;
 }
 
+/* Agenda: gli eventi passati sono attenuati (vale anche con il filtro su Past). */
+.event-group-past {
+    opacity: 0.5;
+}
+
 .reference-author-date {
     font-family: var(--hts-font-display);
     font-weight: 300;
