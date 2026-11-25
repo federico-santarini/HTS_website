@@ -194,18 +194,21 @@ disegno, stessa posizione (centro dello schermo) e stessa dimensione (`--hts-tri
 quando l'intro si dissolve si vede lo stesso disegno senza salti. Ogni tracciato è un link a `/archive/random/<categoria>/`:
 tracciato 1 (in alto) = **relationality**, 2 (in basso a sinistra) = **perception**, 3 (in basso a destra) = **cognition**.
 La categoria è il campo `project_category` del progetto, che si imposta dall'admin (valori: `relationality`, `perception`, `cognition`).
-Attorno alle spirali c'è un **perimetro** (un tracciato chiuso dello stesso disegno), anche lui link (il quarto, `triskele-link-4` di
-`_triskele.html`, con lo stesso bagliore e il nome "Publication" sotto): porta alla pubblicazione (`PUBLICATION_URL`; se non è impostata il
-perimetro non compare). Il clic lo riceve solo lungo la linea (`--home-triskele-hit-width`), non dentro. **Il disegno** è `Asset 1.svg` (viewBox
-453 x 429,96, linee sottili di 3 unità: `--home-triskele-width`, `--intro-line-width`): ogni spirale è un **nastro disegnato come contorno**, cioè
+Attorno alle spirali c'è un **cerchio**, anche lui link (il quarto, `triskele-link-4` di `_triskele.html`, con lo stesso bagliore e un nome
+sotto): porta alla pubblicazione (`PUBLICATION_URL`; se non è impostata il cerchio non compare). Prima c'era un perimetro disegnato
+su misura (nell'`Asset 1.svg`): il cliente ha preferito un cerchio, che è un `<circle>` e non fa parte del disegno. È centrato sul centro di simmetria
+delle tre spirali (`cx 225,1`, `cy 241,3`) con raggio 222 (le spirali arrivano a 196: restano circa 25 di margine); il `viewBox` è quadrato e centrato su
+di lui (`-1,4 14,8 453 453`), così cerchio e spirali stanno al centro dello schermo, nell'intro come nella home. Il clic lo riceve solo lungo la linea
+(`--home-triskele-hit-width`), non dentro. **Il disegno** delle spirali è `Asset 1.svg` (linee sottili di 3 unità: `--home-triskele-width`,
+`--intro-line-width`): ogni spirale è un **nastro disegnato come contorno**, cioè
 un solo tracciato a doppia linea (parte da una giunzione, scende al centro lungo un bordo e torna fuori dall'altro). Per questo mouse e clic sulle
 spirali li riceve un **disco pieno** (un `<circle>` trasparente per spirale, in `_triskele.html`: centro `cx, cy` e raggio 100) che le copre tutte, spazi tra
 un giro e l'altro compresi: con le sole linee, o con il solo nastro, il mouse uscirebbe e rientrerebbe di continuo e l'hover sfarfallerebbe. Se si cambia il disegno vanno
-rimisurati i `data-center` (vedi sotto) e `0,4746` (altezza/larghezza del viewBox, in `.home-triskele-label` di `custom.css`).
+rimisurati i `data-center` (vedi sotto), il centro e il raggio dei dischi e del cerchio e il `viewBox` (il nome sotto il triskele parte da metà dimensione, `.home-triskele-label` in `custom.css`).
 - **Una volta per sessione del browser** (`sessionStorage`, chiave `htsIntroSeen`), e **mai** con "riduci movimento" attivo.
   Il tasto **Skip** (o Esc) lo chiude subito e ferma l'audio. Mentre dura, il resto della pagina non è cliccabile (`inert`).
 - **Dove sta**: markup in `portfolio/_intro.html` (il triskele è `_triskele.html` con `pathLength="1"`: si disegna con
-  `stroke-dasharray`/`stroke-dashoffset`, come il trim paths di After Effects; nell'intro ci sono solo le tre spirali, senza il perimetro. Ogni spirale
+  `stroke-dasharray`/`stroke-dashoffset`, come il trim paths di After Effects; nell'intro ci sono solo le tre spirali, senza il cerchio. Ogni spirale
   è un nastro a doppia linea e **cresce dal centro verso entrambe le estremità**, con i due bordi insieme (le due metà, di lunghezza diversa, si completano nello stesso istante): il punto del giro al centro è `data-center`
   sul tracciato, la frazione della sua lunghezza misurata sul disegno (punto di massima curvatura); l'ordine resta in alto, in basso a sinistra,
   in basso a destra), comportamento e **tempi** in `static/js/intro.js` (oggetto

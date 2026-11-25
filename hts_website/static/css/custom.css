@@ -839,7 +839,7 @@ a:hover, a:focus {
    home.html, _triskele.html
    Occupa lo schermo intero, centrato come lo strato dell'intro, con la stessa dimensione (--hts-triskele-size) e lo stesso
    spessore e colore: quando l'intro si dissolve si vede lo stesso disegno, nello stesso punto. Il contenitore lascia passare i clic;
-   solo le spirali (i link ai progetti a caso) e il perimetro (il link alla pubblicazione) li ricevono.
+   solo le spirali (i link ai progetti a caso) e il cerchio (il link alla pubblicazione) li ricevono.
    Variabili: --home-triskele-... sul selettore .home-triskele.
    ========================================================================== */
 
@@ -852,7 +852,7 @@ a:hover, a:focus {
     --home-triskele-label-size: 1.25rem;         /* testo della categoria sotto il triskele */
     --home-triskele-label-color: #fff;
     --home-triskele-label-gap: 2rem;             /* distanza tra il triskele e il nome */
-    --home-triskele-hit-width: 16;               /* area cliccabile del perimetro (invisibile): più larga della linea, per colpirla più facilmente */
+    --home-triskele-hit-width: 16;               /* area cliccabile del cerchio (invisibile): più larga della linea, per colpirla più facilmente */
 
     position: fixed;
     inset: 0;
@@ -901,7 +901,7 @@ a:hover, a:focus {
     opacity: var(--home-triskele-glow-opacity);
 }
 
-/* Perimetro (link 4): riceve il clic solo lungo la linea (e il suo margine, --home-triskele-hit-width), non dentro, dove stanno le spirali. */
+/* Cerchio (link 4): riceve il clic solo lungo la linea (e il suo margine, --home-triskele-hit-width), non dentro, dove stanno le spirali. */
 .home-triskele-svg .triskele-hit {
     fill: none;
     stroke: transparent;
@@ -922,7 +922,7 @@ a:hover, a:focus {
 }
 
 /* Nome della categoria sotto il triskele: tre testi nello stesso punto, ognuno visibile solo con hover o focus del suo tracciato.
-   Sta sotto il triskele e il suo perimetro, centrato: la posizione parte dal centro dello schermo (50%) e scende fino al bordo inferiore del perimetro (0,4746 volte la dimensione: il disegno è alto 429,96 su 453 di larghezza) più la distanza.
+   Sta sotto il triskele e il suo cerchio, centrato: la posizione parte dal centro dello schermo (50%) e scende di metà dimensione (il bordo inferiore del cerchio, il disegno è quadrato) più la distanza.
    Per metterlo in fondo allo schermo basta cambiare "top" con "bottom: 2rem". Usa :has() (Safari 15.4+, Chrome 105+, Firefox 121+):
    nei browser più vecchi il nome non compare, ma il resto funziona. */
 .home-triskele-label {
@@ -930,7 +930,7 @@ a:hover, a:focus {
     left: 0;
     right: 0;
     /* Il più basso tra "sotto il triskele" e "3rem dal fondo dello schermo": con un triskele grande su una finestra bassa il nome resta visibile. */
-    top: min(calc(50% + var(--hts-triskele-size) * 0.4746 + var(--home-triskele-label-gap)), calc(100% - 3rem));
+    top: min(calc(50% + var(--hts-triskele-size) * 0.5 + var(--home-triskele-label-gap)), calc(100% - 3rem));
     text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: se capita sopra le linee bianche si legge lo stesso */
     margin: 0;
     display: grid;
