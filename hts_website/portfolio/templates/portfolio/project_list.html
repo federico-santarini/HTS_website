@@ -33,38 +33,4 @@
 </div>
 {% endfor %}
 
-
-{% comment %} <table style="width: 100%; margin-top: 40px">
-    <thead style="text-align: left;">
-        <tr>
-            <th>
-                <a
-                    href="?sort={% if current_sort == 'title' %}-title{% else %}title{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}">
-                    Title{% if current_sort == 'title' %} ▲{% elif current_sort == '-title' %} ▼{% endif %}
-                </a>
-            </th>
-            <th>Type</th>
-            <th>
-                <a
-                    href="?sort={% if current_sort == 'date' %}-date{% else %}date{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}">
-                    Date{% if current_sort == 'date' %} ▲{% elif current_sort == '-date' %} ▼{% endif %}
-                </a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for project in projects %}
-        <tr>
-            <td><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></td>
-            <td>{% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %},
-                {% endif %}{% endfor %}</td>
-            <td>{{ project.date }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3">No projects yet.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table> {% endcomment %}
 {% endblock %}

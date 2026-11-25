@@ -74,6 +74,7 @@
        --bs-link-color-rgb: 0, 0, 0;     (i colori dei link vogliono la forma "r, g, b")
        */
     --bs-body-font-family: "Machina Inktrap", sans-serif;
+    --bs-body-font-weight: 300;            /* Inktrap Light: peso di base di tutto il testo che non ne dichiara uno */
     --bs-body-font-size: 1rem;
     --bs-body-color: white;
     --bs-body-bg: #000000;
@@ -125,7 +126,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6 {
-    font-weight: 400;
+    font-weight: 300;
 }
 
 h1, .h1 {
@@ -160,7 +161,7 @@ a:hover, a:focus {
     --bs-navbar-toggler-padding-y: 0;
     --bs-navbar-toggler-font-size: 1rem;
     --bs-navbar-toggler-border-color: transparent;
-    font-weight: 400;
+    font-weight: 300;
     text-transform: uppercase;
     height: var(--hts-navbar-height);
     padding-block: 0;
@@ -277,7 +278,7 @@ a:hover, a:focus {
    ========================================================================== */
 
 /* Etichetta piccola sopra un gruppo di dati ("with the contribution of", "references"). */
-.section-label, .section-label a {
+/* .section-label, .section-label a {
     font-family: var(--hts-font-label);
     font-weight: 400;
     font-style: normal;
@@ -286,9 +287,9 @@ a:hover, a:focus {
     color: var(--hts-muted);
     padding-top: 1.5rem;
     margin-bottom: 0;
-}
+} */
 
-.list-label, .card-subtitle{
+.list-label, .card-subtitle, .section-label, .section-label a{
     /* font-family: var(--hts-font-label);
     font-weight: 400;
     font-style: normal;
@@ -299,7 +300,7 @@ a:hover, a:focus {
     margin-bottom: 0;
     letter-spacing: 0.05rem; */
     font-family: var(--hts-font-display);
-    font-weight: 400;
+    font-weight: 300;
     font-size: .75rem;
     line-height: 1.2;
     color: var(--hts-muted);
@@ -329,7 +330,7 @@ a:hover, a:focus {
 
 .reference-label {
     font-family: var(--hts-font-display);
-    font-weight: 400;
+    font-weight: 300;
     font-size: .75rem;
     line-height: 1.2;
     color: var(--hts-muted);
@@ -450,7 +451,7 @@ a:hover, a:focus {
 
 .contributors {
     font-family: var(--hts-font-display);
-    font-weight: 400;
+    font-weight: 300;
     font-size: 1rem;
 }
 
@@ -648,7 +649,7 @@ a:hover, a:focus {
 
 .sc-artist {
     font-family: var(--hts-font-display);
-    font-weight: 400;
+    font-weight: 300;
     font-size: .75rem;
     line-height: 1.2;
     color: var(--hts-muted);
@@ -1022,6 +1023,10 @@ a:hover, a:focus {
         0 0 12px rgba(var(--hts-accent-rgb), 0.15),
         0 0 25px rgba(var(--hts-accent-rgb), 0.08),
         0 0 40px rgba(var(--hts-accent-rgb), 0);
+    /* Peso del testo, animato insieme all'alone (stessi keyframe, quindi stessa durata ed easing): sottile quando l'alone è debole,
+       più pieno quando è al massimo. Machina Inktrap è variable, accetta qualsiasi valore da 100 a 900. */
+    --intro-weight-min: 100;
+    --intro-weight-max: 900;
 }
 
 .intro-glow .intro-enter {
@@ -1029,8 +1034,8 @@ a:hover, a:focus {
 }
 
 @keyframes intro-glow-pulse {
-    from { text-shadow: var(--intro-glow-min); }
-    to   { text-shadow: var(--hts-glow); }
+    from { text-shadow: var(--intro-glow-min); font-weight: var(--intro-weight-min); }
+    to   { text-shadow: var(--hts-glow);       font-weight: var(--intro-weight-max); }
 }
 
 /* Testo e triskele stanno nella stessa cella: il secondo prende il posto del primo. */
@@ -1054,10 +1059,10 @@ a:hover, a:focus {
 }
 
 /* Il cursore lampeggiante dice che il testo è cliccabile. */
-.intro-enter::after {
+/* .intro-enter::after {
     content: "_";
     animation: intro-blink 1s steps(1) infinite;
-}
+} */
 
 @keyframes intro-blink {
     50% { opacity: 0; }
@@ -1173,14 +1178,14 @@ html:not(.intro-ready) .intro {
 /* Etichetta: maiuscolo spaziato, come le altre etichette del sito. */
 .colophon-list dt {
     margin-bottom: 0.25rem;
-    font-weight: 400;
+    font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 0.1rem;
 }
 
 .colophon-list dd {
     margin: 0;
-    font-weight: 400;
+    font-weight: 300;
     overflow-wrap: anywhere; /* un indirizzo e-mail lungo va a capo invece di finire sotto la colonna accanto */
 }
 

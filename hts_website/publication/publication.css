@@ -189,6 +189,15 @@
     /* sfondo della barra */
     --pub-topbar-size: 1rem;
     /* dimensione del testo della barra */
+    --pub-topbar-weight: 300;
+    /* peso del testo della barra: lo stesso della navbar del sito (custom.css [04]) */
+    --pub-topbar-brand-size: 1.25rem;
+    /* dimensione del marchio HTS: la stessa del sito (.navbar-brand di Bootstrap) */
+    --pub-topbar-container: 100vw;
+    /* larghezza della colonna in cui stanno marchio e pulsante: la stessa del .container di Bootstrap del sito, che cambia per breakpoint
+       (vedi @media qui sotto; sotto i 576px è tutta la finestra). Il margine ai lati è metà dello spazio che avanza + --pub-topbar-padding */
+    --pub-topbar-padding: 0.75rem;
+    /* margine interno della colonna (quello del .container di Bootstrap) */
     --pub-topbar-rule: var(--pub-rule);
     /* filetto sotto la barra (transparent = nessuno) */
     --pub-menu-bg: #000;
@@ -270,6 +279,14 @@
         /* seconda barra sotto la prima, con il nome del testo e l'autore (fino a due righe) */
     }
 }
+
+/* Larghezza della colonna della barra in alto: gli stessi breakpoint e le stesse larghezze del .container di Bootstrap nel sito,
+   così il marchio HTS e il pulsante a destra stanno nello stesso punto nelle due pagine. */
+@media (min-width: 576px)  { :root { --pub-topbar-container: 540px; } }
+@media (min-width: 768px)  { :root { --pub-topbar-container: 720px; } }
+@media (min-width: 992px)  { :root { --pub-topbar-container: 960px; } }
+@media (min-width: 1200px) { :root { --pub-topbar-container: 1140px; } }
+@media (min-width: 1400px) { :root { --pub-topbar-container: 1320px; } }
 
 
 /* ============================================================================================================
@@ -357,7 +374,44 @@ h1 {
     line-height: var(--pub-h1-line-height);
     text-align: center;
     text-shadow: var(--pub-glow);
+    /* Pulsazione dell'alone e del peso, la stessa di "CONNECT" nell'intro del sito (custom.css, .intro-glow): stessa durata,
+       easing e pesi. Valori qui sotto (il sito e la publication non condividono il CSS: se cambiano là, vanno cambiati anche qui).
+       Le due ombre devono avere lo stesso numero di livelli (4), altrimenti il passaggio non è fluido. */
+    --pub-h1-pulse-duration: 2s;       /* durata di un'andata (dal debole al pieno); il ritorno dura uguale */
+    --pub-h1-weight-min: 100;
+    --pub-h1-weight-max: 900;
+    --pub-h1-glow-min:                   /* alone nel punto più debole: stessi raggi di --pub-glow, quasi trasparenti */
+        0 0 5px rgb(255 255 255 / 0.25),
+        0 0 12px rgb(from var(--pub-accent) r g b / 0.15),
+        0 0 25px rgb(from var(--pub-accent) r g b / 0.08),
+        0 0 40px rgb(from var(--pub-accent) r g b / 0);
+    /* Onda tra le righe: ogni riga (uno <span> nel titolo, in index.html) fa la stessa pulsazione, ma sfasata rispetto alla
+       precedente di questa frazione del ciclo completo (andata + ritorno). 1/3 con tre righe = le fasi sono distribuite in modo
+       uniforme e l'onda scorre dall'alto in basso senza fine. 0 = tutte insieme, 1/2 = righe alterne in opposizione. */
+    --pub-h1-line-phase: 1 / 6;
+}
 
+/* Ogni riga del titolo è un blocco a sé, con la sua pulsazione. Il ritardo è negativo: la riga non aspetta, parte subito da un
+   punto più avanti dello stesso ciclo. La riga più avanti arriva prima al picco, quindi la più avanti è quella in alto
+   (riga 1 = 2 passi avanti, riga 2 = 1, riga 3 = 0): l'onda scende dall'alto in basso. Per farla salire, invertire i due numeri.
+   L'easing è la curva "ease-in-out sine": con l'andata e ritorno, il movimento segue una sinusoide. */
+h1 > span {
+    display: block;
+    animation: pub-h1-pulse var(--pub-h1-pulse-duration) cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+    animation-delay: calc(var(--pub-h1-line, 0) * var(--pub-h1-line-phase) * -2 * var(--pub-h1-pulse-duration));
+}
+
+h1 > span:nth-child(1) { --pub-h1-line: 2; }
+h1 > span:nth-child(2) { --pub-h1-line: 1; }
+
+@keyframes pub-h1-pulse {
+    from { text-shadow: var(--pub-h1-glow-min); font-weight: var(--pub-h1-weight-min); }
+    to   { text-shadow: var(--pub-glow);        font-weight: var(--pub-h1-weight-max); }
+}
+
+/* Chi ha chiesto meno movimento vede il titolo fermo, con l'alone pieno. */
+@media (prefers-reduced-motion: reduce) {
+    h1 > span { animation: none; }
 }
 
 h2 {
@@ -409,7 +463,7 @@ h4 {
     letter-spacing: var(--pub-label-letter-spacing);
     color: var(--pub-muted); */
     font-family: var(--pub-font-heading);
-    font-weight: 400;
+    font-weight: 300;
     font-size: .75rem;
     line-height: 1.2;
     color: var(--pub-muted);
@@ -617,6 +671,7 @@ p {
     font-size: var(--pub-note-size);
     line-height: 0;
     font-family: var(--pub-font-heading);
+    font-weight: 300;
 
 }
 
@@ -651,6 +706,7 @@ p {
 .pub-note {
     display: block;
     font-family: var(--pub-font-heading);
+    font-weight: 300;
 }
 
 .pub-note-inner {
@@ -827,14 +883,17 @@ blockquote p:last-child {
     grid-template-rows: var(--pub-topbar-height) var(--pub-subbar-height);
     /* seconda riga: la seconda barra, alta 0 tranne su telefono */
     height: var(--pub-topbar-total);
-    padding-inline: var(--pub-gutter);
+    padding-inline: max(var(--pub-topbar-padding), calc((100% - var(--pub-topbar-container)) / 2 + var(--pub-topbar-padding)));
+    /* come il .container del sito: colonna centrata, larga --pub-topbar-container. Il 100% è la larghezza della finestra (la barra è fissa);
+       max() tiene almeno --pub-topbar-padding quando la colonna è larga tutta la finestra (100vw, che comprende la barra di scorrimento) */
     background: var(--pub-topbar-bg);
     border-bottom: var(--pub-rule-width) solid var(--pub-topbar-rule);
     font-family: var(--pub-font-heading);
-    font-weight: var(--pub-heading-weight);
+    font-weight: var(--pub-topbar-weight);
     font-size: var(--pub-topbar-size);
     text-transform: var(--pub-heading-transform);
-    letter-spacing: var(--pub-heading-letter-spacing);
+    letter-spacing: normal;
+    /* niente spaziatura extra, come nella navbar del sito */
     text-align: left;
     transition: background-color var(--pub-menu-fade), border-color var(--pub-menu-fade);
 }
@@ -850,6 +909,8 @@ blockquote p:last-child {
 .pub-topbar-brand {
     justify-self: start;
     color: var(--pub-text);
+    font-size: var(--pub-topbar-brand-size);
+    line-height: 1.5;
     text-decoration: none;
     text-shadow: var(--pub-glow);
 }
@@ -891,9 +952,10 @@ blockquote p:last-child {
     cursor: pointer;
 }
 
+/* Come "Menu" nel sito: resta bianco e prende l'alone. */
 .pub-topbar-toggle:hover,
 .pub-topbar-toggle:focus-visible {
-    color: var(--pub-link-hover-color);
+    text-shadow: var(--pub-glow);
 }
 
 /* Telefono: il nome del testo (e l'autore) non sta in una riga stretta tra marchio e "Contents", dove veniva tagliato. Va in una seconda barra
@@ -914,9 +976,13 @@ blockquote p:last-child {
         /* il testo sta al centro della barra in verticale, che sia su una riga o su due */
         white-space: normal;
         overflow: visible;
-        margin-inline: calc(-1 * var(--pub-gutter));
-        padding: 0 var(--pub-gutter);
-        border-top: var(--pub-rule-width) solid var(--pub-topbar-rule);
+        /* la seconda barra va da un bordo all'altro dello schermo, con il testo allineato al marchio: margine laterale della barra
+           (lo stesso calcolo del padding di .pub-topbar, qui con 100vw perché il 100% sarebbe la colonna della griglia) */
+        --pub-topbar-inset: calc((100vw - var(--pub-topbar-container)) / 2 + var(--pub-topbar-padding));
+        margin-inline: calc(-1 * var(--pub-topbar-inset));
+        padding: 0 var(--pub-topbar-inset);
+        border-top: var(--pub-rule-width) solid var(--pub-rule);
+        /* filetto tra la barra e la seconda barra: resta anche se quello sotto la barra (--pub-topbar-rule) è tolto */
         font-size: 0.8125rem;
         line-height: 1.25;
         text-align: left;
