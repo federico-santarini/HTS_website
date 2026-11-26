@@ -125,8 +125,6 @@
     /* ---------- Filetti ---------- */
     --pub-rule-width: 1px;
     /* spessore dei filetti */
-    --pub-section-rule-color: var(--pub-accent);
-    /* filetto sopra ogni sezione */
 
     /* ---------- Indice ---------- */
     --pub-contents-size: 1.25rem;
@@ -648,7 +646,6 @@ main {
 .pub-section {
     margin-top: var(--pub-section-gap);
     padding-top: var(--pub-heading-gap);
-    border-top: var(--pub-rule-width) solid var(--pub-section-rule-color);
 }
 
 .pub-section>* {
