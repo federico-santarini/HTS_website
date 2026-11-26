@@ -1,9 +1,14 @@
 {% extends "portfolio/base.html" %}
+{% load static %}
 
 {% block title %}About{% endblock %}
 
-{% block content %}
+{# Si sostituisce il blocco "main" (non "content"): il colophon sta fuori dal .container, così il suo rettangolo arriva ai bordi della finestra. #}
+{% block main %}
+<main class="container">
 {# Pagina About: il testo, poi il colophon (elenco schematico di crediti). Stile: custom.css, sezione [14]. #}
+{# Sfondo liquido a tutto schermo, lo stesso dell'intro (static/js/liquid.js, script in fondo al blocco). #}
+<canvas class="liquid" aria-hidden="true"></canvas>
 <h1 class="visually-hidden">About</h1>
 
 <div class="row justify-content-center mt-5">
@@ -18,11 +23,14 @@
     </div>
 </div>
 
+</main>
+
 {# Colophon: un elenco di definizioni (<dl>) con la griglia di Bootstrap, come l'elenco dei contributor: row-cols-N decide quante voci stanno in una riga #}
 {# (1 sul telefono, 2 da sm, 3 da md). Da lg in su le colonne restano 3 ma l'elenco occupa solo una parte della larghezza, centrata (--colophon-width-lg in custom.css), #}
 {# così sono strette come quando erano 5. Ogni voce è un <div class="col"> con etichetta (<dt>) sopra e valore (<dd>) sotto. #}
 {# "Contact" compare solo se CONTACT_EMAIL è impostata nell'ambiente. Fonti: il testo di questa pagina e i ringraziamenti della pubblicazione. #}
 <section class="colophon" aria-label="Colophon">
+    <div class="container">
     <dl class="colophon-list row row-cols-1 row-cols-sm-2 row-cols-md-3 gy-4 mb-0">
         <div class="col">
             <dt>Collective</dt>
@@ -76,5 +84,7 @@
             <dd>© {% now "Y" %} Holistic Technology Salon</dd>
         </div>
     </dl>
+    </div>
 </section>
+<script src="{% static 'js/liquid.js' %}" defer></script>
 {% endblock %}

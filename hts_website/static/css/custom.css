@@ -100,7 +100,7 @@
         0 0 12px rgba(var(--hts-accent-rgb), 0.15),
         0 0 25px rgba(var(--hts-accent-rgb), 0.08),
         0 0 40px rgba(var(--hts-accent-rgb), 0);
-    --hts-pulse-weight-min: 100;
+    --hts-pulse-weight-min: 300;
     --hts-pulse-weight-max: 900;
     --hts-pulse: hts-pulse 1.5s ease-in-out infinite alternate; /* 1.5s = un'andata (dal debole al pieno); il ritorno dura uguale */
 
@@ -122,6 +122,22 @@
     /* larghezza del triskele: la stessa nell'intro e nella home, così coincidono. Su finestre basse si rimpicciolisce (è anche alto quanto è largo). */
     --hts-triskele-size: min(100vw, 40rem, 100dvh - 2 * var(--hts-triskele-margin));
     --hts-spirals-scale: 1;                      /* scala delle sole spirali dentro il cerchio (intro e home); ridotta senza hover, vedi [12] */
+
+    /* Sfondo liquido (static/js/liquid.js, intro e About): onde morbide in quattro colori, che scorrono piano. */
+    --hts-liquid-color-base: #eec2ff;          /* colore di base */
+    --hts-liquid-color-waves: #8712a1;         /* colore delle onde */
+    --hts-liquid-color-top: #a364b4;           /* colore che prevale nella parte alta */
+    --hts-liquid-color-highlight: #99b2a7;     /* colore dei riflessi */
+    --hts-liquid-speed: 0.7;                   /* velocità: 0 = fermo */
+    --hts-liquid-scale: 2.35;                  /* dimensione delle onde: più alto = più grandi */
+    --hts-liquid-stretch: 0.4;                 /* allungamento orizzontale */
+    --hts-liquid-tilt: 0;                      /* inclinazione */
+    --hts-liquid-ripple: 0;                    /* ondulazione */
+    --hts-liquid-top-amount: 1;                /* quanto si vede il colore della parte alta */
+    --hts-liquid-highlight-amount: 0.9;        /* intensità dei riflessi */
+    --hts-liquid-brightness: 1;                /* luminosità */
+    --hts-liquid-resolution: 0.5;              /* 1 = un pixel per pixel dello schermo; 0.5 = metà (più leggero, la sfumatura non cambia) */
+    --hts-liquid-opacity: 1;                   /* intensità: 0 = spento (solo nero), 1 = pieno */
 }
 
 /* ==========================================================================
@@ -151,6 +167,24 @@ h1, .h1 {
 
 a {
     text-decoration: none;
+}
+
+/* Sfondo liquido: una tela a tutto schermo, ferma dietro al contenuto, disegnata da static/js/liquid.js (shader WebGL). Usata
+   nell'intro (dove si dissolve insieme a lui) e nella pagina About. Colori e movimento: variabili --hts-liquid-... in [02]. */
+.liquid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: var(--hts-liquid-opacity);
+    pointer-events: none;
+}
+
+/* In pagina (About) il testo è nero: se lo shader non parte, sotto resta il colore di base invece del nero del sito. */
+main .liquid {
+    background: var(--hts-liquid-color-base);
 }
 
 a:hover, a:focus {
@@ -1089,17 +1123,8 @@ a:hover, a:focus {
     --intro-line-color: #fff;
     --intro-line-width: 3;                       /* nelle unità del disegno (453 di larghezza): 3 è lo spessore del file originale */
     --intro-triskele-size: var(--hts-triskele-size);   /* larghezza del triskele (vale anche per quello della home) */
-    --intro-skip-color: var(--hts-muted);
-    /* Sfondo liquido (static/js/intro-liquid.js): rampa nero → colore intermedio → colore chiaro, che scorre piano. */
-    --intro-liquid-dark: #000;                   /* colore delle zone scure */
-    --intro-liquid-mid: rgba(var(--hts-accent-rgb), 1);       /* colore intermedio (il viola) */
-    --intro-liquid-light: rgb(2, 255, 2);                  /* colore delle creste */
-    --intro-liquid-white: 0.75;                  /* quanto bianco: 0 = nessuno (solo nero e accento), 1 = bianco pieno sulle creste (disturba triskele e testo) */
-    --intro-liquid-speed: .5;                     /* 1 = velocità dell'originale; 0.5 = metà; 2 = doppia */
-    --intro-liquid-scale: .1;                     /* 1 = macchie grandi come lo schermo; 2 = metà dimensione */
-    --intro-liquid-resolution: 0.5;              /* 1 = un pixel per pixel dello schermo; 0.5 = metà (più leggero, la sfumatura non cambia) */
-    --intro-liquid-opacity: .3;                   /* intensità: 0 = spento (solo nero), 1 = pieno */
-
+    --intro-skip-color: #000;
+    --intro-enter-target: var(--intro-triskele-size);  /* lato dell'area cliccabile attorno a CONNECT: quanto il triskele */
     position: fixed;
     inset: 0;
     z-index: 2000; /* sopra la navbar (1020) e i modali (1055) */
@@ -1109,27 +1134,9 @@ a:hover, a:focus {
     background: var(--intro-bg);
 }
 
-/* Sfondo liquido: una tela a tutto schermo disegnata da static/js/intro-liquid.js (shader WebGL). z-index -1: sta dietro al testo e al
-   triskele, sopra il nero. Si dissolve insieme all'intro, perché l'opacità di .intro la imposta intro.js. */
-.intro-liquid {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    display: block;
-    width: 100%;
-    height: 100%;
-    opacity: var(--intro-liquid-opacity);
-    pointer-events: none;
-}
-
-/* Versione "glow" dello sfondo (classe .intro-glow in _intro.html): sfondo nero, niente liquido (intro-liquid.js non parte con opacità 0),
-   e il testo d'ingresso pulsa (--hts-pulse, sezioni [02] e [03]). */
+/* Versione con sfondo nero (classe .intro-glow in _intro.html): niente liquido (liquid.js non parte con opacità 0). */
 .intro-glow {
-    --intro-liquid-opacity: 0;
-}
-
-.intro-glow .intro-enter {
-    animation: var(--hts-pulse);
+    --hts-liquid-opacity: 0;
 }
 
 /* Testo e triskele stanno nella stessa cella: il secondo prende il posto del primo. */
@@ -1138,7 +1145,10 @@ a:hover, a:focus {
     grid-area: 1 / 1;
 }
 
+/* L'area cliccabile è un quadrato molto più grande della scritta (che resta al centro). */
 .intro-enter {
+    width: var(--intro-enter-target);
+    height: var(--intro-enter-target);
     padding: 1rem 2rem;
     background: none;
     border: 0;
@@ -1150,6 +1160,7 @@ a:hover, a:focus {
     letter-spacing: var(--intro-text-letter-spacing);
     text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: il testo resta leggibile sopra lo sfondo */
     cursor: pointer;
+    animation: var(--hts-pulse); /* il testo d'ingresso pulsa (--hts-pulse, sezioni [02] e [03]) */
 }
 
 /* Il cursore lampeggiante dice che il testo è cliccabile. */
@@ -1180,9 +1191,13 @@ a:hover, a:focus {
     visibility: hidden;
 }
 
+/* In basso al centro. */
 .intro-skip {
     position: absolute;
-    right: max(1.5rem, env(safe-area-inset-right));
+    left: 0;
+    right: 0;
+    width: max-content;
+    margin-inline: auto;
     bottom: max(1.5rem, env(safe-area-inset-bottom));
     padding: 0.5rem;
     background: none;
@@ -1220,8 +1235,21 @@ html:not(.intro-ready) .intro {
    [14] ABOUT
    about.html
    Testo in colonna centrale: il primo paragrafo (.about-lead) è più grande, gli altri hanno il corpo dei testi dei progetti.
-   Il colophon è un elenco di definizioni (<dl>) nella griglia di Bootstrap (row-cols-*): voci in colonne, etichetta sopra e valore sotto, con un filetto sfumato sopra (come l'archivio).
+   Il colophon è un elenco di definizioni (<dl>) nella griglia di Bootstrap (row-cols-*): voci in colonne, etichetta sopra e valore sotto, dentro un rettangolo scuro.
    ========================================================================== */
+
+/* Sullo sfondo liquido il testo è nero, con un leggero bagliore bianco che lo stacca dalle zone viola */
+.about-text {
+    --about-glow: 0 0 1em rgba(255, 255, 255, 1), 0 0 2em rgba(255, 255, 255, 1);
+    /* , 0 0 0.8em rgba(255, 255, 255, 0.5); */
+
+    color: #000;
+    text-shadow: var(--about-glow);
+}
+
+.about-text a {
+    color: inherit;
+}
 
 .about-text p {
     font-family: var(--hts-font-serif);
@@ -1240,46 +1268,50 @@ html:not(.intro-ready) .intro {
 
 .about-text a,
 .colophon a {
-    text-decoration: underline;
-    text-decoration-thickness: 0.05rem;
+    text-decoration: none;
+    text-decoration-thickness: 0.02rem;
     text-underline-offset: 0.3rem;
 }
 
-/* Colophon: discreto e largo. Tutto grigio (--hts-muted), solo nel carattere grottesco, piccolo; occupa tutta la larghezza. Le colonne le fa la griglia
+/* Colophon: discreto e largo. Testo bianco su un rettangolo scuro in multiply, solo nel carattere grottesco, piccolo; occupa tutta la larghezza. Le colonne le fa la griglia
    di Bootstrap (row-cols-* in about.html: quante voci per riga a ogni larghezza), con etichetta sopra e valore sotto. Variabili sul selettore .colophon. */
 .colophon {
     --colophon-width-lg: 60%;                    /* larghezza dell'elenco da lg in su: 60% = 3 colonne spesse come quando erano 5 (3/5); 100% = tutta la larghezza */
     --colophon-size: 0.75rem;                    /* corpo del testo (etichette e valori) */
-    --colophon-color: var(--hts-muted);
+    --colophon-color: #fff;
+    --colophon-bg: rgba(0, 0, 0, 0.5);           /* rettangolo dietro il testo, in multiply sullo sfondo */
+    --colophon-weight: 450;                      /* peso di etichette e valori */
 
+    position: relative;
     margin-top: 6rem;
-    padding-top: 1.5rem;
-    padding-bottom: 3rem;
-    border-top: 1px solid transparent;
-    border-image: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        var(--hts-accent-muted) 20%,
-        var(--hts-accent-muted) 80%,
-        rgba(255, 255, 255, 0) 100%
-    ) 1;
+    padding-block: 2rem;
     font-family: var(--hts-font-display);
     font-size: var(--colophon-size);
     line-height: 1.4;
     color: var(--colophon-color);
 }
 
+/* Il rettangolo è uno strato a parte: il multiply vale solo per lui (sul testo bianco lo farebbe sparire). */
+.colophon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1; /* sopra lo sfondo liquido (che viene prima nel codice), sotto il testo */
+    background: var(--colophon-bg);
+    mix-blend-mode: multiply;
+}
+
 /* Etichetta: maiuscolo spaziato, come le altre etichette del sito. */
 .colophon-list dt {
     margin-bottom: 0.25rem;
-    font-weight: 300;
+    font-weight: var(--colophon-weight);
     text-transform: uppercase;
     letter-spacing: 0.1rem;
 }
 
 .colophon-list dd {
     margin: 0;
-    font-weight: 300;
+    font-weight: var(--colophon-weight);
     overflow-wrap: anywhere; /* un indirizzo e-mail lungo va a capo invece di finire sotto la colonna accanto */
 }
 
@@ -1296,7 +1328,10 @@ html:not(.intro-ready) .intro {
     color: inherit;
 }
 
+/* Al passaggio il link del colophon non si illumina: si ispessisce la sottolineatura. */
 .colophon a:hover,
 .colophon a:focus-visible {
-    color: #fff;
+    color: inherit;
+    text-shadow: none;
+    text-decoration-thickness: 0.125rem;
 }
