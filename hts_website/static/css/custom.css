@@ -485,7 +485,7 @@ a:hover, a:focus {
    static/js/title-wave.js mette ogni lettera in uno span e ognuna è sfasata rispetto alla precedente, così l'effetto è
    un'onda da sinistra a destra. Senza JavaScript pulsa il titolo intero. Con "meno movimento" resta fermo, come sopra. */
 .project-feed .project-title {
-    --title-pulse-duration: 1.5s;      /* durata di un'andata (da leggero a pesante); il ritorno dura uguale */
+    --title-pulse-duration: 3s;      /* durata di un'andata (da leggero a pesante); il ritorno dura uguale */
     --title-pulse-phase: 1 / 20;       /* sfasamento tra due lettere, in cicli: 1/16 = un'onda ogni 16 lettere */
 }
 
@@ -1049,7 +1049,14 @@ a:hover, a:focus {
     letter-spacing: 0.05em;
     text-transform: uppercase;
     fill: var(--home-triskele-arc-color);
-    text-shadow: var(--hts-glow); /* lo stesso alone del nome in hover */
+}
+
+/* Lo stesso alone del nome in hover (--hts-glow). Non con text-shadow, che Safari su iOS ritaglia sul testo SVG, ma come per le spirali:
+   una copia del testo trasformata in sole ombre dal filtro che static/js/triskele-glow.js costruisce. Senza JavaScript resta un alone sfocato. */
+.home-triskele-svg .triskele-arc-glow {
+    fill: var(--hts-accent);
+    filter: url(#triskele-arc-glow-filter);
+    pointer-events: none;
 }
 
 @media (hover: none) {
