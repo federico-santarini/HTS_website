@@ -118,7 +118,10 @@
     --hts-font-serif: "Alegreya", serif;
     --hts-font-label: "Alegreya SC", serif;
     --hts-navbar-height: 3.5rem;
-    --hts-triskele-size: min(100vmin, 40rem);   /* larghezza del triskele: la stessa nell'intro e nella home, così coincidono */
+    --hts-triskele-margin: 5.5rem;               /* spazio libero sopra e sotto il triskele: ci stanno la navbar e il nome in hover */
+    /* larghezza del triskele: la stessa nell'intro e nella home, così coincidono. Su finestre basse si rimpicciolisce (è anche alto quanto è largo). */
+    --hts-triskele-size: min(100vw, 40rem, 100dvh - 2 * var(--hts-triskele-margin));
+    --hts-spirals-scale: 1;                      /* scala delle sole spirali dentro il cerchio (intro e home); ridotta senza hover, vedi [12] */
 }
 
 /* ==========================================================================
@@ -476,6 +479,36 @@ a:hover, a:focus {
     text-transform: uppercase;
     line-height: 1.2;
     text-shadow: var(--hts-glow);
+}
+
+/* Nel feed il titolo pulsa come il testo d'ingresso dell'intro e il marchio (keyframes hts-pulse), ma lettera per lettera:
+   static/js/title-wave.js mette ogni lettera in uno span e ognuna è sfasata rispetto alla precedente, così l'effetto è
+   un'onda da sinistra a destra. Senza JavaScript pulsa il titolo intero. Con "meno movimento" resta fermo, come sopra. */
+.project-feed .project-title {
+    --title-pulse-duration: 1.5s;      /* durata di un'andata (da leggero a pesante); il ritorno dura uguale */
+    --title-pulse-phase: 1 / 20;       /* sfasamento tra due lettere, in cicli: 1/16 = un'onda ogni 16 lettere */
+}
+
+.wave-word {
+    display: inline-block; /* una parola non si spezza tra una lettera e l'altra */
+    white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .project-feed .project-title:not(.is-wave),
+    .project-feed .wave-letter {
+        /* la curva è "ease-in-out sine": con andata e ritorno il movimento segue una sinusoide */
+        animation: hts-pulse var(--title-pulse-duration) cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+    }
+
+    /* Ritardo negativo: nessuna lettera aspetta, ognuna parte già al suo punto del ciclo. */
+    .project-feed .wave-letter {
+        animation-delay: calc(var(--letters-from-end) * var(--title-pulse-phase) * -2 * var(--title-pulse-duration));
+    }
+
+    .project-feed .is-offscreen .wave-letter {
+        animation-play-state: paused;
+    }
 }
 
 .contributors {
@@ -887,6 +920,8 @@ a:hover, a:focus {
     --home-triskele-label-size: 1.25rem;         /* testo della categoria sotto il triskele */
     --home-triskele-label-color: #fff;
     --home-triskele-label-gap: 2rem;             /* distanza tra il triskele e il nome */
+    --home-triskele-arc-size: 19px;              /* nomi sempre visibili (senza hover): px del disegno, non dello schermo */
+    --home-triskele-arc-color: #fff;
     --home-triskele-hit-width: 16;               /* area cliccabile del cerchio (invisibile): più larga della linea, per colpirla più facilmente */
 
     position: fixed;
@@ -964,8 +999,8 @@ a:hover, a:focus {
     position: absolute;
     left: 0;
     right: 0;
-    /* Il più basso tra "sotto il triskele" e "3rem dal fondo dello schermo": con un triskele grande su una finestra bassa il nome resta visibile. */
-    top: min(calc(50% + var(--hts-triskele-size) * 0.5 + var(--home-triskele-label-gap)), calc(100% - 3rem));
+    /* Il posto sotto il triskele è garantito da --hts-triskele-margin (sezione [02]): se aumenti distanza o testo, aumenta anche quello. */
+    top: calc(50% + var(--hts-triskele-size) * 0.5 + var(--home-triskele-label-gap));
     text-shadow: 0 0 0.5em #000, 0 0 1em #000; /* alone scuro: se capita sopra le linee bianche si legge lo stesso */
     margin: 0;
     display: grid;
@@ -991,6 +1026,45 @@ a:hover, a:focus {
 .home-triskele:has(.triskele-link-3:hover, .triskele-link-3:focus-visible) .home-triskele-label-3,
 .home-triskele:has(.triskele-link-4:hover, .triskele-link-4:focus-visible) .home-triskele-label-4 {
     opacity: 1;
+}
+
+/* Le tre spirali (non il cerchio né i nomi) scalate attorno al centro del cerchio (225.1, 241.3, vedi _triskele.html); lo spessore
+   viene compensato, così la linea resta uguale. Vale per home e intro, che devono coincidere. */
+.home-triskele-svg :is(.triskele-link-1, .triskele-link-2, .triskele-link-3) :is(.triskele-glow, .triskele-hit, .triskele-line),
+.intro-triskele path {
+    transform: translate(225.1px, 241.3px) scale(var(--hts-spirals-scale)) translate(-225.1px, -241.3px);
+}
+
+.home-triskele-svg :is(.triskele-link-1, .triskele-link-2, .triskele-link-3) :is(.triskele-glow, .triskele-line) {
+    stroke-width: calc(var(--home-triskele-width) / var(--hts-spirals-scale));
+}
+
+/* Nomi scritti lungo archi attorno alle spirali: al posto del nome in hover sui dispositivi senza hover (telefoni, tablet).
+   La dimensione è in unità del disegno (largo 453), quindi si rimpicciolisce con il triskele. Anche il testo è cliccabile (sta dentro il link). */
+.home-triskele-svg .triskele-arc-label {
+    display: none;
+    font-family: var(--hts-font-display);
+    font-weight: 300;
+    font-size: var(--home-triskele-arc-size);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    fill: var(--home-triskele-arc-color);
+    text-shadow: var(--hts-glow); /* lo stesso alone del nome in hover */
+}
+
+@media (hover: none) {
+    :root {
+        --hts-triskele-margin: 4.5rem; /* il nome sotto il cerchio è più vicino di quello in hover: serve meno spazio */
+        --hts-spirals-scale: 0.88;     /* spirali più piccole: più spazio tra loro e il cerchio per i nomi */
+    }
+
+    .home-triskele-svg .triskele-arc-label {
+        display: inline;
+    }
+
+    .home-triskele-label {
+        display: none;
+    }
 }
 
 /* ==========================================================================
@@ -1092,7 +1166,7 @@ a:hover, a:focus {
 .intro-triskele path {
     fill: none;
     stroke: var(--intro-line-color);
-    stroke-width: var(--intro-line-width);
+    stroke-width: calc(var(--intro-line-width) / var(--hts-spirals-scale)); /* la divisione compensa la scala delle spirali ([12]) */
     stroke-linecap: round;
     stroke-dasharray: 1; /* con pathLength="1" ogni linea è lunga 1: dashoffset 1 = nascosta, 0 = disegnata (lo imposta intro.js) */
     stroke-dashoffset: 1;

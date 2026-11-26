@@ -1,20 +1,25 @@
 {# Scheda di un progetto nel feed (incluso da project_feed.html, che passa la variabile "project"). #}
 {# L'id="project-<pk>" è il bersaglio dell'ancora a cui rimanda la view project_detail: non cambiarlo. #}
 {# L'header è a tutta larghezza (lo sfondo arriva ai bordi dello schermo); il suo testo e il resto stanno in un .container. #}
-<section id="project-{{ project.pk }}" class="text-center">
+<section id="project-{{ project.pk }}">
     <header class="project-header pb-0 mb-5">
+        {# Titolo, contributori, descrizione e references stanno nella stessa colonna di 8 (su 12) centrata dai 992px in su, testo a sinistra. #}
         <div class="container">
+            <div class="row justify-content-center">
+            <div class="col-lg-8">
             <h2 class="project-title mt-5">{{ project.title }}</h2>
 
             {% if project.contributors.all %}
             <p class="section-label mt-5">with the contribution of</p>
-            <p class="contributors mx-5 my-0">
+            <p class="contributors my-0">
                 {% for contributor in project.contributors.all %}
                 <a href="{% url 'contributor_detail' contributor.pk %}">{{ contributor.name }}
                     {{ contributor.surname }}</a>{% if not forloop.last %},{% endif %}
                 {% endfor %}
             </p>
             {% endif %}
+            </div>
+            </div>
         </div>
     </header>
 
@@ -22,6 +27,28 @@
         <div class="row justify-content-center">
             <p class="project-description col-lg-8">{{ project.description|linebreaksbr }}</p>
         </div>
+                <div class="row justify-content-center mt-5">
+            {# References: autore con le iniziali maiuscole (CSS, .reference-author); titolo in corsivo con la sola prima lettera maiuscola. #}
+            {# Se c'è l'url, il tipo di riferimento è un link; altrimenti è solo testo. #}
+            {# Stessa colonna di 8 centrata della descrizione. #}
+            {% if project.references.all %}
+            <div class="col-lg-8">
+            <h3 class="section-label">references</h3>
+            <ul class="references list-unstyled">
+                {% for reference in project.references.all %}
+                {# Autore con le iniziali maiuscole (CSS, .reference-author); titolo in corsivo con la sola prima lettera maiuscola. #}
+                {% with title=reference.title|lower|capfirst %}
+                <li class="mb-1">{% if reference.author %}<span class="reference-author">{{ reference.author }}</span>,
+                    {% endif %}<em>{{ title }}&nbsp;&nbsp;&nbsp;&nbsp;</em>{% if reference.url %}(<a
+                        href="{{ reference.url }}" target="_blank" rel="noopener">{{ reference.get_kind_display }}</a>){% else %}({{ reference.get_kind_display }}){% endif %}
+                </li>
+                {% endwith %}
+                {% endfor %}
+            </ul>
+            </div>
+            {% endif %}
+        </div>
+
 
         {# Player custom: i link arrivano già convertiti e limitati a YouTube/SoundCloud (portfolio/embeds.py); #}
         {# il comportamento sta in static/js/players.js, l'aspetto in custom.css. #}
@@ -30,7 +57,7 @@
         {# L'iframe non ha src: players.js lo imposta da data-src quando il player sta per entrare nello schermo. #}
         {# Titolo e artista (attribuzione richiesta da SoundCloud) li riempie il JavaScript; senza, resta il link al brano. #}
         <div class="row justify-content-center mt-5 mb-5">
-            <div class="sc-player col-10 col-lg-6" data-sc-player>
+            <div class="sc-player col-10 col-lg-8" data-sc-player>
                 <button type="button" class="sc-toggle" disabled>Play</button>
                 <div class="sc-meta">
                     <a class="sc-title" href="{{ project.soundcloud_url }}" target="_blank" rel="noopener">Listen on SoundCloud</a>
@@ -49,10 +76,10 @@
         {# Miniature: ogni immagine è un bottone che apre la galleria del progetto (modale qui sotto) sulla sua immagine. #}
         {# data-gallery-index è la posizione nella galleria: lo legge static/js/gallery.js. #}
         {# Come la griglia dei contributors: row-cols-N decide quante miniature stanno in una riga, senza fissare la larghezza di ogni colonna. #}
-        {# L'involucro .col-lg-8 centrato lascia 2 colonne vuote per lato (su 12) dai 992px in su; sotto, la galleria usa tutta la larghezza. #}
+        {# L'involucro .col-lg-6 centrato occupa metà riga dai 992px in su; sotto, la galleria usa tutta la larghezza. #}
         {# Per cambiare le miniature per riga: row-cols-4 = 4 sempre; row-cols-3 row-cols-lg-4 = 3 sotto i 992px e 4 sopra. #}
         <div class="row justify-content-center">
-        <div class="col-lg-6">
+        <div class="col-lg-8">
         <div class="row row-cols-4 g-2">
             {# Le miniature sono quadrate, con l'immagine centrata e adattata senza tagli né deformazioni (object-fit-contain). #}
             {% for project_image in images %}
@@ -128,26 +155,6 @@
             </div>
         </div>
         {% endif %}
-
-        <div class="row justify-content-center mt-5">
-            {# References: autore con le iniziali maiuscole (CSS, .reference-author); titolo in corsivo con la sola prima lettera maiuscola. #}
-            {# Se c'è l'url, il tipo di riferimento è un link; altrimenti è solo testo. #}
-            {% if project.references.all %}
-            <h3 class="section-label">references</h3>
-            <ul class="references list-unstyled col-8 col-lg-6">
-                {% for reference in project.references.all %}
-                {# Autore con le iniziali maiuscole (CSS, .reference-author); titolo in corsivo con la sola prima lettera maiuscola. #}
-                {% with title=reference.title|lower|capfirst %}
-                <li class="mb-3">{% if reference.author %}<span class="reference-author">{{ reference.author }}</span>,
-                    {% endif %}<em>{{ title }}&nbsp;&nbsp;&nbsp;&nbsp;</em>{% if reference.url %}(<a
-                        href="{{ reference.url }}" target="_blank" rel="noopener">{{ reference.get_kind_display }}</a>){% else %}({{ reference.get_kind_display }}){% endif %}
-                </li>
-                {% endwith %}
-                {% endfor %}
-            </ul>
-            {% endif %}
-        </div>
-
         <hr>
     </div>
 </section>

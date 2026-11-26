@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "django",
+      "runtimeExecutable": "/Users/federicosantarini/Documents/GitHub/HTS_website/env/bin/python",
+      "runtimeArgs": ["/Users/federicosantarini/Documents/GitHub/HTS_website/hts_website/manage.py", "runserver", "8000"],
+      "port": 8000
+    }
+  ]
+}
