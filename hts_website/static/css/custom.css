@@ -92,6 +92,18 @@
         0 0 25px var(--hts-accent),
         0 0 40px var(--hts-accent);
     
+    /* Pulsazione di alone e peso (keyframes hts-pulse, sezione [03]): testo d'ingresso dell'intro e marchio nella navbar.
+       La luce va da poco visibile al glow pieno e torna, in continuo; il peso la segue (Machina Inktrap è variable: da 100 a 900).
+       Le due ombre devono avere lo stesso numero di livelli (qui 4, come --hts-glow), altrimenti il passaggio non è fluido. */
+    --hts-glow-min:                              /* alone nel punto più debole: stessi raggi di --hts-glow, ma quasi trasparenti */
+        0 0 5px rgba(255, 255, 255, 0.25),
+        0 0 12px rgba(var(--hts-accent-rgb), 0.15),
+        0 0 25px rgba(var(--hts-accent-rgb), 0.08),
+        0 0 40px rgba(var(--hts-accent-rgb), 0);
+    --hts-pulse-weight-min: 100;
+    --hts-pulse-weight-max: 900;
+    --hts-pulse: hts-pulse 1.5s ease-in-out infinite alternate; /* 1.5s = un'andata (dal debole al pieno); il ritorno dura uguale */
+
     --hts-glow-triskele: 
         0 0 5px white,
         0 0 10px white,
@@ -143,6 +155,11 @@ a:hover, a:focus {
     text-shadow: var(--hts-glow);
 }
 
+@keyframes hts-pulse {
+    from { text-shadow: var(--hts-glow-min); font-weight: var(--hts-pulse-weight-min); }
+    to   { text-shadow: var(--hts-glow);     font-weight: var(--hts-pulse-weight-max); }
+}
+
 /* ==========================================================================
    [04] NAVBAR E MENU
    base.html
@@ -178,8 +195,20 @@ a:hover, a:focus {
 
 .navbar-brand{
     text-shadow: var(--hts-glow);
+    /* Larga quanto la scritta al peso massimo: altrimenti l'area cliccabile cambia con la pulsazione e al bordo destro
+       l'hover andrebbe e verrebbe. */
+    min-width: 2.25em;
 }
+/* Il marchio pulsa come il testo d'ingresso dell'intro. Con "meno movimento" resta fermo, con l'alone pieno. */
+@media (prefers-reduced-motion: no-preference) {
+    .navbar-brand {
+        animation: var(--hts-pulse);
+    }
+}
+
+/* Al passaggio del mouse o con il focus la pulsazione si ferma: niente alone, peso della navbar. */
 .navbar-brand:hover, .navbar-brand:focus {
+    animation: none;
     text-shadow: none;
 }
 
@@ -1013,29 +1042,13 @@ a:hover, a:focus {
 }
 
 /* Versione "glow" dello sfondo (classe .intro-glow in _intro.html): sfondo nero, niente liquido (intro-liquid.js non parte con opacità 0),
-   e il testo d'ingresso pulsa con l'alone di --hts-glow: la luce va da poco visibile al glow pieno e torna, in continuo.
-   Le due ombre devono avere lo stesso numero di livelli (qui 4, come --hts-glow), altrimenti il passaggio tra l'una e l'altra non è fluido. */
+   e il testo d'ingresso pulsa (--hts-pulse, sezioni [02] e [03]). */
 .intro-glow {
     --intro-liquid-opacity: 0;
-    --intro-glow-duration: 1.5s;                 /* durata di un'andata (dal debole al pieno); il ritorno dura uguale */
-    --intro-glow-min:                            /* alone nel punto più debole: stessi raggi di --hts-glow, ma quasi trasparenti */
-        0 0 5px rgba(255, 255, 255, 0.25),
-        0 0 12px rgba(var(--hts-accent-rgb), 0.15),
-        0 0 25px rgba(var(--hts-accent-rgb), 0.08),
-        0 0 40px rgba(var(--hts-accent-rgb), 0);
-    /* Peso del testo, animato insieme all'alone (stessi keyframe, quindi stessa durata ed easing): sottile quando l'alone è debole,
-       più pieno quando è al massimo. Machina Inktrap è variable, accetta qualsiasi valore da 100 a 900. */
-    --intro-weight-min: 100;
-    --intro-weight-max: 900;
 }
 
 .intro-glow .intro-enter {
-    animation: intro-glow-pulse var(--intro-glow-duration) ease-in-out infinite alternate;
-}
-
-@keyframes intro-glow-pulse {
-    from { text-shadow: var(--intro-glow-min); font-weight: var(--intro-weight-min); }
-    to   { text-shadow: var(--hts-glow);       font-weight: var(--intro-weight-max); }
+    animation: var(--hts-pulse);
 }
 
 /* Testo e triskele stanno nella stessa cella: il secondo prende il posto del primo. */
