@@ -346,16 +346,39 @@ immagini) e il font che il suo CSS richiama per percorso fisso restano in cache 
 - **HSTS**: si accende con `SECURE_HSTS_SECONDS`, prima `3600` (un'ora); se per qualche giorno va tutto bene, `2592000`
   (30 giorni) e poi `31536000` (un anno). I browser ricordano il valore per tutta la durata: per tornare indietro si mette
   `0` e si aspetta. `check --deploy` continua a segnalare `includeSubDomains` e `preload`, spenti apposta.
-- **Backup**: i dati sono nel Postgres di Railway. Se il piano non offre backup, una copia si fa dal proprio computer con
-  `pg_dump` (versione uguale o superiore a quella del server) e l'indirizzo pubblico del database
-  (servizio Postgres -> Variables -> `DATABASE_PUBLIC_URL`): `pg_dump "<indirizzo>" -Fc -f hts.dump`. Il file contiene
-  anche gli utenti: non va nel repository. Le immagini non sono nel database (stanno su R2).
+- **Backup**: il database viene copiato ogni notte su R2, vedi [Backup del database](#backup-del-database). Le immagini non
+  sono nel database (stanno su R2).
+
+### Backup del database
+
+`.github/workflows/db-backup.yml` (GitHub Actions) ogni notte esporta il Postgres di Railway con `pg_dump` e carica il file
+in `db/` su un bucket R2 dedicato. Non resta nessuna copia sul computer.
+
+**Configurazione (una volta)**
+1. Cloudflare -> R2 -> Create bucket (es. `hts-backups`), **senza accesso pubblico**: il file contiene anche gli utenti.
+   Mai usare il bucket delle immagini, che è pubblico.
+2. Nel bucket: Settings -> Object lifecycle rules -> cancellare gli oggetti dopo 30 giorni (limita spazio e costo).
+3. R2 -> Manage R2 API tokens -> Create token, *Object Read & Write* sul solo bucket dei backup.
+4. Railway -> servizio Postgres -> Variables: copiare `DATABASE_PUBLIC_URL` (richiede l'accesso pubblico del database,
+   Settings -> Networking; il traffico in uscita può essere conteggiato nei consumi di Railway).
+5. GitHub -> repository -> Settings -> Secrets and variables -> Actions -> New repository secret, uno per nome:
+   `DATABASE_PUBLIC_URL`, `BACKUP_R2_ACCOUNT_ID`, `BACKUP_R2_ACCESS_KEY_ID`, `BACKUP_R2_SECRET_ACCESS_KEY`,
+   `BACKUP_R2_BUCKET_NAME`.
+6. Dopo il push: Actions -> Backup database -> **Run workflow**, e controllare che il file compaia nel bucket.
+
+**Da sapere.** Se un backup fallisce GitHub avvisa per e-mail (secondo le impostazioni di notifica): controllare ogni tanto
+che nel bucket ci siano file recenti. In un repository pubblico GitHub sospende le esecuzioni pianificate dopo 60 giorni
+senza attività. Se Railway passa a un Postgres più recente di quello in `PG_IMAGE`, aggiornare la riga nel workflow. Se la
+password del database cambia, aggiornare il secret.
+
+**Ripristino.** Scaricare il file dal bucket ed eseguire `pg_restore --clean --if-exists --no-owner -d "<indirizzo>" file.dump`:
+**sovrascrive** il database indicato, quindi provarlo prima su un database vuoto.
 
 **Da fare**
 - [ ] Impostare `SECURE_HSTS_SECONDS` e alzarlo per gradi.
 - [ ] Spegnere `NOINDEX`.
 - [ ] Configurare il redirect di `www` in Cloudflare.
-- [ ] Decidere come fare i backup.
+- [ ] Configurare il backup (bucket, secrets) e provare un ripristino.
 - [ ] Alleggerire le immagini già caricate.
 - [ ] Valutare un dominio proprio per le immagini (es. `media.<dominio>`) al posto di `r2.dev`: se cambia, `R2_PUBLIC_DOMAIN` si aggiorna, ma gli indirizzi delle immagini già salvate restano quelli vecchi se il bucket resta lo stesso.
 

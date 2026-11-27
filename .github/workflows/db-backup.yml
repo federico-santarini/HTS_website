@@ -1,0 +1,47 @@
+# Backup notturno del database: pg_dump del Postgres di Railway, caricato su un bucket R2 PRIVATO.
+# La copia esiste solo sulla macchina temporanea di GitHub (cancellata a fine esecuzione) e nel bucket.
+# Configurazione (bucket, token, secrets) e ripristino: README, "Backup del database".
+name: Backup database
+
+on:
+  schedule:
+    - cron: "17 2 * * *"   # ogni notte alle 02:17 UTC (GitHub può partire con un po' di ritardo)
+  workflow_dispatch:        # avvio a mano: scheda Actions -> Backup database -> Run workflow
+
+permissions: {}             # non legge né modifica il repository
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Deve essere uguale o superiore alla versione del Postgres di Railway.
+      PG_IMAGE: postgres:18
+    steps:
+      - name: Esporta il database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_PUBLIC_URL }}
+        run: |
+          set -euo pipefail
+          test -n "$DATABASE_URL" || { echo "Manca il secret DATABASE_PUBLIC_URL"; exit 1; }
+          docker run --rm -e DATABASE_URL "$PG_IMAGE" sh -c 'pg_dump "$DATABASE_URL" --format=custom --no-owner --no-privileges' > hts.dump
+          # Controllo: il file deve essere un archivio leggibile e contenere i progetti.
+          docker run --rm -i "$PG_IMAGE" pg_restore --list < hts.dump > contenuto.txt
+          grep -q "TABLE DATA public portfolio_project " contenuto.txt
+          ls -l hts.dump
+
+      - name: Carica su R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          # R2 non accetta i checksum che la CLI di AWS aggiunge di sua iniziativa.
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+          ACCOUNT_ID: ${{ secrets.BACKUP_R2_ACCOUNT_ID }}
+          BUCKET: ${{ secrets.BACKUP_R2_BUCKET_NAME }}
+        run: |
+          set -euo pipefail
+          aws s3 cp hts.dump "s3://$BUCKET/db/hts-$(date -u +%Y-%m-%d_%H%M).dump" \
+            --endpoint-url "https://$ACCOUNT_ID.r2.cloudflarestorage.com" --only-show-errors
+          echo "Backup caricato."
