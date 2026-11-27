@@ -65,12 +65,15 @@ else:
 # Dietro il proxy di Railway la richiesta arriva a Gunicorn in HTTP: questa riga dice a Django di fidarsi
 # dell'intestazione che dice com'era davvero ("https"). Online: reindirizza a HTTPS e cookie solo su HTTPS.
 # SECURE_SSL_REDIRECT=False nell'ambiente lo spegne (se mai desse un ciclo di reindirizzamenti).
-# HSTS (SECURE_HSTS_SECONDS) non è attivo apposta: si accende col dominio definitivo, perché una volta visto dai browser non si torna indietro.
+# HSTS: SECURE_HSTS_SECONDS nell'ambiente, in secondi (manca o 0 = spento). Per quella durata i browser che l'hanno visto rifiutano
+# l'HTTP e non si torna indietro: si parte da un valore basso (3600) e lo si alza quando tutto funziona. Vale per l'host che risponde,
+# quindi anche per la pubblicazione; includeSubDomains e preload restano spenti apposta.
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "True") == "True"
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.environ.get("SECURE_HSTS_SECONDS") or 0)
 
 # NOINDEX=True: ogni risposta porta "X-Robots-Tag: noindex, nofollow" (i motori di ricerca non indicizzano nulla).
 # Da tenere acceso finché il sito non è pronto (vedi portfolio/middleware.py).
@@ -182,16 +185,16 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# Online (DEBUG spento) WhiteNoise comprime i file statici raccolti da collectstatic. Non si usa ancora la versione con i nomi
-# "a impronta" (CompressedManifestStaticFilesStorage): fallirebbe, perché custom.css cita i font trial, che non sono nel repository.
-# Con i font veri nel repository conviene passarci (risolve anche la cache dei browser). Senza, i file statici stanno in cache 60 secondi.
+# Online (DEBUG spento) WhiteNoise comprime i file statici raccolti da collectstatic e aggiunge al nome un'"impronta" del
+# contenuto (custom.3f2a….css): i browser li tengono in cache a lungo e un file modificato cambia nome, quindi si vede subito.
+# Nei template i file statici vanno scritti con {% static %}. collectstatic si ferma se un CSS cita un file che non esiste.
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {
         "BACKEND": (
             "django.contrib.staticfiles.storage.StaticFilesStorage"
             if DEBUG
-            else "whitenoise.storage.CompressedStaticFilesStorage"
+            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
         ),
     },
 }

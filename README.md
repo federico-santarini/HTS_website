@@ -4,10 +4,8 @@ Sito del collettivo (Holistic Technology Salon): archivio dei progetti, contribu
 referenze/bibliografia e una pubblicazione statica su un sottodominio dedicato.
 
 Stack: **Django 5.2**, **Postgres**, **WhiteNoise** per i file statici, **Gunicorn** per la produzione.
-Il deploy previsto è su **Railway** (non ancora fatto, vedi [Deploy](#deploy-checklist)).
-
-> Stato attuale: Bootstrap è collegato e la navbar è responsive, ma il design vero (layout editoriale, colori,
-> tipografia) è ancora da fare: le pagine hanno l'aspetto di base di Bootstrap. Vedi [Frontend](#frontend-bootstrap).
+Il sito è **online su Railway**: <https://holistictechnologysalon.com>, con la pubblicazione su
+<https://trifoldtrinetrinity.holistictechnologysalon.com> (vedi [Deploy](#deploy-su-railway)).
 
 ## Struttura del repository
 
@@ -265,8 +263,9 @@ del primo articolo non c'è nel markdown: serve all'indice. Le immagini stanno i
 `image1` … `image20`, con le didascalie in `<figcaption>`; `alt` è vuoto dove il markdown non aveva didascalia). Hanno il **bordo sfumato** delle foto del sito principale (maschera con due sfumature intersecate); la larghezza è `--pub-image-fade` in `publication.css` (0 = nessuna). Ogni immagine porta in `style` i suoi pixel naturali (`--pub-img-w`, `--pub-img-h`): il CSS riserva così lo spazio giusto prima che si carichi (`loading="lazy"`), altrimenti il testo sotto si sposterebbe e le ancore della barra laterale finirebbero nel posto sbagliato. Chi aggiunge un'immagine a mano deve metterli anche lì.
 
 **Immagini caricate.** Finiscono in `hts_website/media/`, cartella ignorata da git: chi clona il repository non le
-riceve, e se servono vanno salvate a parte. In sviluppo le serve Django. In produzione non funzionerà così:
-vedi la checklist.
+riceve, e se servono vanno salvate a parte. In sviluppo le serve Django; online stanno su Cloudflare R2.
+Il sito non le ridimensiona: miniature e galleria scaricano il file caricato, quindi vanno preparate prima (lato lungo
+2000 px, ritratti e referenze 1200 px, JPG qualità 80 circa, meglio sotto i 500 KB e mai oltre 1 MB).
 
 **Migration scritte a mano.** `0009_copy_project_type_to_project_types.py` è una migration dei dati, commentata:
 fa parte della sequenza 0008-0010 che ha sostituito il vecchio campo `project_type` con la many-to-many.
@@ -294,15 +293,18 @@ python manage.py check
 
 ## Deploy su Railway
 
-Il repository è pronto per il deploy: la configurazione sta in `hts_website/railway.json` (comandi di avvio), nelle
-impostazioni lette dall'ambiente (`settings.py`) e nel file `.python-version`. **Provato in locale** simulando la
-produzione (DEBUG spento, HTTPS dietro proxy, Gunicorn, WhiteNoise, login dell'admin con CSRF); **non ancora provato su Railway**:
-`railway.json` è scritto sullo schema di Railway senza averlo potuto verificare lì, quindi al primo deploy controlla
-Settings del servizio -> Deploy: se i comandi non risultano, vanno incollati a mano (sono quelli del file).
+La configurazione sta in `hts_website/railway.json` (comandi di avvio), nelle impostazioni lette dall'ambiente
+(`settings.py`) e nel file `.python-version`. Se dopo un cambio i comandi non risultano in Settings del servizio ->
+Deploy, vanno incollati a mano (sono quelli del file). Per pubblicare una modifica: commit e `git push`.
 
 **Cosa succede a ogni deploy.** Prima di avviare la nuova versione: `python manage.py migrate --noinput` (aggiorna il
 database; crea anche il gruppo *Authors*) e `python manage.py ensure_superuser` (crea il superuser dalle variabili
 d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e Gunicorn.
+
+**File statici.** Online hanno un'impronta nel nome (`CompressedManifestStaticFilesStorage`) e i browser li tengono in
+cache a lungo: una modifica a CSS o JavaScript si vede subito dopo il deploy. Nei template usare sempre `{% static %}`.
+Se un CSS cita un file che non esiste, `collectstatic` si ferma e il deploy non parte. La pubblicazione (HTML, CSS, JS e
+immagini) e il font che il suo CSS richiama per percorso fisso restano in cache 60 secondi.
 
 **Variabili d'ambiente del servizio web** (Railway -> servizio -> Variables):
 
@@ -310,14 +312,16 @@ d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e G
 |---|---|
 | `SECRET_KEY` | stringa lunga e casuale (`python -c "import secrets; print(secrets.token_urlsafe(50))"`) |
 | `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE` | riferimenti al servizio Postgres di Railway: `${{Postgres.PGHOST}}` ecc. |
-| `NOINDEX` | `True` finché il sito non è pronto (i motori di ricerca non lo indicizzano) |
+| `NOINDEX` | `True` = i motori di ricerca non indicizzano il sito. Per farlo trovare: togliere la variabile (o `False`) |
+| `SECURE_HSTS_SECONDS` | HSTS in secondi (manca = spento): vedi sotto |
+| `CONTACT_EMAIL` | indirizzo mostrato nella pagina About; manca = la voce "Contact" non compare |
 | `R2_BUCKET_NAME`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_PUBLIC_DOMAIN` | storage delle immagini (vedi sotto) |
 | `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_PASSWORD`, `DJANGO_SUPERUSER_EMAIL` | il tuo account admin. Dopo il primo deploy la password si cambia dall'admin; quella nella variabile non serve più |
 | `DEBUG` | **non impostarla** (vale False) |
-| `ALLOWED_HOSTS` | non serve con l'indirizzo gratuito (`RAILWAY_PUBLIC_DOMAIN` lo imposta Railway); con il dominio vero: `dominio.it,www.dominio.it,trifoldtrinetrinity.dominio.it` |
-| `PUBLICATION_URL` | vuota finché non c'è il dominio (il link "Publication" resta nascosto) |
+| `ALLOWED_HOSTS` | `holistictechnologysalon.com,trifoldtrinetrinity.holistictechnologysalon.com` (senza, con il dominio proprio ogni pagina risponde 400) |
+| `PUBLICATION_URL` | `https://trifoldtrinetrinity.holistictechnologysalon.com` (vuota = link "Publication" nascosto) |
 
-**Passi, in ordine**
+**Rifare il deploy da zero, in ordine**
 1. **GitHub**: pubblicare i commit (`git push`). Il repository non contiene segreti.
 2. **Cloudflare R2** (immagini): R2 -> Create bucket -> nel bucket Settings -> attivare l'accesso pubblico (dominio `r2.dev`, che diventa
    `R2_PUBLIC_DOMAIN`, senza `https://`) -> "Manage R2 API tokens" -> Create token con permesso *Object Read & Write* sul solo bucket.
@@ -336,20 +340,24 @@ d'ambiente se non esiste; se esiste non tocca nulla). Avvio: `collectstatic` e G
   conviene che le modifiche ai modelli siano *additive* (aggiungere campi con valore predefinito o facoltativi); per rinominare o togliere un campo, prima un backup.
 - **Immagini**: finiscono su R2 e non si perdono ai deploy. Senza le variabili `R2_*`, online le immagini non si vedrebbero (con DEBUG spento Django non serve `media/`).
   Le immagini nel `media/` locale non vengono caricate online.
-- **Pubblicazione**: vive su `trifoldtrinetrinity.<dominio>`; con l'indirizzo gratuito di Railway non è raggiungibile (l'host `trifoldtrinetrinity.*.up.railway.app` non è ammesso).
-- **Backup**: i dati sono nel Postgres di Railway: controllare nel suo pannello le opzioni di backup prima di affidargli contenuti importanti.
+- **Domini**: in Railway sono collegati il dominio principale e `trifoldtrinetrinity.<dominio>` (record DNS su Cloudflare in
+  "DNS only"). Il piano attuale non ne ammette altri: `www` si gestisce solo in Cloudflare (record `A` `www` -> `192.0.2.1`
+  con proxy attivo, più una Redirect Rule da `www` al dominio principale).
+- **HSTS**: si accende con `SECURE_HSTS_SECONDS`, prima `3600` (un'ora); se per qualche giorno va tutto bene, `2592000`
+  (30 giorni) e poi `31536000` (un anno). I browser ricordano il valore per tutta la durata: per tornare indietro si mette
+  `0` e si aspetta. `check --deploy` continua a segnalare `includeSubDomains` e `preload`, spenti apposta.
+- **Backup**: i dati sono nel Postgres di Railway. Se il piano non offre backup, una copia si fa dal proprio computer con
+  `pg_dump` (versione uguale o superiore a quella del server) e l'indirizzo pubblico del database
+  (servizio Postgres -> Variables -> `DATABASE_PUBLIC_URL`): `pg_dump "<indirizzo>" -Fc -f hts.dump`. Il file contiene
+  anche gli utenti: non va nel repository. Le immagini non sono nel database (stanno su R2).
 
-**Quando ci sarà il dominio**
-- [x] Collegare in Railway il dominio principale e `trifoldtrinetrinity.<dominio>` allo stesso servizio (Settings -> Networking -> Custom Domain) e creare in
-  Cloudflare i record DNS che Railway indica (CNAME per `@` e per `publication`, più il TXT di verifica), lasciandoli su "DNS only".
-  Il piano Hobby ha un limite di domini personalizzati per servizio: se non basta per `www.`, in Cloudflare si può reindirizzare `www.` al dominio principale.
-- [x] Creare la variabile `ALLOWED_HOSTS` (`dominio,trifoldtrinetrinity.dominio`, separati da virgola, senza `https://`) e impostare
-  `PUBLICATION_URL=https://trifoldtrinetrinity.<dominio>`. **`ALLOWED_HOSTS` non esiste finché non la si crea**: con l'indirizzo gratuito non serviva
-  (lo aggiunge `RAILWAY_PUBLIC_DOMAIN`), ma con un dominio proprio, senza, ogni pagina risponde **400 Bad Request**.
-- [ ] Attivare HSTS (`SECURE_HSTS_SECONDS`, prima con valore basso) solo col dominio definitivo; `check --deploy` lo segnala finché manca.
+**Da fare**
+- [ ] Impostare `SECURE_HSTS_SECONDS` e alzarlo per gradi.
+- [ ] Spegnere `NOINDEX`.
+- [ ] Configurare il redirect di `www` in Cloudflare.
+- [ ] Decidere come fare i backup.
+- [ ] Alleggerire le immagini già caricate.
 - [ ] Valutare un dominio proprio per le immagini (es. `media.<dominio>`) al posto di `r2.dev`: se cambia, `R2_PUBLIC_DOMAIN` si aggiorna, ma gli indirizzi delle immagini già salvate restano quelli vecchi se il bucket resta lo stesso.
-- [ ] Con i font veri (licenza) nel repository, passare a `CompressedManifestStaticFilesStorage` in `settings.py` (nomi dei file con impronta: risolve la cache dei browser).
-- [ ] Spegnere `NOINDEX` quando il sito è pronto.
 
 ## Idee rimandate
 
