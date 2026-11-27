@@ -3,12 +3,13 @@
 {% block title %}Projects{% endblock %}
 
 {% block content %}
+<h1 class="visually-hidden">Projects</h1>
 {# Archivio: tabella dei progetti. Ordinamento e filtro stanno nell'indirizzo (?sort=...&type=...). #}
 {# Ogni link ricostruisce anche l'altro parametro, altrimenti cliccare un filtro azzererebbe l'ordine e viceversa. #}
 {# I valori arrivano già validati dalla view project_list. La colonna Type non è ordinabile (è una M2M). #}
 <div class="row justify-content-center mt-5 mb-5">
 
-    <div class="col-8 text-center text-uppercase" id="filter">
+    <div class="col-12 col-md-8 text-center text-uppercase" id="filter">
         <a href="?sort={{ current_sort }}" {% if not current_type %} class="active" {% endif %}>All</a> /
         {% for type in types %}
         <a href="?sort={{ current_sort }}&type={{ type.slug }}" {% if current_type == type.slug %} class="active"
@@ -24,7 +25,7 @@
         {% for type in project.project_types.all %}{{ type.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
     </div>
     <div class="list-label col-3 col-lg-1 p-0 d-flex align-items-center justify-content-end">{{ project.date|date:"b 'y" }}</div>
-    <div class="list-title col-lg-9 p-0 mt-1 order-lg-first text-truncate"><a
+    <div class="list-title archive-title col-lg-9 p-0 mt-1 order-lg-first"><a
             href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></div>
 </div>
 {% empty %}

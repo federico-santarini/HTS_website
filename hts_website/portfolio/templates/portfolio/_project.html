@@ -6,7 +6,7 @@
         {# Titolo, contributori, descrizione e references stanno nella stessa colonna di 8 (su 12) centrata dai 992px in su, testo a sinistra. #}
         <div class="container">
             <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
             <h2 class="project-title mt-5">{{ project.title }}</h2>
 
             {% if project.contributors.all %}
@@ -25,14 +25,14 @@
 
     <div class="container project-body">
         <div class="row justify-content-center">
-            <p class="project-description col-lg-8">{{ project.description|linebreaksbr }}</p>
+            <p class="project-description col-lg-6">{{ project.description|linebreaksbr }}</p>
         </div>
                 <div class="row justify-content-center mt-5">
             {# References: autore con le iniziali maiuscole (CSS, .reference-author); titolo in corsivo con la sola prima lettera maiuscola. #}
             {# Se c'è l'url, il tipo di riferimento è un link; altrimenti è solo testo. #}
             {# Stessa colonna di 8 centrata della descrizione. #}
             {% if project.references.all %}
-            <div class="col-lg-8">
+            <div class="col-lg-6">
             <h3 class="section-label">references</h3>
             <ul class="references list-unstyled">
                 {% for reference in project.references.all %}
@@ -57,7 +57,7 @@
         {# L'iframe non ha src: players.js lo imposta da data-src quando il player sta per entrare nello schermo. #}
         {# Titolo e artista (attribuzione richiesta da SoundCloud) li riempie il JavaScript; senza, resta il link al brano. #}
         <div class="row justify-content-center mt-5 mb-5">
-            <div class="sc-player col-10 col-lg-8" data-sc-player>
+            <div class="sc-player col-10 col-lg-6" data-sc-player>
                 <button type="button" class="sc-toggle" disabled>Play</button>
                 <div class="sc-meta">
                     <a class="sc-title" href="{{ project.soundcloud_url }}" target="_blank" rel="noopener">Listen on SoundCloud</a>
@@ -79,7 +79,7 @@
         {# L'involucro .col-lg-6 centrato occupa metà riga dai 992px in su; sotto, la galleria usa tutta la larghezza. #}
         {# Per cambiare le miniature per riga: row-cols-4 = 4 sempre; row-cols-3 row-cols-lg-4 = 3 sotto i 992px e 4 sopra. #}
         <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-6">
         <div class="row row-cols-4 g-2">
             {# Le miniature sono quadrate, con l'immagine centrata e adattata senza tagli né deformazioni (object-fit-contain). #}
             {% for project_image in images %}

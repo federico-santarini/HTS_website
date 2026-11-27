@@ -1,0 +1,14 @@
+{% extends "portfolio/base.html" %}
+{# Pagina "non trovata": Django la usa da sola con DEBUG spento (con DEBUG=True mostra la sua pagina di debug). #}
+
+{% block title %}Page not found{% endblock %}
+
+{% block content %}
+<div class="text-center text-uppercase mt-5 pt-5">
+    <h1 class="event-title mb-4">Page not found</h1>
+    <div id="filter">
+        <a href="{% url 'home' %}">Home</a> /
+        <a href="{% url 'project_list' %}">Archive</a>
+    </div>
+</div>
+{% endblock %}

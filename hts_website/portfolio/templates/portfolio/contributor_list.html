@@ -3,6 +3,7 @@
 {% block title %}Contributors{% endblock %}
 
 {% block content %}
+<h1 class="visually-hidden">Contributors</h1>
 
 <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4">
     {% for contributor in contributors%}
@@ -12,7 +13,7 @@
 
     
     
-{% with photo=contributor.images.first %}{% if photo %}<img src="{{ photo.image.url }}" class="card-img-top" alt="...">{% endif %}{% endwith %}
+{% with photo=contributor.images.first %}{% if photo %}<img src="{{ photo.image.url }}" class="card-img-top" alt="{{ contributor.name }} {{ contributor.surname }}">{% endif %}{% endwith %}
 
 
   {% comment %} <img src="{{ contributor.image.url }}" class="card-img-top" alt="..."> {% endcomment %}

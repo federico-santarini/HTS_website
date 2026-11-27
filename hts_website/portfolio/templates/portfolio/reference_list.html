@@ -3,10 +3,11 @@
 {% block title %}References{% endblock %}
 
 {% block content %}
+<h1 class="visually-hidden">References</h1>
 {# Il filtro per tipo usa ?kind=...; il valore è validato dalla view reference_list. #}
 
 <div class="row justify-content-center mt-5 mb-5">
-<div class="col-8 text-center text-uppercase" id="filter">
+<div class="col-12 col-md-8 text-center text-uppercase" id="filter">
     <a href="?"{% if not current_kind %} class="active"{% endif %}>All</a> /
     {% for value, label in kinds %}
     <a href="?kind={{ value }}"{% if current_kind == value %} class="active"{% endif %}>{{ label }}s</a>
@@ -15,25 +16,29 @@
 </div>
 </div>
 
+{# Da lg in su immagine a sinistra (colonna di 3, vuota se non c'è: i testi restano allineati) e dati a destra; sotto, in colonna con l'immagine in fondo. #}
 <div class="row">
     {% for reference in references %}
-    <div class="mb-5 border-bottom">
-        <div class="reference-title m-0">{{ reference.title }}</div>
-        <div class="reference-author-date mt-2">{{ reference.author }}{% if reference.author and reference.year %}, {% endif %}{{ reference.year|default_if_none:"" }} ({{ reference.kind }}) </div>
-        {% if reference.notes %}<p class="reference-notes mt-2 mb-0 col-6"> <span class="reference-label">Notes:</span><br>{{ reference.notes|linebreaksbr }}</p>{% endif %}
-        <div class="mt-3 mb-5">    
-        {% if reference.projects.all %}
-            <span class="reference-label">Projects:</span>
-
-            {% for project in reference.projects.all %}
-            <br><a class="reference-project" href="{% url 'project_detail' project.pk %}">{{ project.title }}</a>
-            {% if not forloop.last %}, {% endif %}
-            {% endfor %}
-            {% comment %} {% else %}
-            <span class="text-muted">No projects</span> {% endcomment %}
-            {% endif %}
+    <div class="col-12 mb-4 border-bottom">
+        <div class="row pb-4">
+            <div class="col-lg-9">
+                <div class="reference-title m-0">{{ reference.title }}</div>
+                <div class="reference-author-date mt-2">{{ reference.author }}{% if reference.author and reference.year %}, {% endif %}{{ reference.year|default_if_none:"" }} ({{ reference.kind }}) </div>
+                {% if reference.notes %}<p class="reference-notes mt-2 mb-0 col-lg-8"> <span class="reference-label">Notes:</span><br>{{ reference.notes|linebreaksbr }}</p>{% endif %}
+                {% if reference.projects.all %}
+                <div class="mt-3">
+                    <span class="reference-label">Projects:</span>
+                    {% for project in reference.projects.all %}
+                    <br><a class="reference-project" href="{% url 'project_detail' project.pk %}">{{ project.title }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-3 order-lg-first mt-3 mt-lg-0">
+                {% if reference.image %}<img class="img-fluid" src="{{ reference.image.url }}" alt="{{ reference.title }}" style="max-width: min(100%, 300px);">{% endif %}
+            </div>
         </div>
-        {% if reference.image %}<img src="{{ reference.image.url }}" alt="{{ reference.title }}" style="max-width: 300px;">{% endif %}
     </div>
     {% endfor %}
 </div>

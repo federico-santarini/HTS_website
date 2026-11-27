@@ -11,7 +11,7 @@
 <h1 class="visually-hidden">Agenda</h1>
 
 <div class="row justify-content-center mt-5 mb-5">
-<div class="col-8 text-center text-uppercase" id="filter">
+<div class="col-12 col-md-8 text-center text-uppercase" id="filter">
     <a href="?"{% if not current_when %} class="active"{% endif %}>All</a> /
     {% for value, label in event_filters %}
     <a href="?when={{ value }}"{% if current_when == value %} class="active"{% endif %}>{{ label }}</a>
