@@ -1000,9 +1000,16 @@ a:hover, a:focus {
     transition: opacity var(--home-triskele-glow-fade);
 }
 
-.home-triskele-svg a:hover .triskele-glow,
 .home-triskele-svg a:focus-visible .triskele-glow {
     opacity: var(--home-triskele-glow-opacity);
+}
+
+/* L'hover solo dove esiste: su touch resta "incollato" a ciò che sta sotto l'ultimo tocco (per esempio quello su CONNECT:
+   finita l'intro, la spirale in quel punto risulterebbe accesa). */
+@media (hover: hover) {
+    .home-triskele-svg a:hover .triskele-glow {
+        opacity: var(--home-triskele-glow-opacity);
+    }
 }
 
 /* Cerchio (link 4): riceve il clic solo lungo la linea (e il suo margine, --home-triskele-hit-width), non dentro, dove stanno le spirali. */
